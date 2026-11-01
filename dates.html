@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Important Dates – ACMCST 2027</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --dark-blue:#0d2137;
+  --mid-blue:#1a4a7a;
+  --sky-blue:#2e9fd4;
+  --orange:#e07b20;
+  --white:#ffffff;
+  --light:#c5e3f5;
+  --border:rgba(0,0,0,0.08);
+  --text:#1c2b3a;
+  --gray:#6b7a8d;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Times New Roman',Times,serif;color:var(--text);background:var(--white);overflow-x:hidden;}
+
+/* TOPBAR */
+.topbar{background:var(--dark-blue);padding:.45rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem;}
+.topbar-item{display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:rgba(255,255,255,0.75);}
+
+/* NAVBAR */
+nav{background:var(--white);border-bottom:3px solid var(--sky-blue);position:sticky;top:0;z-index:1000;box-shadow:0 2px 10px rgba(0,0,0,0.08);}
+.nav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;padding:0 2rem;height:70px;gap:1rem;}
+.nav-logo{display:flex;align-items:center;gap:.8rem;text-decoration:none;margin-right:1.5rem;}
+.nav-logo img{height:73px;width:auto;}
+.nav-menu{display:flex;list-style:none;height:70px;flex:1;justify-content:center;}
+.nav-item{position:relative;height:100%;display:flex;align-items:center;}
+.nav-item>a{display:flex;align-items:center;gap:.25rem;padding:0 .65rem;height:100%;font-size:.82rem;font-weight:700;color:var(--dark-blue);text-decoration:none;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-3px;transition:color .2s,border-color .2s;}
+.nav-item>a:hover,.nav-item.active>a{color:var(--sky-blue);border-bottom-color:var(--orange);}
+.nav-item>a .ch{font-size:.55rem;}
+.new-badge{display:inline-block;background:#e00;color:#fff;font-size:.6rem;font-weight:800;padding:.1rem .35rem;border-radius:2px;margin-left:.3rem;animation:blink 1s infinite;vertical-align:middle;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+.dropdown{display:none;position:absolute;top:100%;left:0;background:var(--white);box-shadow:0 6px 25px rgba(0,0,0,0.12);border-top:3px solid var(--orange);min-width:200px;z-index:200;}
+.nav-item:hover .dropdown{display:block;}
+.dropdown a{display:block;padding:.65rem 1.2rem;font-size:.8rem;color:var(--text);text-decoration:none;font-weight:600;border-bottom:1px solid var(--border);transition:background .15s,color .15s,padding-left .15s;}
+.dropdown a:hover{background:var(--light);color:var(--sky-blue);padding-left:1.6rem;}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;}
+.hamburger span{width:24px;height:2px;background:var(--dark-blue);}
+
+/* PAGE HEADER */
+.page-header{background:linear-gradient(rgba(13,33,55,0.8),rgba(13,33,55,0.8)),url('header-bg.svg') center/cover no-repeat;padding:4rem 2rem;text-align:center;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.page-header h1{font-family:'Merriweather',serif;font-size:clamp(1.8rem,3vw,2.8rem);font-weight:900;color:var(--white);margin-bottom:.5rem;}
+.page-header p{color:rgba(255,255,255,0.7);font-size:.95rem;}
+.breadcrumb{display:flex;align-items:center;justify-content:center;gap:.5rem;font-size:.8rem;color:rgba(255,255,255,0.5);margin-top:.8rem;}
+.breadcrumb a{color:var(--sky-blue);text-decoration:none;}
+.breadcrumb span{color:rgba(255,255,255,0.3);}
+
+/* LAYOUT */
+.container{max-width:1200px;margin:0 auto;padding:0 2rem;}
+section{padding:4rem 0;}
+
+/* INTRO */
+.intro-section{background:var(--white);padding:3rem 0;}
+.intro-text{max-width:900px;margin:0 auto;text-align:justify;}
+.intro-text p{font-size:1rem;color:#4a5a6a;line-height:1.9;}
+
+/* DATES SECTION */
+#dates{background:var(--white);}
+.dates-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2rem;}
+
+.date-card{
+  background:var(--white);
+  border:2px solid var(--sky-blue);
+  border-radius:12px;
+  padding:1.5rem 1.5rem 1.5rem 1.2rem;
+  display:flex;
+  align-items:center;
+  gap:1.2rem;
+  position:relative;
+  box-shadow:4px 8px 20px rgba(0,0,0,0.08);
+  transition:transform .2s,box-shadow .2s;
+}
+.date-card:hover{transform:translateY(-4px);box-shadow:6px 12px 30px rgba(0,0,0,0.15);}
+
+/* Quote marks */
+.date-card::before{
+  content:'\201C\201C';
+  position:absolute;
+  top:-12px;
+  left:12px;
+  font-size:2rem;
+  color:var(--sky-blue);
+  font-family:Georgia,serif;
+  line-height:1;
+}
+.date-card::after{
+  content:'\201D\201D';
+  position:absolute;
+  bottom:-12px;
+  right:12px;
+  font-size:2rem;
+  color:var(--sky-blue);
+  font-family:Georgia,serif;
+  line-height:1;
+}
+
+.date-icon{
+  width:85px;
+  height:85px;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--sky-blue);
+  border-radius:50%;
+  flex-shrink:0;
+}
+.date-icon img{
+  width:60px;
+  height:60px;
+  object-fit:contain;
+  filter:brightness(0) invert(1);
+}
+.date-icon .dif{
+  font-size:1.8rem;
+}
+.date-icon .dif{font-size:2.5rem;}
+
+.date-info{}
+.date-label{
+  font-size:.75rem;
+  font-weight:900;
+  color:var(--dark-blue);
+  text-transform:uppercase;
+  letter-spacing:1.5px;
+  margin-bottom:.4rem;
+  line-height:1.3;
+}
+.date-value{
+  font-family:'Merriweather',serif;
+  font-size:1rem;
+  font-weight:700;
+  color:var(--sky-blue);
+}
+.date-value.striked{
+  text-decoration:line-through;
+  color:var(--gray);
+  font-size:.9rem;
+}
+.date-value-new{
+  font-family:'Merriweather',serif;
+  font-size:1rem;
+  font-weight:700;
+  color:var(--sky-blue);
+  margin-top:.2rem;
+}
+
+/* NOTE SECTION */
+.note-section{background:var(--light);padding:2rem;border-radius:8px;margin-top:3rem;border-left:4px solid var(--sky-blue);}
+.note-section p{font-size:.9rem;color:#4a5a6a;line-height:1.8;}
+.note-section strong{color:var(--dark-blue);}
+
+/* FOOTER */
+footer{background:var(--mid-blue);padding:3rem 2rem 0;}
+.footer-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:2.5rem;padding-bottom:2.5rem;}
+.footer-contact-block{display:flex;gap:.8rem;align-items:flex-start;}
+.footer-avatar{width:52px;height:52px;border-radius:50%;flex-shrink:0;background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:1.4rem;}
+.fc-name{color:var(--white);font-weight:700;font-size:.88rem;margin-bottom:.3rem;}
+.fc-info a{color:rgba(255,255,255,0.65);font-size:.8rem;text-decoration:none;display:block;margin-bottom:.2rem;}
+.fc-info a:hover{color:var(--orange);}
+.footer-col h4{font-size:.85rem;font-weight:700;color:var(--white);margin-bottom:1.2rem;padding-bottom:.5rem;border-bottom:2px solid rgba(255,255,255,0.1);text-transform:uppercase;letter-spacing:.5px;}
+.footer-links{list-style:none;}
+.footer-links li{padding:.32rem 0;border-bottom:1px solid rgba(255,255,255,0.06);}
+.footer-links a{color:rgba(255,255,255,0.65);text-decoration:none;font-size:.82rem;transition:color .2s,padding-left .2s;display:flex;align-items:center;gap:.4rem;}
+.footer-links a:hover{color:var(--orange);padding-left:.4rem;}
+.footer-links a .nb{display:inline-block;background:#e00;color:#fff;font-size:.58rem;font-weight:800;padding:.1rem .3rem;border-radius:2px;animation:blink 1s infinite;}
+.footer-downloads{list-style:none;}
+.footer-downloads li{padding:.32rem 0;border-bottom:1px solid rgba(255,255,255,0.06);}
+.footer-downloads a{color:rgba(255,255,255,0.65);text-decoration:none;font-size:.82rem;transition:color .2s;}
+.footer-downloads a::before{content:'↓ ';color:var(--sky-blue);}
+.footer-downloads a:hover{color:var(--orange);}
+.news-item{padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:.8rem;color:rgba(255,255,255,0.65);line-height:1.5;}
+.news-item::before{content:'● ';color:var(--orange);font-size:.55rem;vertical-align:middle;}
+.footer-bottom{max-width:1200px;margin:0 auto;padding:1rem 0;border-top:1px solid rgba(255,255,255,0.08);text-align:center;}
+.footer-copyright{font-size:.78rem;color:rgba(255,255,255,0.35);}
+.footer-copyright a{color:var(--sky-blue);text-decoration:none;}
+
+/* BACK TO TOP */
+#btt{position:fixed;bottom:2rem;right:2rem;z-index:999;width:40px;height:40px;border-radius:4px;background:var(--orange);color:var(--white);display:none;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer;text-decoration:none;box-shadow:0 4px 15px rgba(0,0,0,0.2);transition:background .2s,transform .2s;font-weight:700;}
+#btt.show{display:flex;}
+#btt:hover{background:var(--dark-blue);transform:translateY(-3px);}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* RESPONSIVE */
+@media(max-width:1024px){.footer-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:768px){
+  .dates-grid{grid-template-columns:1fr;}
+  .nav-menu{display:none;flex-direction:column;position:absolute;top:70px;left:0;right:0;background:var(--white);box-shadow:0 8px 20px rgba(0,0,0,0.1);height:auto;padding:1rem 0;z-index:999;}
+  .nav-menu.open{display:flex;}
+  .nav-item{height:auto;flex-direction:column;align-items:flex-start;}
+  .nav-item>a{padding:.7rem 1.5rem;height:auto;border-bottom:1px solid var(--border);width:100%;}
+  .dropdown{position:static;box-shadow:none;border-top:none;border-left:3px solid var(--orange);margin-left:1.5rem;}
+  .hamburger{display:flex;}
+  .nav-inner{position:relative;}
+  .footer-grid{grid-template-columns:1fr;}
+}
+@media(max-width:500px){section{padding:2.5rem 0;}}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-item">🕐 Conference: 10–12 November 2027, Béni Mellal, Morocco</div>
+  <div class="topbar-item">📞 Contact: acmcst@usms.ma</div>
+</div>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <img src="logo-acmcst.png" alt="ACMCST" onerror="this.style.display='none'">
+    </a>
+    <ul class="nav-menu" id="navMenu">
+      <li class="nav-item"><a href="index.html">HOME</a></li>
+      <li class="nav-item">
+        <a href="cfp.html">CALL FOR PAPERS <span class="ch">▾</span></a>
+        <div class="dropdown">
+          <a href="cfp.html">Conference Topics</a>
+          <a href="cfp.html#special">Special Session</a>
+        </div>
+      </li>
+      <li class="nav-item"><a href="speakers.html">KEYNOTE SPEAKERS</a></li>
+      <li class="nav-item active"><a href="dates.html">IMPORTANT DATES</a></li>
+      <li class="nav-item">
+        <a href="committees.html">COMMITTEES <span class="ch">▾</span></a>
+        <div class="dropdown">
+          <a href="committees.html#organizing">Organizing Committee</a>
+          <a href="committees.html#technical">Technical Committee</a>
+          <a href="committees.html#scientific">Scientific Committee</a>
+        </div>
+      </li>
+      <li class="nav-item"><a href="venue.html">ACCESS MAP</a></li>
+      <li class="nav-item"><a href="submission.html">SUBMISSION</a></li>
+      <li class="nav-item"><a href="registration.html">REGISTRATION</a></li>
+            <li class="nav-item"><a href="previous-edition.html">PREVIOUS EDITION</a></li>
+
+    </ul>
+    <div class="hamburger" onclick="document.getElementById('navMenu').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <h1>Important Dates</h1>
+  <p>ACMCST 2027 — International Conference | Béni Mellal, Morocco</p>
+  <div class="breadcrumb">
+    <a href="index.html">Home</a>
+    <span>›</span>
+    <span>Important Dates</span>
+  </div>
+</div>
+
+<!-- INTRO -->
+<div class="intro-section">
+  <div class="container">
+    <div class="intro-text reveal">
+      <p>Submissions to <strong>ACMCST 2027</strong> must be original works. The submission, or a substantially similar version, must not have been previously published or accepted in any journal or conference proceedings. Furthermore, submissions must not be under concurrent consideration for publication or presentation at another venue. The important dates of ACMCST 2027 are the following:</p>
+    </div>
+  </div>
+</div>
+
+<!-- DATES -->
+<section id="dates">
+  <div class="container">
+    <div class="dates-grid">
+
+      <!-- Submission Deadline -->
+      <div class="date-card reveal">
+        <div class="date-icon">
+          <img src="date-icon1.png" alt="Submission" onerror="this.outerHTML='<div class=dif>⏳</div>'">
+        </div>
+        <div class="date-info">
+          <div class="date-label">Paper Submission Deadline</div>
+          <div class="date-value js-hide-when-deadline-extended">July 31, 2027</div>
+          <div class="js-toggle-deadline-banner" style="display:none;">
+            <div class="date-value striked">July 31, 2027</div>
+            <div class="date-value-new">August 15, 2027</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notification of Acceptance -->
+      <div class="date-card reveal">
+        <div class="date-icon">
+          <img src="date-icon2.png" alt="Notification" onerror="this.outerHTML='<div class=dif>🔔</div>'">
+        </div>
+        <div class="date-info">
+          <div class="date-label">Notification of Acceptance</div>
+          <div class="date-value">September 15, 2027</div>
+        </div>
+      </div>
+
+      <!-- Camera Ready -->
+      <div class="date-card reveal">
+        <div class="date-icon">
+          <img src="date-icon3.png" alt="Camera Ready" onerror="this.outerHTML='<div class=dif>📝</div>'">
+        </div>
+        <div class="date-info">
+          <div class="date-label">Camera-Ready Paper Deadline</div>
+          <div class="date-value">October 15, 2027</div>
+        </div>
+      </div>
+
+      <!-- Author Registration -->
+      <div class="date-card reveal">
+        <div class="date-icon">
+          <img src="date-icon4.png" alt="Registration" onerror="this.outerHTML='<div class=dif>✍️</div>'">
+        </div>
+        <div class="date-info">
+          <div class="date-label">Regular Registration Deadline</div>
+          <div class="date-value">October 15, 2027</div>
+        </div>
+      </div>
+
+      <!-- Early Bird Payment -->
+      <div class="date-card reveal">
+        <div class="date-icon">
+          <img src="date-icon5.png" alt="Early Bird" onerror="this.outerHTML='<div class=dif>🐦</div>'">
+        </div>
+        <div class="date-info">
+          <div class="date-label">Early Bird Payment Deadline</div>
+          <div class="date-value">October 5, 2027</div>
+        </div>
+      </div>
+
+      <!-- Conference Days -->
+      <div class="date-card reveal">
+        <div class="date-icon">
+          <img src="date-icon6.png" alt="Conference" onerror="this.outerHTML='<div class=dif>📅</div>'">
+        </div>
+        <div class="date-info">
+          <div class="date-label">Conference Days</div>
+          <div class="date-value">10, 11 and 12 November 2027</div>
+        </div>
+      </div>
+
+    </div>
+
+
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <h4>Contact Us</h4>
+      <div class="footer-contact-block">
+        <div class="footer-avatar">👤</div>
+        <div class="fc-info">
+          <div class="fc-name">Dr. SAIH Mohamed</div>
+          <a href="mailto:acmcst@usms.ma">acmcst@usms.ma</a>
+          <a href="http://www.acmcst.com">www.acmcst.com</a>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <ul class="footer-links">
+        <li><a href="cfp.html">Call for Papers</a></li>
+        <li><a href="speakers.html">Keynote Speakers</a></li>
+        <li><a href="submission.html">Submission</a></li>
+        <li><a href="registration.html">Registration</a></li>
+        <li><a href="venue.html">Access Map</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Downloads</h4>
+      <ul class="footer-downloads">
+        <li><a href="program.pdf">Conference Program</a></li>
+          <li><a href="CFP.pdf">CFP Flyer (PDF)</a></li>
+          <li><a href="Microsoft+Word+Proceedings+Templates.zip">Springer Template (Word)</a></li>
+          <li><a href="LaTeX2e+Proceedings+Templates.zip">Springer Template (LaTeX)</a></li>
+          <li class="js-toggle-copyright" style="display:none;"><a href="copyright.docx">Copyright Transfer Form</a></li>
+
+      </ul>
+    </div>
+    <div>
+      <h4>Recent News</h4>
+      <div class="news-item">ACMCST 2027 will take place on November 10–12, 2027, in Béni Mellal, Morocco.</div>
+      <div class="news-item">Paper submission is now open. Deadline: July 31, 2027.</div>
+      <div class="news-item">ACMCST'25 proceedings are now available on SpringerLink.</div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copyright">
+      © 2027 <a href="http://www.acmcst.com">ACMCST</a>. All rights reserved. <a href="http://www.acmcst.com">www.acmcst.com</a>
+    </div>
+  </div>
+</footer>
+
+<a href="#" id="btt" title="Back to top">↑</a>
+
+<script>
+window.addEventListener('scroll',()=>{document.getElementById('btt').classList.toggle('show',window.scrollY>400);});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="site-toggles.js?v=2"></script>
+</body>
+</html>

@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACMCST 2027 — Paper Review</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --dark-blue:#0d2137;--mid-blue:#1a4a7a;--sky-blue:#2e9fd4;--orange:#e07b20;
+    --bg:#0a0f1a;--white:#ffffff;--text:#ffffff;--muted:#8a9ab0;
+    --success:#1a7a4a;--danger:#c0392b;--border:#1e3a5a;--card-bg:#0d2137;--input-bg:#0f1e30;--pending:#f59e0b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Source Sans 3',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+  #login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0a0f1a 0%,#0d2137 100%);}
+  .login-box{background:#0d2137;border-radius:16px;padding:2.5rem 2rem;width:100%;max-width:380px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5);border:1px solid var(--border);}
+  .login-box .logo-title{font-family:'Merriweather',serif;font-size:1.4rem;color:var(--white);margin-bottom:0.3rem;}
+  .login-box .logo-sub{font-size:0.85rem;color:var(--muted);margin-bottom:2rem;}
+  .lock-icon{width:60px;height:60px;background:var(--sky-blue);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;}
+  .lock-icon svg{width:28px;height:28px;fill:var(--white);}
+  .login-box input[type="email"],.login-box input[type="password"]{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:8px;font-size:1rem;font-family:inherit;margin-bottom:1rem;outline:none;text-align:center;background:var(--input-bg);color:var(--white);}
+  .login-box input[type="password"]{letter-spacing:4px;}
+  .login-box input[type="email"]:focus,.login-box input[type="password"]:focus{border-color:var(--sky-blue);}
+  .login-btn{width:100%;padding:12px;background:var(--sky-blue);color:var(--white);border:none;border-radius:8px;font-size:1rem;font-family:inherit;font-weight:600;cursor:pointer;}
+  .login-btn:hover{background:var(--mid-blue);}
+  .login-btn:disabled{opacity:0.6;cursor:not-allowed;}
+  .login-error{color:#ff6b6b;font-size:0.85rem;margin-top:0.75rem;display:none;}
+  #main-app{display:none;}
+  .topbar{background:#060c14;color:var(--white);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--border);}
+  .topbar-title{font-family:'Merriweather',serif;font-size:1rem;}
+  .topbar-title span{color:var(--sky-blue);}
+  .topbar-right{display:flex;gap:10px;align-items:center;}
+  .admin-link{background:var(--orange);color:var(--white);padding:6px 14px;border-radius:6px;font-size:0.85rem;text-decoration:none;font-weight:600;}
+  .assignments-link{background:var(--mid-blue);color:var(--white);padding:6px 14px;border-radius:6px;font-size:0.85rem;text-decoration:none;font-weight:600;}
+  .logout-btn{background:transparent;border:1px solid var(--border);color:var(--white);padding:6px 14px;border-radius:6px;font-size:0.85rem;cursor:pointer;font-family:inherit;}
+  .logout-btn:hover{background:var(--border);}
+  .container{max-width:1100px;margin:0 auto;padding:2rem 1rem;}
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1.5rem;}
+  .stat-card{border-radius:10px;padding:1.2rem;text-align:center;border:1px solid var(--border);}
+  .stat-card.total{background:#0d2137;}
+  .stat-card.pending{background:#7c4a00;}
+  .stat-card.accepted{background:#0a4a2a;}
+  .stat-card.rejected{background:#5a1010;}
+  .stat-card .num{font-size:1.8rem;font-weight:700;color:var(--white);}
+  .stat-card .lbl{font-size:0.78rem;color:rgba(255,255,255,0.6);margin-top:2px;}
+
+  /* IMPORT SECTION */
+  .import-card{background:var(--card-bg);border-radius:12px;padding:1.25rem;border:1px solid var(--border);margin-bottom:1.5rem;}
+  .import-card-title{font-size:0.9rem;font-weight:700;color:var(--sky-blue);margin-bottom:1rem;padding-bottom:8px;border-bottom:1px solid var(--border);}
+  .import-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+  .btn-orange{background:var(--orange);color:var(--white);padding:9px 18px;border:none;border-radius:8px;font-size:0.88rem;font-family:inherit;font-weight:600;cursor:pointer;}
+  .btn-orange:hover{background:#c96d18;}
+
+  .form-container{background:var(--card-bg);border-radius:12px;padding:1.5rem;border:1px solid var(--border);margin-bottom:1.5rem;}
+  .form-title{font-size:1rem;font-weight:700;color:var(--white);margin-bottom:1.2rem;padding-bottom:10px;border-bottom:2px solid var(--sky-blue);display:flex;align-items:center;gap:8px;}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+  .form-group{display:flex;flex-direction:column;gap:6px;}
+  .form-group.full{grid-column:1/-1;}
+  .form-group label{font-size:0.78rem;font-weight:700;color:var(--sky-blue);text-transform:uppercase;letter-spacing:1px;}
+  .form-group input,.form-group select,.form-group textarea{padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:0.9rem;font-family:inherit;outline:none;background:var(--input-bg);color:var(--white);transition:border-color 0.2s;}
+  .form-group input::placeholder,.form-group textarea::placeholder{color:var(--muted);}
+  .form-group input:focus,.form-group textarea:focus{border-color:var(--sky-blue);}
+  .form-group textarea{resize:vertical;min-height:100px;}
+  .decision-label{font-size:0.78rem;font-weight:700;color:var(--sky-blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+  .decision-row{display:flex;gap:10px;}
+  .decision-btn{flex:1;padding:12px;border:2px solid var(--border);border-radius:8px;font-size:0.9rem;font-family:inherit;font-weight:700;cursor:pointer;background:var(--input-bg);color:var(--muted);transition:all 0.2s;}
+  .decision-btn:hover{border-color:var(--sky-blue);color:var(--white);}
+  .decision-btn.accepted{border-color:#2ecc71;background:rgba(46,204,113,0.15);color:#2ecc71;}
+  .decision-btn.rejected{border-color:#e74c3c;background:rgba(231,76,60,0.15);color:#e74c3c;}
+  .decision-btn.horssujet{border-color:#9b59b6;background:rgba(155,89,182,0.15);color:#9b59b6;}
+  .hors-sujet-official{background:var(--input-bg);border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--muted);font-size:0.85rem;line-height:1.6;}
+  .status-sent-horssujet{background:rgba(155,89,182,0.15);color:#9b59b6;border-color:rgba(155,89,182,0.5);}
+  .decision-btn.acceptedposter{border-color:#2e9fd4;background:rgba(46,159,212,0.15);color:#2e9fd4;}
+  .decision-btn.origin-active{border-color:#9b59b6;background:rgba(155,89,182,0.15);color:#9b59b6;}
+  .status-sent-acceptedposter{background:rgba(46,159,212,0.15);color:#2e9fd4;border-color:rgba(46,159,212,0.5);}
+  .btn-row{display:flex;gap:10px;margin-top:16px;justify-content:flex-end;}
+  .btn{padding:10px 20px;border:none;border-radius:8px;font-size:0.9rem;font-family:inherit;font-weight:600;cursor:pointer;}
+  .btn-sky{background:var(--sky-blue);color:var(--white);}
+  .btn-sky:hover{background:var(--mid-blue);}
+  .btn-outline{background:transparent;color:var(--muted);border:1.5px solid var(--border);}
+  .btn-outline:hover{background:var(--border);color:var(--white);}
+  .controls{background:var(--card-bg);border-radius:10px;padding:1.25rem;border:1px solid var(--border);margin-bottom:1rem;display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+  .search-input{flex:1;min-width:200px;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:0.95rem;font-family:inherit;outline:none;background:var(--input-bg);color:var(--white);}
+  .search-input::placeholder{color:var(--muted);}
+  .search-input:focus{border-color:var(--sky-blue);}
+  .filter-btns{display:flex;gap:6px;flex-wrap:wrap;}
+  .filter-btn{padding:8px 14px;border-radius:20px;border:1.5px solid var(--border);background:transparent;font-size:0.82rem;font-family:inherit;cursor:pointer;color:var(--muted);font-weight:600;}
+  .filter-btn:hover{border-color:var(--sky-blue);color:var(--sky-blue);}
+  .filter-btn.active{background:var(--sky-blue);color:var(--white);border-color:var(--sky-blue);}
+  .papers-grid{display:grid;gap:12px;}
+  .paper-card{background:var(--card-bg);border-radius:10px;border:1px solid var(--border);padding:1.25rem;transition:border-color 0.2s,box-shadow 0.2s;}
+  .paper-card.ready{background:rgba(224,123,32,0.25);border-color:rgba(224,123,32,0.6);}
+  .paper-card:hover{border-color:var(--sky-blue);box-shadow:0 4px 20px rgba(46,159,212,0.1);}
+  .paper-card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;gap:12px;}
+  .paper-id{font-size:0.72rem;font-weight:700;color:var(--sky-blue);letter-spacing:1px;text-transform:uppercase;}
+  .paper-title{font-size:0.95rem;font-weight:700;color:var(--white);margin-top:2px;}
+  .paper-email{font-size:0.82rem;color:var(--muted);margin-top:4px;}
+  .paper-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+  .meta-badge{font-size:0.72rem;padding:4px 12px;border-radius:20px;font-weight:700;border:1px solid;}
+  .meta-ith{background:rgba(224,123,32,0.1);color:#f0a050;border-color:rgba(224,123,32,0.3);}
+  .status-badge{font-size:0.72rem;padding:5px 14px;border-radius:20px;font-weight:700;white-space:nowrap;border:1px solid;}
+  .status-pending{background:rgba(245,158,11,0.1);color:#f59e0b;border-color:rgba(245,158,11,0.3);}
+.status-complete{background:rgba(224,123,32,0.25);color:#e07b20;border-color:rgba(224,123,32,0.6);}
+.status-sent-accepted{background:rgba(255,255,255,0.15);color:#ffffff;border-color:#ffffff;}
+  .status-sent-rejected{background:rgba(231,76,60,0.1);color:#e74c3c;border-color:rgba(231,76,60,0.3);}
+  .reviews-list{display:flex;flex-direction:column;gap:8px;margin-top:12px;}
+  .review-item{background:#060c14;border-radius:8px;padding:10px 14px;border:1px solid var(--border);}
+  .review-item-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:4px;}
+  .review-num{font-size:0.72rem;font-weight:700;color:var(--sky-blue);text-transform:uppercase;}
+  .review-score{font-size:0.78rem;font-weight:700;}
+  .review-comment{font-size:0.82rem;color:var(--muted);white-space:pre-wrap;line-height:1.5;}
+  .review-empty{font-size:0.8rem;color:var(--muted);font-style:italic;}
+  .paper-actions{display:flex;gap:8px;margin-top:12px;justify-content:flex-end;}
+  .action-btn{padding:8px 16px;border-radius:6px;font-size:0.82rem;font-family:inherit;font-weight:700;cursor:pointer;border:none;}
+  .action-view{background:var(--mid-blue);color:var(--white);}
+  .action-view:hover{background:var(--sky-blue);}
+  .action-send{background:rgba(46,204,113,0.2);color:#2ecc71;border:1px solid rgba(46,204,113,0.4);}
+  .action-send:hover{background:rgba(46,204,113,0.35);}
+  .action-send:disabled{background:rgba(255,255,255,0.05);color:var(--muted);border-color:var(--border);cursor:not-allowed;}
+  .action-delete{background:rgba(231,76,60,0.1);color:#e74c3c;border:1px solid rgba(231,76,60,0.3);border-radius:6px;padding:7px 12px;font-size:0.82rem;cursor:pointer;font-weight:700;}
+  .action-delete:hover{background:rgba(231,76,60,0.25);}
+  .empty-state{text-align:center;padding:3rem;color:var(--muted);}
+  .loading{text-align:center;padding:2rem;color:var(--muted);}
+  #toast{position:fixed;bottom:2rem;right:2rem;padding:12px 20px;border-radius:8px;font-size:0.9rem;font-weight:600;color:var(--white);z-index:9999;transform:translateY(100px);opacity:0;transition:all 0.3s;max-width:320px;}
+  #toast.show{transform:translateY(0);opacity:1;}
+  #toast.success{background:#1a7a4a;}
+  #toast.error{background:#c0392b;}
+  #toast.info{background:var(--sky-blue);}
+  @media(max-width:640px){
+    .stats-grid{grid-template-columns:repeat(2,1fr);}
+    .form-grid{grid-template-columns:1fr;}
+    .topbar{padding:1rem;}
+    .container{padding:1rem;}
+  }
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-box">
+    <div class="lock-icon"><svg viewBox="0 0 24 24"><path d="M12 1C9.24 1 7 3.24 7 6v2H5c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2h-2V6c0-2.76-2.24-5-5-5zm0 2c1.66 0 3 1.34 3 3v2H9V6c0-1.66 1.34-3 3-3zm0 9c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"/></svg></div>
+    <div class="logo-title">ACMCST <span style="color:var(--orange)">2027</span></div>
+    <div class="logo-sub">Paper Review Management — Restricted Access</div>
+    <input type="email" id="email-input" placeholder="Email" onkeydown="if(event.key==='Enter')document.getElementById('pwd-input').focus()"/>
+    <input type="password" id="pwd-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkLogin()"/>
+    <button class="login-btn" id="login-btn" onclick="checkLogin()">Access</button>
+    <div class="login-error" id="login-error">Incorrect email or password</div>
+  </div>
+</div>
+
+<div id="main-app">
+  <div class="topbar">
+    <div class="topbar-title">ACMCST <span>2027</span> — Paper Review Management</div>
+    <div class="topbar-right">
+      <a href="assignments.html" class="assignments-link" style="background:var(--mid-blue);">📋 Assignments</a>
+      <a href="review.html" class="admin-link" style="background:#1a7a4a;">📄 Reviewing Papers</a>
+      <a href="reviewers.html" class="admin-link" style="background:var(--mid-blue);">👥 Reviewers</a>
+      <a href="Attestations.html" class="admin-link" style="background:var(--mid-blue);">🏅 Attestations</a>
+      <a href="payments.html" class="admin-link" style="background:var(--orange);">💰 Payments</a>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card total"><div class="num" id="stat-total">0</div><div class="lbl">Total Papers</div></div>
+      <div class="stat-card pending"><div class="num" id="stat-pending">0</div><div class="lbl">En attente</div></div>
+      <div class="stat-card accepted"><div class="num" id="stat-accepted">0</div><div class="lbl">Accepted</div></div>
+      <div class="stat-card rejected"><div class="num" id="stat-rejected">0</div><div class="lbl">Rejected</div></div>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;margin-bottom:1rem;">
+      <button class="btn btn-sky" onclick="exportDecisionsExcel()">📥 Télécharger le rapport Excel</button>
+    </div>
+
+    <!-- IMPORT CMT -->
+    <!-- FORM -->
+    <div class="form-container">
+      <div class="form-title" id="form-title">➕ Add New Paper</div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Paper ID *</label>
+          <input type="text" id="f-paperid" placeholder="e.g. 663168"/>
+        </div>
+        <div class="form-group">
+          <label>Author Email *</label>
+          <input type="email" id="f-email" placeholder="author@university.edu"/>
+        </div>
+        <div class="form-group full">
+          <label>Paper Title *</label>
+          <input type="text" id="f-titre" placeholder="Full paper title"/>
+        </div>
+        <div class="form-group">
+          <label>iThenticate Similarity (%)</label>
+          <input type="number" id="f-ith" placeholder="e.g. 15" min="0" max="100"/>
+        </div>
+        <div class="form-group">
+          <div class="decision-label">Decision</div>
+          <div class="decision-row">
+            <button class="decision-btn" id="btn-accepted" onclick="setDecision('Accepted')">✅ Accepted</button>
+            <button class="decision-btn" id="btn-rejected" onclick="setDecision('Rejected')">❌ Rejected</button>
+            <button class="decision-btn" id="btn-horssujet" onclick="setDecision('Hors_Sujet')">🚫 Hors Sujet</button>
+            <button class="decision-btn" id="btn-acceptedposter" onclick="setDecision('Accepted_Poster')">📋 Accepted (Poster)</button>
+          </div>
+        </div>
+        <div class="form-group full" id="hors-sujet-block" style="display:none;">
+          <label>Message officiel envoyé (fixe)</label>
+          <div class="hors-sujet-official">After careful review, we regret to inform you that your paper does not fall within the scope of ACMCST 2027. We encourage you to submit your work to a more suitable venue.</div>
+          <label style="margin-top:10px;">Remarque optionnelle du chair (ajoutée à la fin du message officiel)</label>
+          <textarea id="f-hors-sujet-remark" placeholder="Optionnel — ajouté à la fin du message officiel si rempli" style="min-height:70px;"></textarea>
+        </div>
+        <div class="form-group full" id="origin-block" style="display:none;">
+          <label>Participant Origin *</label>
+          <div class="decision-row" style="margin-top:6px;">
+            <button type="button" class="decision-btn" id="btn-origin-moroccan" onclick="setParticipantOrigin('Moroccan')">🇲🇦 Moroccan</button>
+            <button type="button" class="decision-btn" id="btn-origin-international" onclick="setParticipantOrigin('International')">🌍 International</button>
+          </div>
+          <p style="color:var(--muted);font-size:0.78rem;margin-top:6px;">Required for Accepted / Accepted (Poster) — determines which camera-ready link is sent. "Send Decision" stays disabled until this is set and saved.</p>
+        </div>
+      </div>
+
+      <p style="color:var(--muted);font-size:0.82rem;">
+        ℹ️ Les scores et commentaires des reviewers ne se saisissent plus ici — ils arrivent automatiquement quand chaque reviewer soumet sa review depuis son lien personnel. Tu les verras apparaître sous chaque papier ci-dessous dès qu'ils sont reçus.
+      </p>
+
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="resetForm()">Cancel</button>
+        <button class="btn btn-sky" id="save-btn" onclick="savePaper()">Save Paper</button>
+        <button class="btn" id="save-send-btn" style="display:none;background:#9b59b6;color:#fff;" onclick="saveAndSendHorsSujet()">📧 Enregistrer et Envoyer</button>
+      </div>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="controls">
+      <input type="text" class="search-input" id="search-input" placeholder="Search by ID or title..." oninput="renderPapers()"/>
+      <div class="filter-btns">
+        <button class="filter-btn active" onclick="setFilter('All')">All</button>
+        <button class="filter-btn" onclick="setFilter('En attente')">⏳ En attente</button>
+        <button class="filter-btn" onclick="setFilter('Complet')">📋 Complet</button>
+        <button class="filter-btn" onclick="setFilter('Envoyé')">✅ Envoyé</button>
+      </div>
+    </div>
+
+    <!-- PAPERS LIST -->
+    <div class="papers-grid" id="papers-grid">
+      <div class="loading">Loading papers...</div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="camera-ready-config.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+let papers = [];
+let currentFilter = 'All';
+let editingId = null;
+let selectedDecision = '';
+let selectedParticipantOrigin = '';
+let cameraReadyPaperIds = new Set();
+
+// Un seul appel (RPC sur le projet Supabase séparé, dédié au stockage
+// camera-ready) pour savoir quels papiers ont déjà une soumission — pas
+// d'appel par papier, et ne renvoie que des paper_id (jamais de données
+// personnelles), donc utilisable sans risque avec la clé anon publique.
+async function loadCameraReadyStatus() {
+  try {
+    const { data, error } = await crSb.rpc('registered_paper_ids', { p_conference: 'ACMCST' });
+    if (error) throw error;
+    cameraReadyPaperIds = new Set((data || []).map(String));
+  } catch (e) { console.error('Camera-ready status check failed:', e); }
+}
+
+async function checkLogin() {
+  const email = document.getElementById('email-input').value.trim();
+  const pwd = document.getElementById('pwd-input').value;
+  const btn = document.getElementById('login-btn');
+  btn.disabled = true; btn.textContent = 'Signing in...';
+  const { error } = await sb.auth.signInWithPassword({ email, password: pwd });
+  btn.disabled = false; btn.textContent = 'Access';
+  if (error) {
+    document.getElementById('login-error').textContent = error.message;
+    document.getElementById('login-error').style.display = 'block';
+    return;
+  }
+  document.getElementById('login-error').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('main-app').style.display = 'block';
+  loadPapers();
+}
+
+async function logout() {
+  await sb.auth.signOut();
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('main-app').style.display = 'none';
+}
+
+(async function initSession() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('main-app').style.display = 'block';
+    loadPapers();
+  }
+})();
+
+async function loadPapers() {
+  try {
+    const { data, error } = await sb.from('papers')
+      .select('id, paper_id, titre, email_auteur, nom_auteur, prenom_auteur, ithenticate, decision, decision_remark, participant_origin, statut, date_envoi_decision, assignments(id, num_reviewer, score, commentaire, statut, reviewer:reviewers(nom, prenom, email))')
+      .order('created_at');
+    if (error) throw error;
+    papers = data.map(p => ({
+      id: p.id, paperID: p.paper_id, titre: p.titre, email: p.email_auteur,
+      nomAuteur: p.nom_auteur, prenomAuteur: p.prenom_auteur,
+      ithenticate: p.ithenticate, decision: p.decision, decisionRemark: p.decision_remark,
+      participantOrigin: p.participant_origin, statut: p.statut,
+      dateEnvoiDecision: p.date_envoi_decision,
+      reviews: (p.assignments || []).slice().sort((a,b) => a.num_reviewer - b.num_reviewer).map(a => ({
+        id: a.id, numReviewer: a.num_reviewer, score: a.score, commentaire: a.commentaire,
+        statut: a.statut,
+        reviewerNom: a.reviewer ? a.reviewer.nom : '', reviewerPrenom: a.reviewer ? a.reviewer.prenom : '',
+        reviewerEmail: a.reviewer ? a.reviewer.email : ''
+      }))
+    }));
+    await loadCameraReadyStatus();
+    renderPapers(); updateStats();
+  } catch(e) { showToast('Connection error: ' + e.message, 'error'); }
+}
+
+// Bouton de test : vide papers/assignments/reviewers/participants pour repartir de zéro.
+function setDecision(d) {
+  selectedDecision = d;
+  document.getElementById('btn-accepted').className = 'decision-btn' + (d === 'Accepted' ? ' accepted' : '');
+  document.getElementById('btn-rejected').className = 'decision-btn' + (d === 'Rejected' ? ' rejected' : '');
+  document.getElementById('btn-horssujet').className = 'decision-btn' + (d === 'Hors_Sujet' ? ' horssujet' : '');
+  document.getElementById('btn-acceptedposter').className = 'decision-btn' + (d === 'Accepted_Poster' ? ' acceptedposter' : '');
+  document.getElementById('hors-sujet-block').style.display = d === 'Hors_Sujet' ? 'block' : 'none';
+  document.getElementById('save-send-btn').style.display = d === 'Hors_Sujet' ? 'inline-block' : 'none';
+  document.getElementById('origin-block').style.display = (d === 'Accepted' || d === 'Accepted_Poster') ? 'block' : 'none';
+}
+
+function setParticipantOrigin(o) {
+  selectedParticipantOrigin = o;
+  document.getElementById('btn-origin-moroccan').className = 'decision-btn' + (o === 'Moroccan' ? ' origin-active' : '');
+  document.getElementById('btn-origin-international').className = 'decision-btn' + (o === 'International' ? ' origin-active' : '');
+}
+
+function decisionMeta(decision) {
+  if (decision === 'Accepted') return { icon: '✅', label: 'Accepted', bg: 'rgba(46,204,113,0.1)', color: '#2ecc71', border: 'rgba(46,204,113,0.3)' };
+  if (decision === 'Hors_Sujet') return { icon: '🚫', label: 'Hors Sujet', bg: 'rgba(155,89,182,0.1)', color: '#9b59b6', border: 'rgba(155,89,182,0.3)' };
+  if (decision === 'Accepted_Poster') return { icon: '📋', label: 'Accepted (Poster)', bg: 'rgba(46,159,212,0.1)', color: '#2e9fd4', border: 'rgba(46,159,212,0.3)' };
+  return { icon: '❌', label: 'Rejected', bg: 'rgba(231,76,60,0.1)', color: '#e74c3c', border: 'rgba(231,76,60,0.3)' };
+}
+
+function computeStatut(p) {
+  if (p.decision === 'Hors_Sujet') return 'Complet';
+  if (p.reviews.length === 0) return 'En attente';
+  const allSubmitted = p.reviews.every(r => r.statut === 'Review reçue');
+  const hasIthenticate = p.ithenticate !== null && p.ithenticate !== undefined;
+  return (allSubmitted && p.decision && hasIthenticate) ? 'Complet' : 'En attente';
+}
+
+async function savePaper() {
+  const paperID = document.getElementById('f-paperid').value.trim();
+  const titre = document.getElementById('f-titre').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  const ithenticate = document.getElementById('f-ith').value.trim();
+  if (!paperID || !titre || !email) { showToast('Paper ID, Title and Email are required!', 'error'); return; }
+  const pData = {
+    paper_id: paperID, titre, email_auteur: email,
+    ithenticate: ithenticate ? Number(ithenticate) : null,
+    decision: selectedDecision || null,
+    decision_remark: document.getElementById('f-hors-sujet-remark').value.trim() || null,
+    participant_origin: selectedParticipantOrigin || null
+  };
+  const btn = document.getElementById('save-btn');
+  btn.textContent = 'Saving...'; btn.disabled = true;
+  try {
+    if (editingId) {
+      const { error } = await sb.from('papers').update(pData).eq('id', editingId);
+      if (error) throw error;
+      showToast('Paper updated!', 'success');
+    } else {
+      const { error } = await sb.from('papers').insert(pData);
+      if (error) throw error;
+      showToast('Paper saved!', 'success');
+    }
+    resetForm();
+    await loadPapers();
+  } catch(e) { showToast('Error: ' + e.message, 'error'); }
+  btn.textContent = editingId ? 'Update Paper' : 'Save Paper'; btn.disabled = false;
+}
+
+async function saveAndSendHorsSujet() {
+  const paperID = document.getElementById('f-paperid').value.trim();
+  const titre = document.getElementById('f-titre').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  const ithenticate = document.getElementById('f-ith').value.trim();
+  if (!paperID || !titre || !email) { showToast('Paper ID, Title and Email are required!', 'error'); return; }
+  if (!confirm('Enregistrer ce papier comme "Hors Sujet" et envoyer immédiatement l\'email à ' + email + ' ?')) return;
+  const pData = {
+    paper_id: paperID, titre, email_auteur: email,
+    ithenticate: ithenticate ? Number(ithenticate) : null,
+    decision: 'Hors_Sujet',
+    decision_remark: document.getElementById('f-hors-sujet-remark').value.trim() || null
+  };
+  const btn = document.getElementById('save-send-btn');
+  btn.textContent = 'Envoi...'; btn.disabled = true;
+  try {
+    let id = editingId;
+    if (id) {
+      const { error } = await sb.from('papers').update(pData).eq('id', id);
+      if (error) throw error;
+    } else {
+      const { data, error } = await sb.from('papers').insert(pData).select('id').single();
+      if (error) throw error;
+      id = data.id;
+    }
+    const { data: sendData, error: sendError } = await sb.functions.invoke('send-email', { body: { action: 'sendDecision', paperId: id } });
+    if (sendError) throw sendError;
+    if (!sendData || !sendData.succes) throw new Error((sendData && sendData.message) || 'Erreur inconnue');
+    resetForm();
+    await loadPapers();
+    showToast('Papier enregistré et email envoyé à ' + email + ' !', 'success');
+  } catch(e) { showToast('Error: ' + e.message, 'error'); }
+  btn.textContent = '📧 Enregistrer et Envoyer'; btn.disabled = false;
+}
+
+function editPaper(id) {
+  const p = papers.find(x => x.id == id);
+  if (!p) return;
+  editingId = id;
+
+  document.getElementById('form-title').textContent = '✏️ Edit Paper — ' + p.paperID;
+  document.getElementById('f-paperid').value = p.paperID || '';
+  document.getElementById('f-titre').value = p.titre || '';
+  document.getElementById('f-email').value = p.email || '';
+  document.getElementById('f-ith').value = p.ithenticate ?? '';
+  document.getElementById('f-hors-sujet-remark').value = p.decisionRemark || '';
+  document.getElementById('save-btn').textContent = 'Update Paper';
+  setDecision(p.decision || '');
+  setParticipantOrigin(p.participantOrigin || '');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function resetForm() {
+  editingId = null; selectedDecision = ''; selectedParticipantOrigin = '';
+  document.getElementById('form-title').textContent = '➕ Add New Paper';
+  document.getElementById('f-paperid').value = '';
+  document.getElementById('f-titre').value = '';
+  document.getElementById('f-email').value = '';
+  document.getElementById('f-ith').value = '';
+  document.getElementById('f-hors-sujet-remark').value = '';
+  document.getElementById('save-btn').textContent = 'Save Paper';
+  document.getElementById('btn-accepted').className = 'decision-btn';
+  document.getElementById('btn-rejected').className = 'decision-btn';
+  document.getElementById('btn-horssujet').className = 'decision-btn';
+  document.getElementById('btn-acceptedposter').className = 'decision-btn';
+  document.getElementById('btn-origin-moroccan').className = 'decision-btn';
+  document.getElementById('btn-origin-international').className = 'decision-btn';
+  document.getElementById('hors-sujet-block').style.display = 'none';
+  document.getElementById('origin-block').style.display = 'none';
+  document.getElementById('save-send-btn').style.display = 'none';
+}
+
+// =====================
+// RAPPORT EXCEL — 4 sheets par décision + 1 sheet Statistiques.
+// =====================
+function exportDecisionsExcel() {
+  const groups = { Accepted: [], Accepted_Poster: [], Rejected: [], Hors_Sujet: [] };
+  let pending = 0;
+  papers.forEach(p => {
+    if (p.decision && groups[p.decision]) groups[p.decision].push(p);
+    else if (!p.decision) pending++;
+  });
+
+  const toRow = (p) => [p.paperID, `${p.prenomAuteur || ''} ${p.nomAuteur || ''}`.trim(), p.email, p.titre];
+  const buildSheet = (list) => {
+    const ws = XLSX.utils.aoa_to_sheet([["Paper ID", "Nom de l'auteur", "Email de l'auteur", "Titre du papier"], ...list.map(toRow)]);
+    ws['!cols'] = [{ wch: 12 }, { wch: 25 }, { wch: 30 }, { wch: 60 }];
+    return ws;
+  };
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, buildSheet(groups.Accepted), 'Accepted');
+  XLSX.utils.book_append_sheet(wb, buildSheet(groups.Accepted_Poster), 'Accepted (Poster)');
+  XLSX.utils.book_append_sheet(wb, buildSheet(groups.Rejected), 'Rejected');
+  XLSX.utils.book_append_sheet(wb, buildSheet(groups.Hors_Sujet), 'Hors Sujet');
+
+  const total = papers.length;
+  const counts = [
+    ['Accepted', groups.Accepted.length],
+    ['Accepted (Poster)', groups.Accepted_Poster.length],
+    ['Rejected', groups.Rejected.length],
+    ['Hors Sujet', groups.Hors_Sujet.length],
+    ['En attente', pending],
+  ];
+  const statsRows = [['Décision', 'Nombre', 'Pourcentage'], ...counts.map(([label, n]) => [label, n, total ? `${((n / total) * 100).toFixed(1)}%` : '0%'])];
+  const wsStats = XLSX.utils.aoa_to_sheet(statsRows);
+  wsStats['!cols'] = [{ wch: 20 }, { wch: 10 }, { wch: 14 }];
+  XLSX.utils.book_append_sheet(wb, wsStats, 'Statistiques');
+
+  XLSX.writeFile(wb, 'rapport_decisions_ACMCST2027.xlsx');
+}
+
+function exportPaperReviewsExcel(id) {
+  const p = papers.find(x => x.id == id);
+  if (!p) return;
+
+  const rows = [
+    ['Paper ID', p.paperID],
+    ['Titre', p.titre],
+    ['Auteur(s)', (p.prenomAuteur || p.nomAuteur) ? (p.prenomAuteur + ' ' + p.nomAuteur).trim() : ''],
+    ['Email auteur', p.email],
+    ['Decision', p.decision || ''],
+    ['iThenticate (%)', p.ithenticate ?? ''],
+    [],
+  ];
+
+  if (p.reviews.length === 0) {
+    rows.push(['Aucun reviewer assigné']);
+  }
+  p.reviews.forEach(r => {
+    rows.push([`Reviewer ${r.numReviewer}`]);
+    rows.push(['Nom', r.reviewerNom]);
+    rows.push(['Prénom', r.reviewerPrenom]);
+    rows.push(['Email', r.reviewerEmail]);
+    rows.push(['Réponse (score)', r.score || '']);
+    rows.push(['Commentaire', r.commentaire || '']);
+    rows.push([]);
+  });
+
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols'] = [{ wch: 20 }, { wch: 70 }];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Reviews');
+  XLSX.writeFile(wb, `ACMCST2027_reviews_${p.paperID}.xlsx`);
+}
+
+async function sendDecision(id) {
+  const p = papers.find(x => x.id == id);
+  if (!p) return;
+  if (!p.decision) { showToast('Please set a decision before sending!', 'error'); return; }
+  if (p.decision !== 'Hors_Sujet') {
+    const allSubmitted = p.reviews.length > 0 && p.reviews.every(r => r.statut === 'Review reçue');
+    const hasIthenticate = p.ithenticate !== null && p.ithenticate !== undefined;
+    if (!allSubmitted) { showToast('Please wait for all reviews before sending!', 'error'); return; }
+    if (!hasIthenticate) { showToast('Please enter the iThenticate similarity percentage before sending!', 'error'); return; }
+  }
+  if ((p.decision === 'Accepted' || p.decision === 'Accepted_Poster') && !p.participantOrigin) {
+    showToast('Please set the Participant Origin (Moroccan/International) before sending!', 'error'); return;
+  }
+  if (!confirm('Send ' + p.decision + ' notification to ' + p.email + '?')) return;
+  showToast('Sending email...', 'info');
+  try {
+    const { data, error } = await sb.functions.invoke('send-email', {
+      body: { action: 'sendDecision', paperId: id }
+    });
+    if (error) throw error;
+    if (!data || !data.succes) throw new Error(data && data.message || 'Erreur inconnue');
+    await loadPapers();
+    showToast('Email sent to ' + p.email + '!', 'success');
+  } catch(e) { showToast('Error: ' + e.message, 'error'); }
+}
+
+async function deletePaper(id) {
+  const p = papers.find(x => x.id == id);
+  if (!p || !confirm('Delete paper ' + p.paperID + '?')) return;
+  try {
+    const { error } = await sb.from('papers').delete().eq('id', id);
+    if (error) throw error;
+    papers = papers.filter(x => x.id != id);
+    renderPapers(); updateStats();
+    showToast('Paper deleted!', 'info');
+  } catch(e) { showToast('Error: ' + e.message, 'error'); }
+}
+
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.classList.toggle('active',
+      (f === 'All' && btn.textContent === 'All') ||
+      btn.textContent.includes(f)
+    );
+  });
+  renderPapers();
+}
+
+function getStatusBadge(p) {
+  if (p.statut === 'Envoyé') {
+    if (p.decision === 'Accepted') return '<span class="status-badge status-sent-accepted">✅ Sent — Accepted</span>';
+    if (p.decision === 'Hors_Sujet') return '<span class="status-badge status-sent-horssujet">🚫 Sent — Hors Sujet</span>';
+    if (p.decision === 'Accepted_Poster') return '<span class="status-badge status-sent-acceptedposter">📋 Sent — Poster</span>';
+    return '<span class="status-badge status-sent-rejected">❌ Sent — Rejected</span>';
+  }
+  if (computeStatut(p) === 'Complet') return '<span class="status-badge status-complete">📋 Ready to Send</span>';
+  return '<span class="status-badge status-pending">⏳ En attente</span>';
+}
+
+function renderPapers() {
+  const search = document.getElementById('search-input').value.toLowerCase();
+  const grid = document.getElementById('papers-grid');
+  let filtered = papers.filter(p => {
+    const displayStatut = p.statut === 'Envoyé' ? 'Envoyé' : computeStatut(p);
+    const matchFilter = currentFilter === 'All' || displayStatut === currentFilter;
+    const matchSearch = (p.paperID||'').toString().toLowerCase().includes(search) || (p.titre||'').toLowerCase().includes(search) || (p.email||'').toLowerCase().includes(search);
+    return matchFilter && matchSearch;
+  });
+  if (filtered.length === 0) { grid.innerHTML = '<div class="empty-state">No papers found</div>'; return; }
+  grid.innerHTML = filtered.map(p => `
+<div class="paper-card ${computeStatut(p) === 'Complet' ? 'ready' : ''}">
+        <div class="paper-card-header">
+        <div style="flex:1">
+          <div class="paper-id">Paper ID: ${p.paperID}</div>
+          <div class="paper-title">${p.titre}</div>
+          <div class="paper-email">📧 ${p.email}</div>
+        </div>
+        ${getStatusBadge(p)}
+      </div>
+      <div class="paper-meta">
+        ${p.ithenticate ? `<span class="meta-badge meta-ith">iThenticate: ${p.ithenticate}%</span>` : ''}
+        ${p.decision ? (() => { const m = decisionMeta(p.decision); return `<span class="meta-badge" style="background:${m.bg};color:${m.color};border-color:${m.border}">${m.icon} ${m.label}</span>`; })() : ''}
+        ${cameraReadyPaperIds.has(String(p.paperID)) ? `<span class="meta-badge" style="background:rgba(46,159,212,0.1);color:#2e9fd4;border-color:rgba(46,159,212,0.3);">📎 Camera-Ready reçu</span>` : ''}
+      </div>
+      <div class="reviews-list">
+        ${p.reviews.length === 0 ? '<div class="review-empty">Aucun reviewer assigné pour ce papier (voir Assignments)</div>' : p.reviews.map(r => `
+          <div class="review-item">
+            <div class="review-item-head">
+              <span class="review-num">Reviewer ${r.numReviewer}${r.reviewerNom ? ' — ' + (r.reviewerNom + ' ' + r.reviewerPrenom).trim() : ''}</span>
+              ${r.statut === 'Review reçue'
+                ? `<span class="review-score" style="color:${(r.score||'').includes('Reject')?'#e74c3c':'#2ecc71'}">${r.score}</span>`
+                : `<span class="review-score" style="color:#f59e0b">⏳ En attente</span>`}
+            </div>
+            ${r.commentaire ? `<div class="review-comment">${r.commentaire}</div>` : ''}
+          </div>
+        `).join('')}
+      </div>
+      <div class="paper-actions">
+<button class="action-btn action-view" onclick="editPaper('${p.id}')">✏️ Edit</button>
+<button class="action-btn" style="background:var(--sky-blue);color:var(--white);" onclick="exportPaperReviewsExcel('${p.id}')">📊 Export Excel</button>
+<button class="action-btn action-send" onclick="sendDecision('${p.id}')">
+          ${p.statut==='Envoyé'?'🔁 Renvoyer':'📧 Send Decision'}
+        </button>
+        <button class="action-delete" onclick="deletePaper('${p.id}')">🗑</button>
+      </div>
+    </div>`).join('');
+}
+
+function updateStats() {
+  const total = papers.length;
+  const pending = papers.filter(p => p.statut !== 'Envoyé' && computeStatut(p) !== 'Complet').length;
+  const accepted = papers.filter(p => p.statut === 'Envoyé' && p.decision === 'Accepted').length;
+  const rejected = papers.filter(p => p.statut === 'Envoyé' && p.decision === 'Rejected').length;
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-pending').textContent = pending;
+  document.getElementById('stat-accepted').textContent = accepted;
+  document.getElementById('stat-rejected').textContent = rejected;
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'show ' + type;
+  setTimeout(() => { t.className = ''; }, 3500);
+}
+</script>
+</body>
+</html>

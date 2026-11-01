@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACMCST 2027 — Reviewers</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --dark-blue:#0d2137;--mid-blue:#1a4a7a;--sky-blue:#2e9fd4;--orange:#e07b20;
+    --bg:#0a0f1a;--white:#ffffff;--text:#ffffff;--muted:#8a9ab0;
+    --border:#1e3a5a;--card-bg:#0d2137;--input-bg:#0f1e30;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Source Sans 3',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+  #login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0a0f1a 0%,#0d2137 100%);}
+  .login-box{background:#0d2137;border-radius:16px;padding:2.5rem 2rem;width:100%;max-width:380px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5);border:1px solid var(--border);}
+  .login-box .logo-title{font-family:'Merriweather',serif;font-size:1.4rem;color:var(--white);margin-bottom:0.3rem;}
+  .login-box .logo-sub{font-size:0.85rem;color:var(--muted);margin-bottom:2rem;}
+  .lock-icon{width:60px;height:60px;background:var(--sky-blue);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;}
+  .lock-icon svg{width:28px;height:28px;fill:var(--white);}
+  .login-box input[type="email"],.login-box input[type="password"]{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:8px;font-size:1rem;font-family:inherit;margin-bottom:1rem;outline:none;text-align:center;background:var(--input-bg);color:var(--white);}
+  .login-box input[type="password"]{letter-spacing:4px;}
+  .login-box input[type="email"]:focus,.login-box input[type="password"]:focus{border-color:var(--sky-blue);}
+  .login-btn{width:100%;padding:12px;background:var(--sky-blue);color:var(--white);border:none;border-radius:8px;font-size:1rem;font-family:inherit;font-weight:600;cursor:pointer;}
+  .login-btn:hover{background:var(--mid-blue);}
+  .login-btn:disabled{opacity:0.6;cursor:not-allowed;}
+  .login-error{color:#ff6b6b;font-size:0.85rem;margin-top:0.75rem;display:none;}
+  #main-app{display:none;}
+  .topbar{background:#060c14;color:var(--white);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--border);}
+  .topbar-title{font-family:'Merriweather',serif;font-size:1rem;}
+  .topbar-title span{color:var(--sky-blue);}
+  .topbar-right{display:flex;gap:10px;align-items:center;}
+  .nav-link{background:var(--orange);color:var(--white);padding:6px 14px;border-radius:6px;font-size:0.85rem;text-decoration:none;font-weight:600;}
+  .nav-link.blue{background:var(--mid-blue);}
+  .logout-btn{background:transparent;border:1px solid var(--border);color:var(--white);padding:6px 14px;border-radius:6px;font-size:0.85rem;cursor:pointer;font-family:inherit;}
+  .logout-btn:hover{background:var(--border);}
+  .container{max-width:1000px;margin:0 auto;padding:2rem 1rem;}
+  .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:1.5rem;}
+  .stat-card{background:var(--card-bg);border-radius:10px;padding:1rem;text-align:center;border:1px solid var(--border);}
+  .stat-card .num{font-size:1.8rem;font-weight:700;color:var(--white);}
+  .stat-card .lbl{font-size:0.78rem;color:var(--muted);margin-top:2px;}
+  .section-card{background:var(--card-bg);border-radius:12px;padding:1.25rem;border:1px solid var(--border);margin-bottom:1rem;}
+  .section-title{font-size:0.9rem;font-weight:700;color:var(--sky-blue);margin-bottom:1rem;padding-bottom:8px;border-bottom:1px solid var(--border);}
+  .import-section{display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+  .btn{padding:9px 18px;border:none;border-radius:8px;font-size:0.85rem;font-family:inherit;font-weight:600;cursor:pointer;white-space:nowrap;}
+  .btn-sky{background:var(--sky-blue);color:var(--white);}
+  .btn-sky:hover{background:var(--mid-blue);}
+  .btn-orange{background:var(--orange);color:var(--white);}
+  .btn-orange:hover{background:#c96d18;}
+  .btn-danger{background:rgba(231,76,60,0.1);color:#e74c3c;border:1px solid rgba(231,76,60,0.3);}
+  .btn-danger:hover{background:rgba(231,76,60,0.25);}
+  .search-input{flex:1;min-width:200px;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:0.95rem;font-family:inherit;outline:none;background:var(--input-bg);color:var(--white);margin-bottom:1rem;}
+  .search-input::placeholder{color:var(--muted);}
+  .search-input:focus{border-color:var(--sky-blue);}
+  .table-wrap{background:var(--card-bg);border-radius:10px;border:1px solid var(--border);overflow:hidden;}
+  table{width:100%;border-collapse:collapse;}
+  thead{background:#060c14;}
+  thead th{padding:12px 16px;text-align:left;font-size:0.78rem;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--sky-blue);}
+  tbody tr{border-bottom:1px solid var(--border);}
+  tbody tr:last-child{border-bottom:none;}
+  tbody tr:hover{background:rgba(46,159,212,0.05);}
+  tbody td{padding:12px 16px;font-size:0.9rem;color:var(--white);}
+  .delete-btn{padding:7px 10px;background:transparent;color:#e74c3c;border:1px solid rgba(231,76,60,0.4);border-radius:6px;font-size:0.82rem;cursor:pointer;}
+  .delete-btn:hover{background:rgba(231,76,60,0.1);}
+  .empty-state{text-align:center;padding:3rem;color:var(--muted);}
+  .loading{text-align:center;padding:2rem;color:var(--muted);}
+  #toast{position:fixed;bottom:2rem;right:2rem;padding:12px 20px;border-radius:8px;font-size:0.9rem;font-weight:600;color:var(--white);z-index:9999;transform:translateY(100px);opacity:0;transition:all 0.3s;max-width:320px;}
+  #toast.show{transform:translateY(0);opacity:1;}
+  #toast.success{background:#1a7a4a;}
+  #toast.error{background:#c0392b;}
+  #toast.info{background:var(--sky-blue);}
+  @media(max-width:640px){
+    .stats-grid{grid-template-columns:1fr;}
+    .topbar{padding:1rem;}
+    .container{padding:1rem;}
+  }
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-box">
+    <div class="lock-icon"><svg viewBox="0 0 24 24"><path d="M12 1C9.24 1 7 3.24 7 6v2H5c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2h-2V6c0-2.76-2.24-5-5-5zm0 2c1.66 0 3 1.34 3 3v2H9V6c0-1.66 1.34-3 3-3zm0 9c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"/></svg></div>
+    <div class="logo-title">ACMCST <span style="color:var(--orange)">2027</span></div>
+    <div class="logo-sub">Reviewers — Restricted Access</div>
+    <input type="email" id="email-input" placeholder="Email" onkeydown="if(event.key==='Enter')document.getElementById('pwd-input').focus()"/>
+    <input type="password" id="pwd-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkLogin()"/>
+    <button class="login-btn" id="login-btn" onclick="checkLogin()">Access</button>
+    <div class="login-error" id="login-error">Incorrect email or password</div>
+  </div>
+</div>
+
+<div id="main-app">
+  <div class="topbar">
+    <div class="topbar-title">ACMCST <span>2027</span> — Reviewers</div>
+    <div class="topbar-right">
+      <a href="assignments.html" class="nav-link" style="background:var(--mid-blue);">📋 Assignments</a>
+      <a href="review.html" class="nav-link" style="background:var(--mid-blue);">📄 Reviewing Papers</a>
+      <a href="reviewers.html" class="nav-link" style="background:#1a7a4a;">👥 Reviewers</a>
+      <a href="Attestations.html" class="nav-link" style="background:var(--mid-blue);">🏅 Attestations</a>
+      <a href="payments.html" class="nav-link" style="background:var(--orange);">💰 Payments</a>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card"><div class="num" id="stat-total">0</div><div class="lbl">Total Reviewers</div></div>
+      <div class="stat-card"><div class="num" id="stat-assigned">0</div><div class="lbl">Avec au moins 1 papier assigné</div></div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title">🔄 Synchroniser depuis Excel</div>
+      <div class="import-section">
+        <button class="btn btn-orange" id="sync-btn" onclick="syncFromExcel()">🔄 Synchroniser depuis Excel</button>
+        <button class="btn btn-danger" onclick="clearAllReviewers()">🗑 Tout supprimer</button>
+        <span style="color:var(--muted);font-size:0.82rem;">Importe le sheet "Scientific Committee" de ACMCST2027.xlsx — seuls les membres avec un email sont synchronisés (ajout/mise à jour/suppression automatiques).</span>
+      </div>
+    </div>
+
+    <input type="text" class="search-input" id="search-input" placeholder="Rechercher par nom ou email..." oninput="renderReviewers()"/>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>#</th><th>Nom & Prénom</th><th>Email</th><th>Papiers assignés</th><th>Action</th></tr>
+        </thead>
+        <tbody id="reviewers-tbody"><tr><td colspan="5"><div class="loading">Chargement...</div></td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+let reviewers = [];
+let assignmentCounts = {};
+
+async function checkLogin() {
+  const email = document.getElementById('email-input').value.trim();
+  const pwd = document.getElementById('pwd-input').value;
+  const btn = document.getElementById('login-btn');
+  btn.disabled = true; btn.textContent = 'Signing in...';
+  const { error } = await sb.auth.signInWithPassword({ email, password: pwd });
+  btn.disabled = false; btn.textContent = 'Access';
+  if (error) {
+    document.getElementById('login-error').textContent = error.message;
+    document.getElementById('login-error').style.display = 'block';
+    return;
+  }
+  document.getElementById('login-error').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('main-app').style.display = 'block';
+  loadAll();
+}
+
+async function logout() {
+  await sb.auth.signOut();
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('main-app').style.display = 'none';
+}
+
+(async function initSession() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('main-app').style.display = 'block';
+    loadAll();
+  }
+})();
+
+async function loadAll() {
+  try {
+    const { data, error } = await sb.from('reviewers').select('*').order('nom');
+    if (error) throw error;
+    reviewers = data;
+
+    const { data: assignments, error: aError } = await sb.from('assignments').select('reviewer_id');
+    if (aError) throw aError;
+    assignmentCounts = {};
+    (assignments || []).forEach(a => {
+      assignmentCounts[a.reviewer_id] = (assignmentCounts[a.reviewer_id] || 0) + 1;
+    });
+
+    renderReviewers();
+    updateStats();
+  } catch(e) { showToast('Erreur chargement: ' + e.message, 'error'); }
+}
+
+async function deleteReviewer(id) {
+  const r = reviewers.find(x => x.id === id);
+  if (!r) return;
+  const nbAssignments = assignmentCounts[id] || 0;
+  const warning = nbAssignments > 0
+    ? ` Ce reviewer a ${nbAssignments} papier(s) assigné(s) — ils seront supprimés aussi.`
+    : '';
+  if (!confirm('Supprimer ' + r.nom + ' ' + r.prenom + ' ?' + warning)) return;
+  try {
+    const { error } = await sb.from('reviewers').delete().eq('id', id);
+    if (error) throw error;
+    showToast(r.nom + ' supprimé !', 'info');
+    await loadAll();
+  } catch(e) { showToast('Erreur: ' + e.message, 'error'); }
+}
+
+async function clearAllReviewers() {
+  if (!confirm('⚠️ Supprimer TOUS les reviewers (et leurs assignments) ? Action irréversible.')) return;
+  try {
+    const ids = reviewers.map(r => r.id);
+    if (ids.length) {
+      const { error } = await sb.from('reviewers').delete().in('id', ids);
+      if (error) throw error;
+    }
+    showToast('Tous les reviewers ont été supprimés !', 'info');
+    await loadAll();
+  } catch(e) { showToast('Erreur: ' + e.message, 'error'); }
+}
+
+// ACMCST2027.xlsx (sheet "Scientific Committee") est la source de synchronisation des
+// reviewers : ajoute les nouveaux emails, met à jour nom/prénom si changés, et supprime
+// les reviewers dont l'email n'est plus présent avec un email dans ce sheet.
+async function syncFromExcel() {
+  const btn = document.getElementById('sync-btn');
+  btn.disabled = true;
+  btn.textContent = 'Synchronisation…';
+  try {
+    const res = await fetch('ACMCST2027.xlsx?v=' + Date.now());
+    if (!res.ok) throw new Error('ACMCST2027.xlsx introuvable dans le dossier du site.');
+    const buf = await res.arrayBuffer();
+    const wb = XLSX.read(buf, { type: 'array' });
+    const ws = wb.Sheets['Scientific Committee'];
+    if (!ws) throw new Error('Sheet "Scientific Committee" introuvable dans le fichier.');
+    const rows = XLSX.utils.sheet_to_json(ws, { defval: '' }).filter(r => r.Email && String(r.Email).trim());
+
+    const byEmail = new Map();
+    for (const r of rows) {
+      const email = String(r.Email).trim();
+      byEmail.set(email.toLowerCase(), { nom: String(r.Nom || '').trim(), prenom: String(r.Prenom || '').trim(), email });
+    }
+
+    let added = 0, updated = 0, removed = 0;
+
+    const toRemove = reviewers.filter(r => !r.email || !byEmail.has(r.email.toLowerCase()));
+    if (toRemove.length) {
+      const { error } = await sb.from('reviewers').delete().in('id', toRemove.map(r => r.id));
+      if (error) throw error;
+      removed = toRemove.length;
+    }
+
+    const existingByEmail = new Map(reviewers.filter(r => r.email).map(r => [r.email.toLowerCase(), r]));
+    const toInsert = [];
+    for (const [emailKey, row] of byEmail) {
+      const current = existingByEmail.get(emailKey);
+      if (!current) { toInsert.push(row); continue; }
+      if (current.nom !== row.nom || current.prenom !== row.prenom) {
+        const { error } = await sb.from('reviewers').update({ nom: row.nom, prenom: row.prenom }).eq('id', current.id);
+        if (error) throw error;
+        updated++;
+      }
+    }
+    if (toInsert.length) {
+      const { error } = await sb.from('reviewers').insert(toInsert);
+      if (error) throw error;
+      added = toInsert.length;
+    }
+
+    showToast(`${added} ajouté(s), ${updated} mis à jour, ${removed} supprimé(s).`, 'success');
+    await loadAll();
+  } catch (e) {
+    showToast('Erreur: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🔄 Synchroniser depuis Excel';
+  }
+}
+
+function renderReviewers() {
+  const search = document.getElementById('search-input').value.toLowerCase();
+  const tbody = document.getElementById('reviewers-tbody');
+  const filtered = reviewers.filter(r =>
+    (r.nom + ' ' + r.prenom).toLowerCase().includes(search) || r.email.toLowerCase().includes(search)
+  );
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state">Aucun reviewer trouvé.</div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = filtered.map((r, i) => {
+    const nb = assignmentCounts[r.id] || 0;
+    return `
+    <tr>
+      <td style="color:var(--muted)">${i+1}</td>
+      <td><strong>${r.nom}</strong> ${r.prenom}</td>
+      <td style="color:var(--muted)">${r.email}</td>
+      <td>${nb > 0 ? `<span style="color:var(--sky-blue);font-size:0.85rem;">${nb} papier(s)</span>` : `<span style="color:var(--muted);font-size:0.85rem;">Non assigné</span>`}</td>
+      <td>
+        <button class="delete-btn" onclick="deleteReviewer('${r.id}')">🗑</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function updateStats() {
+  document.getElementById('stat-total').textContent = reviewers.length;
+  document.getElementById('stat-assigned').textContent = reviewers.filter(r => (assignmentCounts[r.id] || 0) > 0).length;
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'show ' + type;
+  setTimeout(() => { t.className = ''; }, 3500);
+}
+</script>
+</body>
+</html>

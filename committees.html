@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Committees – ACMCST 2027</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+:root{
+  --dark-blue:#0d2137;
+  --mid-blue:#1a4a7a;
+  --sky-blue:#2e9fd4;
+  --orange:#e07b20;
+  --white:#ffffff;
+  --light:#c5e3f5;
+  --border:rgba(0,0,0,0.08);
+  --text:#1c2b3a;
+  --gray:#6b7a8d;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Times New Roman',Times,serif;color:var(--text);background:var(--white);overflow-x:hidden;}
+
+.topbar{background:var(--dark-blue);padding:.45rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem;}
+.topbar-item{display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:rgba(255,255,255,0.75);}
+
+nav{background:var(--white);border-bottom:3px solid var(--sky-blue);position:sticky;top:0;z-index:1000;box-shadow:0 2px 10px rgba(0,0,0,0.08);}
+.nav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;padding:0 2rem;height:70px;gap:1rem;}
+.nav-logo{display:flex;align-items:center;gap:.8rem;text-decoration:none;margin-right:1.5rem;}
+.nav-logo img{height:73px;width:auto;}
+.nav-menu{display:flex;list-style:none;height:70px;flex:1;justify-content:center;}
+.nav-item{position:relative;height:100%;display:flex;align-items:center;}
+.nav-item>a{display:flex;align-items:center;gap:.25rem;padding:0 .65rem;height:100%;font-size:.82rem;font-weight:700;color:var(--dark-blue);text-decoration:none;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-3px;transition:color .2s,border-color .2s;}
+.nav-item>a:hover,.nav-item.active>a{color:var(--sky-blue);border-bottom-color:var(--orange);}
+.nav-item>a .ch{font-size:.55rem;}
+.new-badge{display:inline-block;background:#e00;color:#fff;font-size:.6rem;font-weight:800;padding:.1rem .35rem;border-radius:2px;margin-left:.3rem;animation:blink 1s infinite;vertical-align:middle;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+.dropdown{display:none;position:absolute;top:100%;left:0;background:var(--white);box-shadow:0 6px 25px rgba(0,0,0,0.12);border-top:3px solid var(--orange);min-width:200px;z-index:200;}
+.nav-item:hover .dropdown{display:block;}
+.dropdown a{display:block;padding:.65rem 1.2rem;font-size:.8rem;color:var(--text);text-decoration:none;font-weight:600;border-bottom:1px solid var(--border);transition:background .15s,color .15s,padding-left .15s;}
+.dropdown a:hover{background:var(--light);color:var(--sky-blue);padding-left:1.6rem;}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;}
+.hamburger span{width:24px;height:2px;background:var(--dark-blue);}
+
+.page-header{background:linear-gradient(rgba(13,33,55,0.85),rgba(13,33,55,0.85)),url('header-bg.svg') center/cover no-repeat;padding:4rem 2rem;text-align:center;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.page-header h1{font-family:'Merriweather',serif;font-size:clamp(1.8rem,3vw,2.8rem);font-weight:900;color:var(--white);margin-bottom:.5rem;}
+.page-header p{color:rgba(255,255,255,0.7);font-size:.95rem;}
+.breadcrumb{display:flex;align-items:center;justify-content:center;gap:.5rem;font-size:.8rem;color:rgba(255,255,255,0.5);margin-top:.8rem;}
+.breadcrumb a{color:var(--sky-blue);text-decoration:none;}
+.breadcrumb span{color:rgba(255,255,255,0.3);}
+
+.container{max-width:1100px;margin:0 auto;padding:0 2rem;}
+section{padding:4rem 0;}
+
+.sec-header{margin-bottom:2.5rem;}
+.sec-tag{font-size:.7rem;color:var(--sky-blue);letter-spacing:3px;text-transform:uppercase;font-weight:700;margin-bottom:.4rem;}
+.sec-title{font-family:'Merriweather',serif;font-size:clamp(1.3rem,2vw,1.8rem);font-weight:900;color:var(--dark-blue);}
+.sec-line{width:50px;height:3px;background:var(--orange);margin:.8rem 0 0;}
+
+/* COMMITTEE BLOCK */
+.committee-block{border-radius:10px;overflow:hidden;border:0.5px solid var(--border);margin-bottom:2rem;box-shadow:0 4px 20px rgba(0,0,0,0.07);}
+
+/* SECTION HEADER */
+.section-header{background:var(--sky-blue);display:flex;align-items:center;padding:.85rem 1.2rem;}
+.section-lettrine{width:38px;height:38px;border-radius:6px;background:var(--dark-blue);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:500;color:var(--sky-blue);font-family:Georgia,serif;flex-shrink:0;margin-right:.9rem;}
+.section-label{font-size:.65rem;color:rgba(255,255,255,0.65);letter-spacing:2px;text-transform:uppercase;margin-bottom:.1rem;}
+.section-title{font-size:.95rem;font-weight:700;color:var(--white);}
+
+/* MEMBER ROWS */
+.member-row{display:flex;align-items:center;justify-content:space-between;padding:.5rem 1.2rem;border-bottom:0.5px solid #e8f2fa;font-size:.85rem;}
+.member-row:last-child{border-bottom:none;}
+.member-row.even{background:#f8fbfe;}
+.member-row.odd{background:#ffffff;}
+.member-full{color:var(--gray);flex:1;}
+.member-name{font-weight:700;color:var(--dark-blue);}
+.member-role{font-size:.68rem;background:var(--sky-blue);color:#fff;padding:.15rem .55rem;border-radius:3px;white-space:nowrap;font-weight:700;letter-spacing:.5px;}
+
+/* TBA     */
+.tba-row{padding:.8rem 1.2rem;background:#f8fbfe;font-size:.85rem;color:var(--gray);font-style:italic;}
+
+footer{background:var(--mid-blue);padding:3rem 2rem 0;}
+.footer-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:2.5rem;padding-bottom:2.5rem;}
+.footer-col h4{font-size:.85rem;font-weight:700;color:var(--white);margin-bottom:1.2rem;padding-bottom:.5rem;border-bottom:2px solid rgba(255,255,255,0.1);text-transform:uppercase;letter-spacing:.5px;}
+.footer-contact-block{display:flex;gap:.8rem;align-items:flex-start;}
+.footer-avatar{width:52px;height:52px;border-radius:50%;flex-shrink:0;background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:1.4rem;}
+.fc-name{color:var(--white);font-weight:700;font-size:.88rem;margin-bottom:.3rem;}
+.fc-info a{color:rgba(255,255,255,0.65);font-size:.8rem;text-decoration:none;display:block;margin-bottom:.2rem;}
+.fc-info a:hover{color:var(--orange);}
+.footer-links,.footer-downloads{list-style:none;}
+.footer-links li,.footer-downloads li{padding:.32rem 0;border-bottom:1px solid rgba(255,255,255,0.06);}
+.footer-links a{color:rgba(255,255,255,0.65);text-decoration:none;font-size:.82rem;transition:color .2s,padding-left .2s;display:flex;align-items:center;gap:.4rem;}
+.footer-links a:hover{color:var(--orange);padding-left:.4rem;}
+.footer-links a .nb{display:inline-block;background:#e00;color:#fff;font-size:.58rem;font-weight:800;padding:.1rem .3rem;border-radius:2px;animation:blink 1s infinite;}
+.footer-downloads a{color:rgba(255,255,255,0.65);text-decoration:none;font-size:.82rem;}
+.footer-downloads a::before{content:'↓ ';color:var(--sky-blue);}
+.footer-downloads a:hover{color:var(--orange);}
+.news-item{padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:.8rem;color:rgba(255,255,255,0.65);line-height:1.5;}
+.news-item::before{content:'● ';color:var(--orange);font-size:.55rem;vertical-align:middle;}
+.footer-bottom{max-width:1200px;margin:0 auto;padding:1rem 0;border-top:1px solid rgba(255,255,255,0.08);text-align:center;}
+.footer-copyright{font-size:.78rem;color:rgba(255,255,255,0.35);}
+.footer-copyright a{color:var(--sky-blue);text-decoration:none;}
+
+#btt{position:fixed;bottom:2rem;right:2rem;z-index:999;width:40px;height:40px;border-radius:4px;background:var(--orange);color:var(--white);display:none;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer;text-decoration:none;box-shadow:0 4px 15px rgba(0,0,0,0.2);transition:background .2s,transform .2s;font-weight:700;}
+#btt.show{display:flex;}
+#btt:hover{background:var(--dark-blue);transform:translateY(-3px);}
+
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:1024px){.footer-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:768px){
+  .member-row{flex-wrap:wrap;gap:.3rem;}
+  .member-full{min-width:100%;}
+  .nav-menu{display:none;flex-direction:column;position:absolute;top:70px;left:0;right:0;background:var(--white);box-shadow:0 8px 20px rgba(0,0,0,0.1);height:auto;padding:1rem 0;z-index:999;}
+  .nav-menu.open{display:flex;}
+  .nav-item{height:auto;flex-direction:column;align-items:flex-start;}
+  .nav-item>a{padding:.7rem 1.5rem;height:auto;border-bottom:1px solid var(--border);width:100%;}
+  .dropdown{position:static;box-shadow:none;border-top:none;border-left:3px solid var(--orange);margin-left:1.5rem;}
+  .hamburger{display:flex;}
+  .nav-inner{position:relative;}
+  .footer-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-item">🕐 Conference: 10–12 November 2027, Béni Mellal, Morocco</div>
+  <div class="topbar-item">📞 Contact: acmcst@usms.ma</div>
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <img src="logo-acmcst.png" alt="ACMCST" onerror="this.style.display='none'">
+    </a>
+    <ul class="nav-menu" id="navMenu">
+      <li class="nav-item"><a href="index.html">HOME</a></li>
+      <li class="nav-item">
+        <a href="cfp.html">CALL FOR PAPERS <span class="ch">▾</span></a>
+        <div class="dropdown">
+          <a href="cfp.html">Conference Topics</a>
+          <a href="cfp.html#special">Special Session</a>
+        </div>
+      </li>
+      <li class="nav-item"><a href="speakers.html">KEYNOTE SPEAKERS</a></li>
+      <li class="nav-item"><a href="dates.html">IMPORTANT DATES</a></li>
+      <li class="nav-item active">
+        <a href="committees.html">COMMITTEES <span class="ch">▾</span></a>
+        <div class="dropdown">
+          <a href="committees.html#organizing">Organizing Committee</a>
+          <a href="committees.html#technical">Technical Committee</a>
+          <a href="committees.html#scientific">Scientific Committee</a>
+        </div>
+      </li>
+      <li class="nav-item"><a href="venue.html">ACCESS MAP</a></li>
+      <li class="nav-item"><a href="submission.html">SUBMISSION</a></li>
+      <li class="nav-item"><a href="registration.html">REGISTRATION</a></li>
+            <li class="nav-item"><a href="previous-edition.html">PREVIOUS EDITION</a></li>
+
+    </ul>
+    <div class="hamburger" onclick="document.getElementById('navMenu').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <h1>Committees</h1>
+  <p>ACMCST 2027 — International Conference | Béni Mellal, Morocco</p>
+  <div class="breadcrumb">
+    <a href="index.html">Home</a>
+    <span>›</span>
+    <span>Committees</span>
+  </div>
+</div>
+
+<!-- ===== ORGANIZING COMMITTEE ===== -->
+<section id="organizing" style="background:var(--white);">
+  <div class="container">
+    <div class="sec-header reveal">
+      <div class="sec-tag">Committees</div>
+      <h2 class="sec-title">Organizing Committee</h2>
+      <div class="sec-line"></div>
+    </div>
+
+    <!-- A. HONORARY -->
+    <div class="committee-block reveal">
+      <div class="section-header">
+        <div class="section-lettrine">A</div>
+        <div>
+          <div class="section-label">Honorary</div>
+          <div class="section-title">Honorary Committee</div>
+        </div>
+      </div>
+      <div id="members-honorary"><div class="tba-row">Loading…</div></div>
+    </div>
+
+    <!-- B. GENERAL CHAIRS -->
+    <div class="committee-block reveal">
+      <div class="section-header">
+        <div class="section-lettrine">B</div>
+        <div>
+          <div class="section-label">General</div>
+          <div class="section-title">Steering Committee</div>
+        </div>
+      </div>
+      <div id="members-steering"><div class="tba-row">Loading…</div></div>
+       </div>
+
+    <!-- C. ORGANIZING COMMITTEE -->
+    <div class="committee-block reveal">
+      <div class="section-header">
+        <div class="section-lettrine">C</div>
+        <div>
+          <div class="section-label">Organizing</div>
+          <div class="section-title">Organizing Committee</div>
+        </div>
+      </div>
+      <div id="members-organizing"><div class="tba-row">Loading…</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TECHNICAL COMMITTEE ===== -->
+<section id="technical" style="background:var(--white);">
+  <div class="container">
+    <div class="sec-header reveal">
+      <div class="sec-tag">Committees</div>
+      <h2 class="sec-title">Technical Committee</h2>
+      <div class="sec-line"></div>
+    </div>
+
+    <div class="committee-block reveal">
+      <div class="section-header">
+        <div class="section-lettrine">T</div>
+        <div>
+          <div class="section-label">Technical</div>
+          <div class="section-title">Technical Committee</div>
+        </div>
+      </div>
+      <div id="members-technical"><div class="tba-row">Loading…</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SCIENTIFIC COMMITTEE ===== -->
+<section id="scientific" style="background:var(--light);">
+  <div class="container">
+    <div class="sec-header reveal">
+      <div class="sec-tag">Committees</div>
+      <h2 class="sec-title">Scientific Committee</h2>
+      <div class="sec-line"></div>
+    </div>
+
+    <div class="committee-block reveal">
+      <div class="section-header">
+        <div class="section-lettrine">S</div>
+        <div>
+          <div class="section-label">Scientific</div>
+          <div class="section-title">Scientific Committee</div>
+        </div>
+      </div>
+      <div id="members-scientific"><div class="tba-row">Loading…</div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <h4>Contact Us</h4>
+      <div class="footer-contact-block">
+        <div class="footer-avatar">👤</div>
+        <div class="fc-info">
+          <div class="fc-name">Dr. SAIH Mohamed</div>
+          <a href="mailto:acmcst@usms.ma">acmcst@usms.ma</a>
+          <a href="http://www.acmcst.com">www.acmcst.com</a>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <ul class="footer-links">
+        <li><a href="cfp.html">Call for Papers</a></li>
+        <li><a href="speakers.html">Keynote Speakers</a></li>
+        <li><a href="submission.html">Submission</a></li>
+        <li><a href="registration.html">Registration</a></li>
+        <li><a href="venue.html">Access Map</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Downloads</h4>
+      <ul class="footer-downloads">
+        <li><a href="program.pdf">Conference Program</a></li>
+        <li><a href="CFP.pdf">CFP Flyer (PDF)</a></li>
+        <li><a href="Microsoft+Word+Proceedings+Templates.zip">Springer Template (Word)</a></li>
+        <li><a href="LaTeX2e+Proceedings+Templates.zip">Springer Template (LaTeX)</a></li>
+        <li class="js-toggle-copyright" style="display:none;"><a href="copyright.docx">Copyright Transfer Form</a></li>
+
+      </ul>
+    </div>
+    <div>
+      <h4>Recent News</h4>
+      <div class="news-item">ACMCST 2027 will take place on November 10–12, 2027, in Béni Mellal, Morocco.</div>
+      <div class="news-item">Paper submission is now open. Deadline: July 31, 2027.</div>
+      <div class="news-item">ACMCST'25 proceedings are now available on SpringerLink.</div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copyright">
+      © 2027 <a href="http://www.acmcst.com">ACMCST</a>. All rights reserved. <a href="http://www.acmcst.com">www.acmcst.com</a>
+    </div>
+  </div>
+</footer>
+
+<a href="#" id="btt" title="Back to top">↑</a>
+
+<script>
+window.addEventListener('scroll',()=>{document.getElementById('btt').classList.toggle('show',window.scrollY>400);});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// Committees list — read directly from ACMCST2027.xlsx on every page load, so new
+// members appear automatically after a git push, with no HTML changes needed.
+// Only Nom/Prenom/University are shown — email and country stay admin-only (reviewers.html).
+const COMMITTEE_TARGETS = [
+  { sheet: 'Honorary Committee', containerId: 'members-honorary' },
+  { sheet: 'Steering Committee', containerId: 'members-steering' },
+  { sheet: 'Organizing Committee', containerId: 'members-organizing' },
+  { sheet: 'Technical Committee', containerId: 'members-technical' },
+  { sheet: 'Scientific Committee', containerId: 'members-scientific' },
+];
+
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+async function loadCommittees() {
+  try {
+    const res = await fetch('ACMCST2027.xlsx?v=' + Date.now());
+    if (!res.ok) throw new Error('not found');
+    const buf = await res.arrayBuffer();
+    const wb = XLSX.read(buf, { type: 'array' });
+
+    COMMITTEE_TARGETS.forEach(({ sheet, containerId }) => {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      const ws = wb.Sheets[sheet];
+      const rows = ws ? XLSX.utils.sheet_to_json(ws, { defval: '' }).filter(r => r.Nom || r.Prenom) : [];
+      if (!rows.length) {
+        container.innerHTML = '<div class="tba-row">To be announced.</div>';
+        return;
+      }
+      container.innerHTML = rows.map((r, i) => {
+        const uni = String(r.University || '').trim();
+        const country = String(r.Country || '').trim();
+        const location = [uni, country].filter(Boolean).join(', ');
+        return `
+        <div class="member-row ${i % 2 === 0 ? 'even' : 'odd'}">
+          <span class="member-full"><span class="member-name">Pr. ${escapeHtml(r.Nom)} ${escapeHtml(r.Prenom)}</span>${location ? ', ' + escapeHtml(location) : ''}</span>
+          ${r.Categorie ? `<span class="member-role">${escapeHtml(String(r.Categorie).trim().toUpperCase())}</span>` : ''}
+        </div>
+      `;
+      }).join('');
+    });
+  } catch (e) {
+    COMMITTEE_TARGETS.forEach(({ containerId }) => {
+      const container = document.getElementById(containerId);
+      if (container) container.innerHTML = '<div class="tba-row">Committee list coming soon.</div>';
+    });
+  }
+}
+loadCommittees();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="site-toggles.js?v=2"></script>
+</body>
+</html>

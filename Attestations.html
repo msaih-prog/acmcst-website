@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACMCST 2027 — Gestion Attestations</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+  :root{
+    --dark-blue:#0d2137;
+    --mid-blue:#1a4a7a;
+    --sky-blue:#2e9fd4;
+    --orange:#e07b20;
+    --bg:#0a0f1a;
+    --white:#ffffff;
+    --text:#ffffff;
+    --muted:#8a9ab0;
+    --success:#1a7a4a;
+    --danger:#c0392b;
+    --border:#1e3a5a;
+    --card-bg:#0d2137;
+    --input-bg:#0f1e30;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Source Sans 3',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+  /* LOGIN */
+  #login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0a0f1a 0%,#0d2137 100%);}
+  .login-box{background:#0d2137;border-radius:16px;padding:2.5rem 2rem;width:100%;max-width:380px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5);border:1px solid var(--border);}
+  .login-box .logo-title{font-family:'Merriweather',serif;font-size:1.4rem;color:var(--white);margin-bottom:0.3rem;}
+  .login-box .logo-sub{font-size:0.85rem;color:var(--muted);margin-bottom:2rem;}
+  .lock-icon{width:60px;height:60px;background:var(--sky-blue);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;}
+  .lock-icon svg{width:28px;height:28px;fill:var(--white);}
+  .login-box input[type="email"],.login-box input[type="password"]{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:8px;font-size:1rem;font-family:inherit;margin-bottom:1rem;outline:none;text-align:center;background:var(--input-bg);color:var(--white);}
+  .login-box input[type="password"]{letter-spacing:4px;}
+  .login-box input[type="email"]:focus,.login-box input[type="password"]:focus{border-color:var(--sky-blue);}
+  .login-btn{width:100%;padding:12px;background:var(--sky-blue);color:var(--white);border:none;border-radius:8px;font-size:1rem;font-family:inherit;font-weight:600;cursor:pointer;}
+  .login-btn:hover{background:var(--mid-blue);}
+  .login-btn:disabled{opacity:0.6;cursor:not-allowed;}
+  .login-error{color:#ff6b6b;font-size:0.85rem;margin-top:0.75rem;display:none;}
+
+  /* TOPBAR */
+  #main-app{display:none;}
+  .topbar{background:#060c14;color:var(--white);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--border);}
+  .topbar-title{font-family:'Merriweather',serif;font-size:1rem;}
+  .topbar-title span{color:var(--sky-blue);}
+  .topbar-right{display:flex;gap:10px;align-items:center;}
+  .review-link{background:var(--orange);color:var(--white);padding:6px 14px;border-radius:6px;font-size:0.85rem;text-decoration:none;font-weight:600;}
+  .logout-btn{background:transparent;border:1px solid var(--border);color:var(--white);padding:6px 14px;border-radius:6px;font-size:0.85rem;cursor:pointer;font-family:inherit;}
+  .logout-btn:hover{background:var(--border);}
+
+  /* CONTAINER */
+  .container{max-width:960px;margin:0 auto;padding:2rem 1rem;}
+
+  /* STATS */
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1.5rem;}
+  .stat-card{background:var(--card-bg);border-radius:10px;padding:1rem;text-align:center;border:1px solid var(--border);}
+  .stat-card .num{font-size:1.8rem;font-weight:700;color:var(--white);}
+  .stat-card .lbl{font-size:0.78rem;color:var(--muted);margin-top:2px;}
+  .stat-card.sent .num{color:#2ecc71;}
+
+  /* SECTION CARDS */
+  .section-card{background:var(--card-bg);border-radius:10px;padding:1.25rem;border:1px solid var(--border);margin-bottom:1rem;}
+  .section-card h3{font-size:0.9rem;font-weight:600;color:var(--sky-blue);margin-bottom:12px;}
+
+  /* FORMS */
+  .add-form{display:flex;gap:8px;flex-wrap:wrap;}
+  .add-form input,.add-form select{flex:1;min-width:140px;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:0.88rem;font-family:inherit;outline:none;background:var(--input-bg);color:var(--white);}
+  .add-form input::placeholder{color:var(--muted);}
+  .add-form input:focus,.add-form select:focus{border-color:var(--sky-blue);}
+  .add-form select option{background:var(--dark-blue);}
+  .import-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+  .import-row>div{flex:1;min-width:200px;}
+  .import-row p{font-size:0.8rem;color:var(--muted);margin-top:3px;}
+
+  /* BUTTONS */
+  .btn{padding:9px 18px;border:none;border-radius:8px;font-size:0.88rem;font-family:inherit;font-weight:600;cursor:pointer;white-space:nowrap;}
+  .btn-sky{background:var(--sky-blue);color:var(--white);}
+  .btn-sky:hover{background:var(--mid-blue);}
+  .btn-orange{background:var(--orange);color:var(--white);}
+  .btn-orange:hover{background:#c96d18;}
+  .btn-outline-danger{background:transparent;color:#e74c3c;border:1.5px solid #e74c3c;}
+  .btn-outline-danger:hover{background:rgba(231,76,60,0.1);}
+
+  /* CONTROLS */
+  .controls{background:var(--card-bg);border-radius:10px;padding:1.25rem;border:1px solid var(--border);margin-bottom:1rem;display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+  .search-input{flex:1;min-width:200px;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:0.95rem;font-family:inherit;outline:none;background:var(--input-bg);color:var(--white);}
+  .search-input::placeholder{color:var(--muted);}
+  .search-input:focus{border-color:var(--sky-blue);}
+  .filter-btns{display:flex;gap:6px;flex-wrap:wrap;}
+  .filter-btn{padding:8px 14px;border-radius:20px;border:1.5px solid var(--border);background:transparent;font-size:0.82rem;font-family:inherit;cursor:pointer;color:var(--muted);font-weight:600;}
+  .filter-btn:hover{border-color:var(--sky-blue);color:var(--sky-blue);}
+  .filter-btn.active{background:var(--sky-blue);color:var(--white);border-color:var(--sky-blue);}
+
+  /* TABLE */
+  .table-wrap{background:var(--card-bg);border-radius:10px;border:1px solid var(--border);overflow:hidden;}
+  table{width:100%;border-collapse:collapse;}
+  thead{background:#060c14;}
+  thead th{padding:12px 16px;text-align:left;font-size:0.82rem;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;color:var(--sky-blue);}
+  tbody tr{border-bottom:1px solid var(--border);}
+  tbody tr:last-child{border-bottom:none;}
+  tbody tr:hover{background:rgba(46,159,212,0.05);}
+  tbody td{padding:12px 16px;font-size:0.9rem;color:var(--white);}
+
+  /* BADGES */
+  .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;border:1px solid;}
+  .badge-participants{background:rgba(46,159,212,0.1);color:var(--sky-blue);border-color:rgba(46,159,212,0.3);}
+  .badge-scientifique{background:rgba(106,26,170,0.1);color:#a070e0;border-color:rgba(106,26,170,0.3);}
+  .badge-organisation{background:rgba(224,123,32,0.1);color:#e07b20;border-color:rgba(224,123,32,0.3);}
+  .badge-chairs{background:rgba(46,204,113,0.1);color:#2ecc71;border-color:rgba(46,204,113,0.3);}
+  .badge-cochair{background:rgba(46,204,113,0.1);color:#2ecc71;border-color:rgba(46,204,113,0.3);}
+  .badge-poster{background:rgba(46,159,212,0.1);color:var(--sky-blue);border-color:rgba(46,159,212,0.3);}
+
+  /* STATUS */
+  .status-pending{color:var(--muted);font-size:0.85rem;}
+  .status-sent{color:#2ecc71;font-size:0.85rem;font-weight:600;}
+
+  /* ACTION BUTTONS */
+  .send-btn{padding:7px 16px;background:var(--mid-blue);color:var(--white);border:none;border-radius:6px;font-size:0.82rem;font-family:inherit;font-weight:600;cursor:pointer;}
+  .send-btn:hover{background:var(--sky-blue);}
+  .send-btn:disabled{background:rgba(46,204,113,0.1);color:#2ecc71;cursor:not-allowed;border:1px solid rgba(46,204,113,0.3);}
+  .send-btn.sending{background:var(--orange);cursor:wait;}
+  .resend-btn{padding:7px 10px;background:transparent;color:var(--sky-blue);border:1px solid var(--sky-blue);border-radius:6px;font-size:0.9rem;cursor:pointer;margin-left:4px;}
+  .resend-btn:hover{background:rgba(46,159,212,0.1);}
+  .upload-btn{padding:7px 10px;background:transparent;color:var(--orange);border:1px solid var(--orange);border-radius:6px;font-size:0.9rem;cursor:pointer;margin-right:4px;}
+  .upload-btn:hover{background:rgba(224,123,32,0.1);}
+  .delete-btn{padding:7px 10px;background:transparent;color:#e74c3c;border:1px solid rgba(231,76,60,0.4);border-radius:6px;font-size:0.82rem;cursor:pointer;margin-left:4px;}
+  .delete-btn:hover{background:rgba(231,76,60,0.1);}
+
+  /* PAPIERS ACCEPTÉS */
+  .paper-attestation-card{background:#060c14;border-radius:10px;padding:1rem 1.25rem;border:1px solid var(--border);margin-bottom:10px;}
+  .paper-attestation-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px;}
+  .paper-id-label{font-size:0.72rem;font-weight:700;color:var(--sky-blue);letter-spacing:1px;text-transform:uppercase;}
+  .paper-title-label{font-size:0.92rem;font-weight:700;color:var(--white);margin-top:2px;}
+  .paper-email-label{font-size:0.8rem;color:var(--muted);margin-top:3px;}
+  .paper-attestation-fields{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+  .paper-attestation-fields input{flex:1;min-width:140px;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:0.85rem;font-family:inherit;outline:none;background:var(--input-bg);color:var(--white);}
+  .paper-attestation-fields input::placeholder{color:var(--muted);}
+  .paper-attestation-fields input:focus{border-color:var(--sky-blue);}
+  .paper-attestation-actions{display:flex;gap:8px;flex-wrap:wrap;}
+
+  /* MISC */
+  .empty-state{text-align:center;padding:3rem;color:var(--muted);font-size:0.95rem;}
+  .loading{text-align:center;padding:2rem;color:var(--muted);}
+  #toast{position:fixed;bottom:2rem;right:2rem;padding:12px 20px;border-radius:8px;font-size:0.9rem;font-weight:600;color:var(--white);z-index:9999;transform:translateY(100px);opacity:0;transition:all 0.3s;max-width:320px;}
+  #toast.show{transform:translateY(0);opacity:1;}
+  #toast.success{background:#1a7a4a;}
+  #toast.error{background:#c0392b;}
+  #toast.info{background:var(--sky-blue);}
+
+  @media(max-width:640px){
+    .stats-grid{grid-template-columns:repeat(2,1fr);}
+    .topbar{padding:1rem;}
+    .container{padding:1rem;}
+    thead th:nth-child(3),tbody td:nth-child(3){display:none;}
+  }
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-box">
+    <div class="lock-icon"><svg viewBox="0 0 24 24"><path d="M12 1C9.24 1 7 3.24 7 6v2H5c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2h-2V6c0-2.76-2.24-5-5-5zm0 2c1.66 0 3 1.34 3 3v2H9V6c0-1.66 1.34-3 3-3zm0 9c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"/></svg></div>
+    <div class="logo-title">ACMCST <span style="color:var(--orange)">2027</span></div>
+    <div class="logo-sub">Gestion des Attestations — Accès Réservé</div>
+    <input type="email" id="email-input" placeholder="Email" onkeydown="if(event.key==='Enter')document.getElementById('pwd-input').focus()"/>
+    <input type="password" id="pwd-input" placeholder="Mot de passe" onkeydown="if(event.key==='Enter')checkLogin()"/>
+    <button class="login-btn" id="login-btn" onclick="checkLogin()">Accéder</button>
+    <div class="login-error" id="login-error">Email ou mot de passe incorrect</div>
+  </div>
+</div>
+
+<div id="main-app">
+  <div class="topbar">
+    <div class="topbar-title">ACMCST <span>2027</span> — Gestion des Attestations</div>
+    <div class="topbar-right">
+      <a href="assignments.html" class="review-link" style="background:var(--mid-blue);">📋 Assignments</a>
+      <a href="review.html" class="review-link" style="background:var(--mid-blue);">📄 Reviewing Papers</a>
+      <a href="reviewers.html" class="review-link" style="background:var(--mid-blue);">👥 Reviewers</a>
+      <a href="Attestations.html" class="review-link" style="background:#1a7a4a;">🏅 Attestations</a>
+      <a href="payments.html" class="review-link" style="background:var(--orange);">💰 Payments</a>
+      <button class="logout-btn" onclick="logout()">Déconnexion</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card"><div class="num" id="stat-total">0</div><div class="lbl">Total participants</div></div>
+      <div class="stat-card sent"><div class="num" id="stat-sent">0</div><div class="lbl">Attestations envoyées</div></div>
+      <div class="stat-card"><div class="num" id="stat-pending">0</div><div class="lbl">En attente</div></div>
+      <div class="stat-card"><div class="num" id="stat-pct">0%</div><div class="lbl">Progression</div></div>
+    </div>
+
+    <div class="section-card">
+      <h3>📄 Auteurs de papiers acceptés</h3>
+      <p style="color:var(--muted);font-size:0.82rem;margin-bottom:1rem;">
+        Cette liste se remplit automatiquement depuis les papiers marqués "Accepted" dans review.html. Renseigne le nom et prénom de l'auteur avant d'uploader ou d'envoyer son attestation.
+      </p>
+      <div id="accepted-papers-list"><div class="loading">Chargement...</div></div>
+    </div>
+
+    <div class="section-card">
+      <h3>Source : Attestations_ACMCST.xlsx — géré entièrement dans ce fichier</h3>
+      <p style="color:var(--muted);font-size:0.82rem;margin-bottom:1rem;">
+        Ajoute, modifie ou supprime des lignes dans ce fichier Excel, puis clique sur "Synchroniser" — la liste ci-dessous se met à jour automatiquement (ajouts, modifications et suppressions).
+      </p>
+      <button class="btn btn-sky" id="sync-btn" onclick="syncFromExcel()">🔄 Synchroniser depuis Excel</button>
+    </div>
+
+    <div class="controls">
+      <input type="text" class="search-input" id="search-input" placeholder="Rechercher par nom ou prénom..." oninput="renderTable()"/>
+      <div class="filter-btns">
+        <button class="filter-btn active" onclick="setFilter('Tous')">Tous</button>
+        <button class="filter-btn" onclick="setFilter('Chair')">Chair</button>
+        <button class="filter-btn" onclick="setFilter('Co-Chair')">Co-Chair</button>
+        <button class="filter-btn" onclick="setFilter('Comite_Scientifique')">Comité Sci.</button>
+        <button class="filter-btn" onclick="setFilter('Comite_Organisation')">Comité Org.</button>
+        <button class="filter-btn" onclick="setFilter('Participant_Oral_Presentation')">Oral</button>
+        <button class="filter-btn" onclick="setFilter('Participant_Poster')">Poster</button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Nom & Prénom</th><th>Université</th><th>Catégorie</th><th>Statut</th><th>Action</th></tr></thead>
+        <tbody id="participants-tbody"><tr><td colspan="6"><div class="loading">Chargement...</div></td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script>
+let participants = [];
+let currentFilter = 'Tous';
+
+async function checkLogin() {
+  const email = document.getElementById('email-input').value.trim();
+  const pwd = document.getElementById('pwd-input').value;
+  const btn = document.getElementById('login-btn');
+  btn.disabled = true; btn.textContent = 'Connexion...';
+  const { error } = await sb.auth.signInWithPassword({ email, password: pwd });
+  btn.disabled = false; btn.textContent = 'Accéder';
+  if (error) {
+    document.getElementById('login-error').textContent = error.message;
+    document.getElementById('login-error').style.display = 'block';
+    return;
+  }
+  document.getElementById('login-error').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('main-app').style.display = 'block';
+  loadParticipants(); loadAcceptedPapers();
+}
+
+async function logout() {
+  await sb.auth.signOut();
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('main-app').style.display = 'none';
+  document.getElementById('email-input').value = '';
+  document.getElementById('pwd-input').value = '';
+  document.getElementById('login-error').style.display = 'none';
+}
+
+(async function initSession() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('main-app').style.display = 'block';
+    loadParticipants(); loadAcceptedPapers();
+  }
+})();
+
+async function loadParticipants() {
+  try {
+    const { data, error } = await sb.from('participants').select('*').order('created_at');
+    if (error) throw error;
+    participants = data.map(p => ({
+      id: p.id, nom: p.nom, prenom: p.prenom, email: p.email, university: p.university,
+      categorie: p.categorie, envoye: p.envoye, dateEnvoi: p.date_envoi
+    }));
+    renderTable(); updateStats();
+  } catch(e) { showToast('Erreur chargement: ' + e.message, 'error'); }
+}
+
+// Attestations_ACMCST.xlsx est l'unique source de vérité pour les participants :
+// synchronisation bidirectionnelle — ajoute les nouvelles lignes, met à jour les champs
+// changés, et supprime celles qui ne sont plus dans le fichier.
+// Dédoublonnage par (email + catégorie), pas par email seul : la même personne peut
+// légitimement avoir plusieurs lignes (ex. Chair ET membre du Comité Scientifique).
+async function syncFromExcel() {
+  const btn = document.getElementById('sync-btn');
+  btn.disabled = true;
+  btn.textContent = 'Synchronisation…';
+  try {
+    const res = await fetch('Attestations_ACMCST.xlsx?v=' + Date.now());
+    if (!res.ok) throw new Error('Attestations_ACMCST.xlsx introuvable dans le dossier du site.');
+    const buf = await res.arrayBuffer();
+    const wb = XLSX.read(buf, { type: 'array' });
+    const sheet = wb.Sheets[wb.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(sheet, { defval: '' })
+      .filter(r => r.Email && String(r.Email).trim());
+
+    const byKey = new Map();
+    for (const r of rows) {
+      const email = String(r.Email).trim();
+      const categorie = String(r.Categorie || '').trim();
+      const key = `${email.toLowerCase()}|${categorie}`;
+      byKey.set(key, {
+        nom: String(r.Nom || '').trim(),
+        prenom: String(r.Prenom || '').trim(),
+        university: r.University ? String(r.University).trim() : null,
+        email,
+        categorie,
+      });
+    }
+
+    const { data: existing, error: exErr } = await sb.from('participants').select('id, nom, prenom, university, email, categorie');
+    if (exErr) throw exErr;
+    const keyOf = (p) => `${(p.email || '').toLowerCase()}|${p.categorie}`;
+
+    let added = 0, updated = 0, removed = 0;
+
+    const toRemove = existing.filter(p => !p.email || !byKey.has(keyOf(p)));
+    if (toRemove.length) {
+      const { error } = await sb.from('participants').delete().in('id', toRemove.map(p => p.id));
+      if (error) throw error;
+      removed = toRemove.length;
+    }
+
+    const existingByKey = new Map(existing.filter(p => p.email).map(p => [keyOf(p), p]));
+    const toInsert = [];
+    for (const [key, row] of byKey) {
+      const current = existingByKey.get(key);
+      if (!current) {
+        toInsert.push(row);
+        continue;
+      }
+      const changed = current.nom !== row.nom || current.prenom !== row.prenom || current.university !== row.university;
+      if (changed) {
+        const { error } = await sb.from('participants')
+          .update({ nom: row.nom, prenom: row.prenom, university: row.university })
+          .eq('id', current.id);
+        if (error) throw error;
+        updated++;
+      }
+    }
+    if (toInsert.length) {
+      const { error } = await sb.from('participants').insert(toInsert);
+      if (error) throw error;
+      added = toInsert.length;
+    }
+
+    showToast(`${added} ajouté(s), ${updated} mis à jour, ${removed} supprimé(s).`, 'success');
+    await loadParticipants();
+  } catch (e) {
+    showToast('Erreur: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🔄 Synchroniser depuis Excel';
+  }
+}
+
+async function envoyerAttestation(id, btn) {
+  const p = participants.find(x => x.id == id);
+  if (!p) return;
+  if (!p.email) { showToast('Email manquant pour ' + p.nom, 'error'); return; }
+  if (!confirm('Envoyer l\'attestation à ' + p.email + ' ?')) return;
+  btn.textContent = 'Envoi...'; btn.classList.add('sending'); btn.disabled = true;
+  try {
+    const { data, error } = await sb.functions.invoke('send-email', {
+      body: { action: 'envoyerAttestation', participantId: id }
+    });
+    if (error) throw error;
+    if (!data || !data.succes) throw new Error(data && data.message || 'Erreur inconnue');
+    const dateEnvoi = new Date().toISOString();
+    await sb.from('participants').update({ envoye: true, date_envoi: dateEnvoi }).eq('id', id);
+    const idx = participants.findIndex(x => x.id == id);
+    participants[idx].envoye = true;
+    participants[idx].dateEnvoi = dateEnvoi;
+    renderTable(); updateStats();
+    showToast('Attestation envoyée à ' + p.email, 'success');
+  } catch(e) {
+    btn.textContent = 'Envoyer'; btn.classList.remove('sending'); btn.disabled = false;
+    showToast('Erreur: ' + e.message, 'error');
+  }
+}
+
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.classList.toggle('active',
+      (f === 'Tous' && btn.textContent === 'Tous') ||
+      (f === 'Chair' && btn.textContent === 'Chair') ||
+      (f === 'Co-Chair' && btn.textContent === 'Co-Chair') ||
+      (f === 'Comite_Scientifique' && btn.textContent === 'Comité Sci.') ||
+      (f === 'Comite_Organisation' && btn.textContent === 'Comité Org.') ||
+      (f === 'Participant_Oral_Presentation' && btn.textContent === 'Oral') ||
+      (f === 'Participant_Poster' && btn.textContent === 'Poster')
+    );
+  });
+  renderTable();
+}
+
+function renderTable() {
+  const search = document.getElementById('search-input').value.toLowerCase();
+  const tbody = document.getElementById('participants-tbody');
+  let filtered = participants.filter(p => {
+    const matchFilter = currentFilter === 'Tous' || p.categorie === currentFilter;
+    const matchSearch = (p.nom + ' ' + p.prenom).toLowerCase().includes(search);
+    return matchFilter && matchSearch;
+  });
+  if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state">Aucun participant trouvé</div></td></tr>'; return; }
+  const badgeClass = {
+    Chair: 'badge-chairs', 'Co-Chair': 'badge-cochair',
+    Comite_Scientifique: 'badge-scientifique', Comite_Organisation: 'badge-organisation',
+    Participant_Oral_Presentation: 'badge-participants', Participant_Poster: 'badge-poster',
+  };
+  const catLabel = {
+    Chair: 'Chair', 'Co-Chair': 'Co-Chair',
+    Comite_Scientifique: 'Comité Sci.', Comite_Organisation: 'Comité Org.',
+    Participant_Oral_Presentation: 'Oral', Participant_Poster: 'Poster',
+  };
+  tbody.innerHTML = filtered.map((p, i) => `
+    <tr data-id="${p.id}">
+      <td style="color:var(--muted);font-size:0.8rem">${i+1}</td>
+      <td><strong>${p.nom}</strong> ${p.prenom}</td>
+      <td style="color:var(--muted);font-size:0.85rem">${p.university || '—'}</td>
+      <td><span class="badge ${badgeClass[p.categorie]||'badge-participants'}">${catLabel[p.categorie]||p.categorie}</span></td>
+      <td>${p.envoye ? '<span class="status-sent">✓ Envoyé</span>' : '<span class="status-pending">⏳ En attente</span>'}</td>
+      <td>
+        <input type="file" id="participant-file-${p.id}" accept="application/pdf" style="display:none" onchange="uploadParticipantAttestation('${p.id}', this.files[0])"/>
+        <button class="upload-btn" onclick="document.getElementById('participant-file-${p.id}').click()" title="Uploader l'attestation PDF">📎 Uploader attestation</button>
+        <button class="send-btn" onclick="envoyerAttestation('${p.id}', this)" ${!p.email?'disabled title="Email manquant"':''}>Envoyer</button>
+      </td>
+    </tr>`).join('');
+}
+
+function updateStats() {
+  const total = participants.length;
+  const sent = participants.filter(p => p.envoye).length;
+  const pending = total - sent;
+  const pct = total > 0 ? Math.round((sent/total)*100) : 0;
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-sent').textContent = sent;
+  document.getElementById('stat-pending').textContent = pending;
+  document.getElementById('stat-pct').textContent = pct + '%';
+}
+
+async function uploadParticipantAttestation(id, file) {
+  if (!file) return;
+  const p = participants.find(x => x.id == id);
+  if (!p) return;
+  try {
+    const path = `${p.categorie}/${p.nom}_${p.prenom}.pdf`;
+    const { error } = await sb.storage.from('attestations').upload(path, file, { upsert: true, contentType: 'application/pdf' });
+    if (error) throw error;
+    showToast('Attestation uploadée pour ' + p.nom + ' ' + p.prenom + ' !', 'success');
+  } catch(e) { showToast('Erreur: ' + e.message, 'error'); }
+  document.getElementById('participant-file-' + id).value = '';
+}
+
+// =====================
+// AUTEURS DE PAPIERS ACCEPTÉS (auto-listés depuis papers.decision = 'Accepted')
+// =====================
+let acceptedPapers = [];
+
+async function loadAcceptedPapers() {
+  try {
+    const { data, error } = await sb.from('papers')
+      .select('id, paper_id, titre, email_auteur, nom_auteur, prenom_auteur, attestation_envoyee')
+      .eq('decision', 'Accepted')
+      .order('created_at');
+    if (error) throw error;
+    acceptedPapers = data;
+    renderAcceptedPapers();
+  } catch(e) { showToast('Erreur chargement papiers acceptés: ' + e.message, 'error'); }
+}
+
+function renderAcceptedPapers() {
+  const container = document.getElementById('accepted-papers-list');
+  if (acceptedPapers.length === 0) {
+    container.innerHTML = '<div class="empty-state">Aucun papier accepté pour l\'instant.</div>';
+    return;
+  }
+  container.innerHTML = acceptedPapers.map(p => `
+    <div class="paper-attestation-card" data-id="${p.id}">
+      <div class="paper-attestation-head">
+        <div>
+          <div class="paper-id-label">Paper ID: ${p.paper_id}</div>
+          <div class="paper-title-label">${p.titre}</div>
+          <div class="paper-email-label">📧 ${p.email_auteur}</div>
+        </div>
+        ${p.attestation_envoyee ? '<span class="status-sent">✓ Envoyé</span>' : '<span class="status-pending">⏳ En attente</span>'}
+      </div>
+      <div class="paper-attestation-fields">
+        <input type="text" placeholder="Nom de l'auteur" value="${p.nom_auteur || ''}" onchange="updatePaperAuthorName('${p.id}', 'nom_auteur', this.value)"/>
+        <input type="text" placeholder="Prénom de l'auteur" value="${p.prenom_auteur || ''}" onchange="updatePaperAuthorName('${p.id}', 'prenom_auteur', this.value)"/>
+      </div>
+      <div class="paper-attestation-actions">
+        <input type="file" id="paper-file-${p.id}" accept="application/pdf" style="display:none" onchange="uploadPaperAttestation('${p.id}', this.files[0])"/>
+        <button class="upload-btn" onclick="document.getElementById('paper-file-${p.id}').click()">📎 Uploader attestation</button>
+        ${p.attestation_envoyee
+          ? `<button class="send-btn" disabled>✓ Envoyé</button> <button class="resend-btn" onclick="resendPaperAttestation('${p.id}')">↺ Renvoyer</button>`
+          : `<button class="send-btn" onclick="sendPaperAttestation('${p.id}')">Envoyer</button>`}
+      </div>
+    </div>
+  `).join('');
+}
+
+async function resendPaperAttestation(id) {
+  if (!confirm('Renvoyer cette attestation ? (utile pour retester après une correction)')) return;
+  await sb.from('papers').update({ attestation_envoyee: false }).eq('id', id);
+  const p = acceptedPapers.find(x => x.id === id);
+  if (p) p.attestation_envoyee = false;
+  renderAcceptedPapers();
+  await sendPaperAttestation(id, true);
+}
+
+function getPaperAuthorInputs(id) {
+  const card = document.querySelector(`.paper-attestation-card[data-id="${id}"]`);
+  const inputs = card.querySelectorAll('input[type="text"]');
+  return { nom: inputs[0].value.trim(), prenom: inputs[1].value.trim() };
+}
+
+async function updatePaperAuthorName(id, field, value) {
+  try {
+    const { error } = await sb.from('papers').update({ [field]: value.trim() }).eq('id', id);
+    if (error) throw error;
+    const p = acceptedPapers.find(x => x.id === id);
+    if (p) p[field] = value.trim();
+  } catch(e) { showToast('Erreur: ' + e.message, 'error'); }
+}
+
+async function uploadPaperAttestation(id, file) {
+  if (!file) return;
+  const { nom, prenom } = getPaperAuthorInputs(id);
+  if (!nom || !prenom) { showToast('Renseigne le nom et le prénom avant d\'uploader.', 'error'); return; }
+  try {
+    await sb.from('papers').update({ nom_auteur: nom, prenom_auteur: prenom }).eq('id', id);
+    const path = `Participant_Oral_Presentation/${nom}_${prenom}.pdf`;
+    const { error } = await sb.storage.from('attestations').upload(path, file, { upsert: true, contentType: 'application/pdf' });
+    if (error) throw error;
+    showToast('Attestation uploadée pour ' + nom + ' ' + prenom + ' !', 'success');
+  } catch(e) { showToast('Erreur: ' + e.message, 'error'); }
+  document.getElementById('paper-file-' + id).value = '';
+}
+
+async function sendPaperAttestation(id, skipConfirm) {
+  const paper = acceptedPapers.find(p => p.id === id);
+  if (!paper) return;
+  const { nom, prenom } = getPaperAuthorInputs(id);
+  if (!nom || !prenom) { showToast('Renseigne le nom et le prénom avant d\'envoyer.', 'error'); return; }
+  if (!skipConfirm && !confirm('Envoyer l\'attestation à ' + paper.email_auteur + ' ?')) return;
+  showToast('Envoi en cours...', 'info');
+  try {
+    await sb.from('papers').update({ nom_auteur: nom, prenom_auteur: prenom }).eq('id', id);
+
+    // Réutilise le même mécanisme d'envoi que les autres catégories : trouve ou crée
+    // le participant correspondant (categorie "Participants") par email. L'email n'étant
+    // pas garanti unique dans participants, on prend la première ligne trouvée plutôt
+    // que d'utiliser maybeSingle() (qui plante s'il y a plusieurs correspondances).
+    let participantId;
+    const { data: existingRows, error: findErr } = await sb.from('participants')
+      .select('id').eq('email', paper.email_auteur).limit(1);
+    if (findErr) throw findErr;
+    const existing = existingRows && existingRows[0];
+    if (existing) {
+      participantId = existing.id;
+      await sb.from('participants').update({ nom, prenom, categorie: 'Participant_Oral_Presentation' }).eq('id', participantId);
+    } else {
+      const { data: created, error: insErr } = await sb.from('participants')
+        .insert({ nom, prenom, email: paper.email_auteur, categorie: 'Participant_Oral_Presentation' })
+        .select('id').single();
+      if (insErr) throw insErr;
+      participantId = created.id;
+    }
+
+    const { data, error } = await sb.functions.invoke('send-email', {
+      body: { action: 'envoyerAttestation', participantId }
+    });
+    if (error) throw error;
+    if (!data || !data.succes) throw new Error(data && data.message || 'Erreur inconnue');
+
+    await sb.from('papers').update({ attestation_envoyee: true }).eq('id', id);
+    showToast('Attestation envoyée à ' + paper.email_auteur + ' !', 'success');
+    await loadAcceptedPapers();
+  } catch(e) { showToast('Erreur: ' + e.message, 'error'); }
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'show ' + type;
+  setTimeout(() => { t.className = ''; }, 3500);
+}
+</script>
+</body>
+</html>

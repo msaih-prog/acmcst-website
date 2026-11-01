@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACMCST 2027 — Paper Assignments</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --dark-blue:#0d2137;--mid-blue:#1a4a7a;--sky-blue:#2e9fd4;--orange:#e07b20;
+    --bg:#0a0f1a;--white:#ffffff;--text:#ffffff;--muted:#8a9ab0;
+    --success:#1a7a4a;--danger:#c0392b;--border:#1e3a5a;--card-bg:#0d2137;--input-bg:#0f1e30;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Source Sans 3',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+  #login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0a0f1a 0%,#0d2137 100%);}
+  .login-box{background:#0d2137;border-radius:16px;padding:2.5rem 2rem;width:100%;max-width:380px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5);border:1px solid var(--border);}
+  .login-box .logo-title{font-family:'Merriweather',serif;font-size:1.4rem;color:var(--white);margin-bottom:0.3rem;}
+  .login-box .logo-sub{font-size:0.85rem;color:var(--muted);margin-bottom:2rem;}
+  .lock-icon{width:60px;height:60px;background:var(--sky-blue);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;}
+  .lock-icon svg{width:28px;height:28px;fill:var(--white);}
+  .login-box input[type="email"],.login-box input[type="password"]{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:8px;font-size:1rem;font-family:inherit;margin-bottom:1rem;outline:none;text-align:center;background:var(--input-bg);color:var(--white);}
+  .login-box input[type="password"]{letter-spacing:4px;}
+  .login-box input[type="email"]:focus,.login-box input[type="password"]:focus{border-color:var(--sky-blue);}
+  .login-btn{width:100%;padding:12px;background:var(--sky-blue);color:var(--white);border:none;border-radius:8px;font-size:1rem;font-family:inherit;font-weight:600;cursor:pointer;}
+  .login-btn:hover{background:var(--mid-blue);}
+  .login-btn:disabled{opacity:0.6;cursor:not-allowed;}
+  .login-error{color:#ff6b6b;font-size:0.85rem;margin-top:0.75rem;display:none;}
+  #main-app{display:none;}
+  .topbar{background:#060c14;color:var(--white);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--border);}
+  .topbar-title{font-family:'Merriweather',serif;font-size:1rem;}
+  .topbar-title span{color:var(--sky-blue);}
+  .topbar-right{display:flex;gap:10px;align-items:center;}
+  .nav-link{background:var(--orange);color:var(--white);padding:6px 14px;border-radius:6px;font-size:0.85rem;text-decoration:none;font-weight:600;}
+  .nav-link.blue{background:var(--mid-blue);}
+  .logout-btn{background:transparent;border:1px solid var(--border);color:var(--white);padding:6px 14px;border-radius:6px;font-size:0.85rem;cursor:pointer;}
+  .logout-btn:hover{background:var(--border);}
+  .container{max-width:1200px;margin:0 auto;padding:2rem 1rem;}
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1.5rem;}
+  .stat-card{border-radius:10px;padding:1rem;text-align:center;border:1px solid var(--border);}
+  .stat-card.total{background:#0d2137;}
+  .stat-card.pending{background:#7c4a00;}
+  .stat-card.responded{background:#0a4a2a;}
+  .stat-card.relanced{background:#4a0a2a;}
+  .stat-card .num{font-size:1.8rem;font-weight:700;color:var(--white);}
+  .stat-card .lbl{font-size:0.78rem;color:rgba(255,255,255,0.6);margin-top:2px;}
+  .tabs{display:flex;gap:4px;margin-bottom:1.5rem;background:var(--card-bg);border-radius:10px;padding:6px;border:1px solid var(--border);}
+  .tab{flex:1;padding:10px;border:none;border-radius:8px;font-size:0.88rem;font-family:inherit;font-weight:600;cursor:pointer;background:transparent;color:var(--muted);transition:all 0.2s;}
+  .tab.active{background:var(--sky-blue);color:var(--white);}
+  .tab-content{display:none;}
+  .tab-content.active{display:block;}
+  .section-card{background:var(--card-bg);border-radius:12px;padding:1.5rem;border:1px solid var(--border);margin-bottom:1rem;}
+  .section-title{font-size:0.9rem;font-weight:700;color:var(--sky-blue);margin-bottom:1rem;padding-bottom:8px;border-bottom:1px solid var(--border);}
+  .site-toggle-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);}
+  .site-toggle-row:last-child{border-bottom:none;}
+  .site-toggle-name{font-size:0.88rem;font-weight:700;color:var(--white);}
+  .site-toggle-desc{font-size:0.74rem;color:var(--muted);margin-top:2px;}
+  .switch{position:relative;display:inline-block;width:46px;height:24px;flex-shrink:0;}
+  .switch input{opacity:0;width:0;height:0;}
+  .switch .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:rgba(255,255,255,0.15);transition:.2s;border-radius:24px;}
+  .switch .slider:before{position:absolute;content:"";height:18px;width:18px;left:3px;bottom:3px;background:var(--white);transition:.2s;border-radius:50%;}
+  .switch input:checked+.slider{background:var(--sky-blue);}
+  .switch input:checked+.slider:before{transform:translateX(22px);}
+  .switch input:disabled+.slider{opacity:0.5;cursor:not-allowed;}
+  .form-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px;}
+  .form-group{display:flex;flex-direction:column;gap:4px;}
+  .form-group label{font-size:0.75rem;font-weight:700;color:var(--sky-blue);text-transform:uppercase;letter-spacing:0.5px;}
+  .form-group input,.form-group select{padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:0.88rem;font-family:inherit;outline:none;background:var(--input-bg);color:var(--white);}
+  .form-group input::placeholder{color:var(--muted);}
+  .form-group input:focus,.form-group select:focus{border-color:var(--sky-blue);}
+  .form-group select option{background:var(--dark-blue);}
+  .btn{padding:9px 18px;border:none;border-radius:8px;font-size:0.85rem;font-family:inherit;font-weight:600;cursor:pointer;white-space:nowrap;}
+  .btn-sky{background:var(--sky-blue);color:var(--white);}
+  .btn-sky:hover{background:var(--mid-blue);}
+  .btn-orange{background:var(--orange);color:var(--white);}
+  .btn-orange:hover{background:#c96d18;}
+  .btn-success{background:rgba(46,204,113,0.2);color:#2ecc71;border:1px solid rgba(46,204,113,0.4);}
+  .btn-success:hover{background:rgba(46,204,113,0.35);}
+  .btn-warning{background:rgba(245,158,11,0.2);color:#f59e0b;border:1px solid rgba(245,158,11,0.4);}
+  .btn-warning:hover{background:rgba(245,158,11,0.35);}
+  .btn-danger{background:rgba(231,76,60,0.1);color:#e74c3c;border:1px solid rgba(231,76,60,0.3);}
+  .btn-danger:hover{background:rgba(231,76,60,0.25);}
+  .btn-outline{background:transparent;color:var(--muted);border:1.5px solid var(--border);}
+  .btn-outline:hover{background:var(--border);color:var(--white);}
+  .import-section{display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+  .pdf-upload-status{margin-top:10px;font-size:0.82rem;color:var(--muted);}
+  .controls{background:var(--card-bg);border-radius:10px;padding:1rem;border:1px solid var(--border);margin-bottom:1rem;display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+  .search-input{flex:1;min-width:200px;padding:9px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:0.9rem;font-family:inherit;outline:none;background:var(--input-bg);color:var(--white);}
+  .search-input::placeholder{color:var(--muted);}
+  .search-input:focus{border-color:var(--sky-blue);}
+  .filter-btns{display:flex;gap:6px;flex-wrap:wrap;}
+  .filter-btn{padding:7px 14px;border-radius:20px;border:1.5px solid var(--border);background:transparent;font-size:0.8rem;font-family:inherit;cursor:pointer;color:var(--muted);font-weight:600;}
+  .filter-btn:hover{border-color:var(--sky-blue);color:var(--sky-blue);}
+  .filter-btn.active{background:var(--sky-blue);color:var(--white);border-color:var(--sky-blue);}
+  .papers-grid{display:grid;gap:16px;}
+  .paper-card{background:var(--card-bg);border-radius:12px;border:1px solid var(--border);padding:1.25rem;transition:border-color 0.2s;}
+  .paper-card:hover{border-color:var(--sky-blue);}
+  .paper-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;gap:12px;}
+  .paper-id{font-size:0.72rem;font-weight:700;color:var(--sky-blue);letter-spacing:1px;text-transform:uppercase;}
+  .paper-title{font-size:0.95rem;font-weight:700;color:var(--white);margin-top:2px;}
+  .paper-email-info{font-size:0.8rem;color:var(--muted);margin-top:3px;}
+  .reviewers-list{display:flex;flex-direction:column;gap:8px;margin-top:12px;}
+  .reviewer-item{background:#060c14;border-radius:8px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--border);}
+  .reviewer-info{flex:1;}
+  .reviewer-num{font-size:0.72rem;font-weight:700;color:var(--sky-blue);text-transform:uppercase;margin-bottom:2px;}
+  .reviewer-name{font-size:0.88rem;font-weight:600;color:var(--white);}
+  .reviewer-email-text{font-size:0.78rem;color:var(--muted);}
+  .reviewer-actions{display:flex;gap:6px;flex-wrap:wrap;}
+  .status-badge{font-size:0.72rem;padding:4px 10px;border-radius:20px;font-weight:700;border:1px solid;white-space:nowrap;}
+  .status-pending{background:rgba(245,158,11,0.1);color:#f59e0b;border-color:rgba(245,158,11,0.3);}
+  .status-responded{background:rgba(224,123,32,0.15);color:var(--orange);border-color:rgba(224,123,32,0.4);}
+  .status-relanced{background:rgba(46,159,212,0.1);color:var(--sky-blue);border-color:rgba(46,159,212,0.3);}
+  .status-review-received{background:rgba(224,123,32,0.15);color:var(--orange);border-color:rgba(224,123,32,0.4);}
+.reviewer-item.review-received{background:rgba(224,123,32,0.25);border-color:rgba(224,123,32,0.6);}
+
+.reviewer-item.review-recu{background:rgba(224,123,32,0.1);border-color:rgba(224,123,32,0.4);}
+  .add-reviewer-form{background:#060c14;border-radius:8px;padding:12px;margin-top:8px;border:1px dashed var(--border);display:none;}
+  .add-reviewer-form.show{display:block;}
+  .reviewer-table-wrap{overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;}
+  thead{background:#060c14;}
+  thead th{padding:10px 14px;text-align:left;font-size:0.78rem;font-weight:700;text-transform:uppercase;color:var(--sky-blue);letter-spacing:0.5px;}
+  tbody tr{border-bottom:1px solid var(--border);}
+  tbody tr:hover{background:rgba(46,159,212,0.05);}
+  tbody td{padding:10px 14px;font-size:0.88rem;color:var(--white);}
+  #toast{position:fixed;bottom:2rem;right:2rem;padding:12px 20px;border-radius:8px;font-size:0.9rem;font-weight:600;color:var(--white);z-index:9999;transform:translateY(100px);opacity:0;transition:all 0.3s;max-width:320px;}
+  #toast.show{transform:translateY(0);opacity:1;}
+  #toast.success{background:#1a7a4a;}
+  #toast.error{background:#c0392b;}
+  #toast.info{background:var(--sky-blue);}
+  .empty-state{text-align:center;padding:3rem;color:var(--muted);}
+  .loading{text-align:center;padding:2rem;color:var(--muted);}
+  @media(max-width:768px){
+    .stats-grid{grid-template-columns:repeat(2,1fr);}
+    .form-row{grid-template-columns:1fr;}
+    .topbar{padding:1rem;}
+    .container{padding:1rem;}
+  }
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-box">
+    <div class="lock-icon"><svg viewBox="0 0 24 24"><path d="M12 1C9.24 1 7 3.24 7 6v2H5c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2h-2V6c0-2.76-2.24-5-5-5zm0 2c1.66 0 3 1.34 3 3v2H9V6c0-1.66 1.34-3 3-3zm0 9c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"/></svg></div>
+    <div class="logo-title">ACMCST <span style="color:var(--orange)">2027</span></div>
+    <div class="logo-sub">Paper Assignments — Restricted Access</div>
+    <input type="email" id="email-input" placeholder="Email" onkeydown="if(event.key==='Enter')document.getElementById('pwd-input').focus()"/>
+    <input type="password" id="pwd-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkLogin()"/>
+    <button class="login-btn" id="login-btn" onclick="checkLogin()">Access</button>
+    <div class="login-error" id="login-error">Incorrect email or password</div>
+  </div>
+</div>
+
+<div id="main-app">
+  <div class="topbar">
+    <div class="topbar-title">ACMCST <span>2027</span> — Paper Assignments</div>
+    <div class="topbar-right">
+      <a href="assignments.html" class="nav-link" style="background:#1a7a4a;">📋 Assignments</a>
+      <a href="review.html" class="nav-link" style="background:var(--mid-blue);">📄 Reviewing Papers</a>
+      <a href="reviewers.html" class="nav-link" style="background:var(--mid-blue);">👥 Reviewers</a>
+      <a href="Attestations.html" class="nav-link" style="background:var(--mid-blue);">🏅 Attestations</a>
+      <a href="payments.html" class="nav-link" style="background:var(--orange);">💰 Payments</a>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card total"><div class="num" id="stat-total">0</div><div class="lbl">Total Assignments</div></div>
+      <div class="stat-card pending"><div class="num" id="stat-pending">0</div><div class="lbl">En attente</div></div>
+      <div class="stat-card responded"><div class="num" id="stat-responded">0</div><div class="lbl">Répondus</div></div>
+      <div class="stat-card relanced"><div class="num" id="stat-relanced">0</div><div class="lbl">Relancés</div></div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title">🎛️ Contrôle du site</div>
+      <div class="site-toggle-row">
+        <div>
+          <div class="site-toggle-name">Extended Deadline Banner</div>
+          <div class="site-toggle-desc">Bannière de prolongation de deadline — index.html</div>
+        </div>
+        <label class="switch"><input type="checkbox" id="toggle-show_extended_deadline_banner" onchange="toggleSiteFeature('show_extended_deadline_banner', this)"><span class="slider"></span></label>
+      </div>
+      <div class="site-toggle-row">
+        <div>
+          <div class="site-toggle-name">Conference Rooms</div>
+          <div class="site-toggle-desc">Section carte des salles — index.html et venue.html</div>
+        </div>
+        <label class="switch"><input type="checkbox" id="toggle-show_conference_rooms" onchange="toggleSiteFeature('show_conference_rooms', this)"><span class="slider"></span></label>
+      </div>
+      <div class="site-toggle-row">
+        <div>
+          <div class="site-toggle-name">Programme</div>
+          <div class="site-toggle-desc">Section programme (téléchargement PDF) — index.html</div>
+        </div>
+        <label class="switch"><input type="checkbox" id="toggle-show_programme" onchange="toggleSiteFeature('show_programme', this)"><span class="slider"></span></label>
+      </div>
+      <div class="site-toggle-row">
+        <div>
+          <div class="site-toggle-name">Ready to Register Button</div>
+          <div class="site-toggle-desc">Bouton d'inscription — registration.html</div>
+        </div>
+        <label class="switch"><input type="checkbox" id="toggle-show_register_button" onchange="toggleSiteFeature('show_register_button', this)"><span class="slider"></span></label>
+      </div>
+      <div class="site-toggle-row">
+        <div>
+          <div class="site-toggle-name">Copyright Transfer Form</div>
+          <div class="site-toggle-desc">Lien Copyright dans le footer — toutes les pages</div>
+        </div>
+        <label class="switch"><input type="checkbox" id="toggle-show_copyright_form_link" onchange="toggleSiteFeature('show_copyright_form_link', this)"><span class="slider"></span></label>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title">💾 Sauvegarde &amp; Restauration</div>
+      <div class="import-section">
+        <button class="btn btn-sky" onclick="manualBackup()">💾 Sauvegarder</button>
+        <span style="color:var(--muted);font-size:0.82rem;" id="last-backup-info">Vérification…</span>
+        <button class="btn btn-warning" style="margin-left:auto;" onclick="restoreBackup()">♻️ Restaurer</button>
+      </div>
+      <p style="color:var(--muted);font-size:0.78rem;margin-top:8px;">Une seule sauvegarde est conservée (papiers + assignments) — chaque nouvelle sauvegarde remplace la précédente. Une sauvegarde automatique est aussi faite avant toute suppression.</p>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('assignments', this)">📋 Assignments</button>
+      <button class="tab" onclick="switchTab('reviewers', this)">👥 Reviewers (<span id="reviewer-count">0</span>)</button>
+    </div>
+
+    <!-- TAB ASSIGNMENTS -->
+    <div id="tab-assignments" class="tab-content active">
+      <div class="section-card">
+        <div class="section-title">📥 Importer les papiers depuis CMT (Excel)</div>
+        <div class="import-section">
+          <input type="file" id="cmt-file" accept=".xlsx,.xls,.csv" style="display:none" onchange="importCMT(this)"/>
+          <button class="btn btn-orange" onclick="document.getElementById('cmt-file').click()">📂 Importer Excel CMT</button>
+          <button class="btn btn-danger" onclick="clearExcelData()">🗑 Supprimer l'Excel importé</button>
+          <span style="color:var(--muted);font-size:0.82rem;">Colonnes requises : Paper ID, Paper Title, Author Email</span>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <div class="section-title">📎 Uploader les PDFs des papiers</div>
+        <div class="import-section">
+          <input type="file" id="cmt-folder" webkitdirectory directory multiple style="display:none" onchange="handleCmtFolder(this.files)"/>
+          <button class="btn btn-orange" onclick="document.getElementById('cmt-folder').click()">📁 Importer le dossier CMT complet</button>
+          <button class="btn btn-danger" onclick="clearPaperFiles()">🗑 Supprimer les papiers</button>
+          <span style="color:var(--muted);font-size:0.82rem;">Sélectionne le dossier racine (ex: "sasa") — le système lit automatiquement <code>&lt;PaperID&gt;/Submission/…pdf</code> dans chaque sous-dossier. Chrome/Edge uniquement.</span>
+        </div>
+        <div class="pdf-upload-status" id="pdf-upload-status"></div>
+      </div>
+
+      <div class="controls">
+        <input type="text" class="search-input" id="search-input" placeholder="Rechercher par Paper ID ou titre..." oninput="renderPapers()"/>
+        <div class="filter-btns">
+          <button class="filter-btn active" onclick="setFilter('All', this)">Tous</button>
+          <button class="filter-btn" onclick="setFilter('pending', this)">⏳ En attente</button>
+          <button class="filter-btn" onclick="setFilter('responded', this)">✅ Répondus</button>
+          <button class="filter-btn" onclick="setFilter('incomplete', this)">⚠️ Incomplets</button>
+        </div>
+      </div>
+
+      <div class="papers-grid" id="papers-grid">
+        <div class="loading">Chargement des papiers...</div>
+      </div>
+    </div>
+
+    <!-- TAB REVIEWERS -->
+    <div id="tab-reviewers" class="tab-content">
+      <div class="section-card">
+        <div class="section-title">👥 Liste des Reviewers</div>
+        <p style="color:var(--muted);font-size:0.82rem;margin-bottom:1rem;">
+          ℹ️ Pour ajouter, importer ou supprimer des reviewers, utilise la page <a href="reviewers.html" style="color:var(--sky-blue);">reviewers.html</a>.
+        </p>
+        <div class="reviewer-table-wrap">
+          <table>
+            <thead>
+              <tr><th>#</th><th>Nom & Prénom</th><th>Email</th><th>Papiers assignés</th></tr>
+            </thead>
+            <tbody id="reviewers-tbody">
+              <tr><td colspan="4"><div class="loading">Chargement...</div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+let papers = [];
+let reviewers = [];
+let assignments = [];
+let currentFilter = 'All';
+
+async function checkLogin() {
+  const email = document.getElementById('email-input').value.trim();
+  const pwd = document.getElementById('pwd-input').value;
+  const btn = document.getElementById('login-btn');
+  btn.disabled = true; btn.textContent = 'Signing in...';
+  const { error } = await sb.auth.signInWithPassword({ email, password: pwd });
+  btn.disabled = false; btn.textContent = 'Access';
+  if (error) {
+    document.getElementById('login-error').textContent = error.message;
+    document.getElementById('login-error').style.display = 'block';
+    return;
+  }
+  document.getElementById('login-error').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('main-app').style.display = 'block';
+  loadAll();
+}
+
+async function logout() {
+  await sb.auth.signOut();
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('main-app').style.display = 'none';
+}
+
+(async function initSession() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('main-app').style.display = 'block';
+    loadAll();
+  }
+})();
+
+async function loadAll() {
+  showToast('Chargement...', 'info');
+  await loadPapers();
+  await Promise.all([loadReviewers(), loadAssignments()]);
+  renderPapers();
+  renderReviewers();
+  updateStats();
+  loadBackupInfo();
+  loadSiteToggles();
+}
+
+// =====================
+// CONTRÔLE DU SITE — 5 interrupteurs qui pilotent l'affichage d'éléments
+// actuellement masqués sur les pages publiques (voir site-toggles.js).
+// =====================
+const SITE_TOGGLE_KEYS = [
+  'show_extended_deadline_banner', 'show_conference_rooms', 'show_programme',
+  'show_register_button', 'show_copyright_form_link',
+];
+
+async function loadSiteToggles() {
+  try {
+    const { data, error } = await sb.from('config').select(SITE_TOGGLE_KEYS.join(', ')).eq('id', 1).single();
+    if (error || !data) return;
+    SITE_TOGGLE_KEYS.forEach(key => {
+      const input = document.getElementById('toggle-' + key);
+      if (input) input.checked = !!data[key];
+    });
+  } catch (e) { console.error('loadSiteToggles:', e); }
+}
+
+async function toggleSiteFeature(key, input) {
+  const newValue = input.checked;
+  input.disabled = true;
+  try {
+    const { error } = await sb.from('config').update({ [key]: newValue }).eq('id', 1);
+    if (error) throw error;
+    showToast(newValue ? 'Activé sur le site public.' : 'Désactivé sur le site public.', 'success');
+  } catch (e) {
+    input.checked = !newValue;
+    showToast('Erreur : ' + e.message, 'error');
+  } finally {
+    input.disabled = false;
+  }
+}
+
+// =====================
+// SAUVEGARDE / RESTAURATION (papers + assignments)
+// Une seule sauvegarde à la fois : le fichier "backup.json" du bucket Storage
+// "backups" est toujours écrasé (upsert) — jamais accumulé.
+// =====================
+function formatBackupDate(isoDate) {
+  const d = new Date(isoDate);
+  return d.toLocaleDateString('fr-FR') + ' à ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+}
+
+function updateLastBackupLabel(isoDate) {
+  const el = document.getElementById('last-backup-info');
+  if (el) el.textContent = 'Dernière sauvegarde : ' + formatBackupDate(isoDate);
+}
+
+async function loadBackupInfo() {
+  const el = document.getElementById('last-backup-info');
+  try {
+    const { data, error } = await sb.storage.from('backups').list('', { search: 'backup.json' });
+    if (error) throw error;
+    const file = (data || []).find(f => f.name === 'backup.json');
+    if (file && file.updated_at) updateLastBackupLabel(file.updated_at);
+    else if (el) el.textContent = 'Aucune sauvegarde pour le moment.';
+  } catch (e) {
+    if (el) el.textContent = 'Aucune sauvegarde pour le moment.';
+  }
+}
+
+// silent=true : pas de toast de succès (utilisé pour la sauvegarde auto avant suppression)
+async function saveBackup(silent) {
+  const { data: papersData, error: pErr } = await sb.from('papers').select('*');
+  if (pErr) throw pErr;
+  const { data: assignData, error: aErr } = await sb.from('assignments').select('*');
+  if (aErr) throw aErr;
+  const createdAt = new Date().toISOString();
+  const payload = { created_at: createdAt, papers: papersData || [], assignments: assignData || [] };
+  const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+  const { error: upErr } = await sb.storage.from('backups').upload('backup.json', blob, { upsert: true, contentType: 'application/json' });
+  if (upErr) throw upErr;
+  updateLastBackupLabel(createdAt);
+  if (!silent) showToast('Sauvegarde effectuée !', 'success');
+  return createdAt;
+}
+
+async function manualBackup() {
+  try {
+    showToast('Sauvegarde en cours...', 'info');
+    await saveBackup(false);
+  } catch (e) { showToast('Erreur sauvegarde : ' + e.message, 'error'); }
+}
+
+async function restoreBackup() {
+  let backupMeta;
+  try {
+    const { data, error } = await sb.storage.from('backups').list('', { search: 'backup.json' });
+    if (error) throw error;
+    backupMeta = (data || []).find(f => f.name === 'backup.json');
+  } catch (e) { showToast('Erreur : ' + e.message, 'error'); return; }
+  if (!backupMeta) { showToast('Aucune sauvegarde disponible.', 'error'); return; }
+
+  const formatted = formatBackupDate(backupMeta.updated_at);
+  if (!confirm('⚠️ Restaurer la sauvegarde du ' + formatted + ' va REMPLACER toutes les données actuelles (papiers + assignments) par celles de cette sauvegarde. Continuer ?')) return;
+
+  try {
+    showToast('Restauration en cours...', 'info');
+    const { data: fileBlob, error: dlErr } = await sb.storage.from('backups').download('backup.json');
+    if (dlErr) throw dlErr;
+    const backup = JSON.parse(await fileBlob.text());
+
+    const { data: currentReviewers, error: rErr } = await sb.from('reviewers').select('id');
+    if (rErr) throw rErr;
+    const validReviewerIds = new Set((currentReviewers || []).map(r => r.id));
+
+    const { data: currentAssignIds } = await sb.from('assignments').select('id');
+    if (currentAssignIds && currentAssignIds.length) {
+      await sb.from('assignments').delete().in('id', currentAssignIds.map(a => a.id));
+    }
+    const { data: currentPaperIds } = await sb.from('papers').select('id');
+    if (currentPaperIds && currentPaperIds.length) {
+      await sb.from('papers').delete().in('id', currentPaperIds.map(p => p.id));
+    }
+
+    if (backup.papers && backup.papers.length) {
+      const { error: insPErr } = await sb.from('papers').insert(backup.papers);
+      if (insPErr) throw insPErr;
+    }
+
+    let skipped = 0;
+    const assignmentsToRestore = (backup.assignments || []).filter(a => {
+      if (validReviewerIds.has(a.reviewer_id)) return true;
+      skipped++; return false;
+    });
+    if (assignmentsToRestore.length) {
+      const { error: insAErr } = await sb.from('assignments').insert(assignmentsToRestore);
+      if (insAErr) throw insAErr;
+    }
+
+    await loadAll();
+    showToast('Restauration terminée : ' + (backup.papers || []).length + ' papier(s), ' + assignmentsToRestore.length + ' assignment(s) restauré(s)' + (skipped > 0 ? ' (' + skipped + ' ignoré(s), reviewer supprimé depuis)' : '') + '.', 'success');
+  } catch (e) { showToast('Erreur restauration : ' + e.message + ' — le fichier de sauvegarde est intact, tu peux réessayer.', 'error'); }
+}
+
+// Sauvegarde auto avant suppression, avec double confirmation. Si la sauvegarde échoue,
+// la suppression est annulée par sécurité.
+async function confirmDeleteWithBackup(message) {
+  if (!confirm(message)) return false;
+  try {
+    showToast('Sauvegarde de sécurité en cours...', 'info');
+    await saveBackup(true);
+  } catch (e) {
+    alert('❌ La sauvegarde automatique a échoué (' + e.message + ') — suppression annulée par sécurité.');
+    return false;
+  }
+  return confirm('✅ Sauvegarde effectuée à l\'instant. Confirmer la suppression définitive ? (Récupérable ensuite via le bouton "Restaurer".)');
+}
+
+// =====================
+// UPLOAD DES PDFs DES PAPIERS (bucket Storage "papers")
+// =====================
+// Import du dossier CMT complet : <racine>/<PaperID>/Submission/....pdf
+async function handleCmtFolder(fileList) {
+  const files = Array.from(fileList);
+  const byPaperID = new Map();
+  for (const file of files) {
+    const rel = file.webkitRelativePath || file.name;
+    const parts = rel.split('/');
+    if (parts.length < 3) continue;
+    const paperID = parts[1].trim();
+    const submissionFolder = parts[2];
+    if (!paperID || !/submission/i.test(submissionFolder)) continue;
+    const lowerName = file.name.toLowerCase();
+    if (!lowerName.endsWith('.pdf') && !lowerName.endsWith('.docx')) continue;
+    if (!byPaperID.has(paperID)) byPaperID.set(paperID, file);
+  }
+
+  const statusEl = document.getElementById('pdf-upload-status');
+  if (byPaperID.size === 0) {
+    showToast('Aucun PDF/DOCX trouvé sous <PaperID>/Submission/ dans ce dossier.', 'error');
+    return;
+  }
+
+  showToast('Upload de ' + byPaperID.size + ' fichier(s) en cours...', 'info');
+  let uploaded = 0, failed = 0, unknownPaper = 0;
+  const entries = Array.from(byPaperID.entries());
+  for (let i = 0; i < entries.length; i++) {
+    const [paperID, file] = entries[i];
+    statusEl.textContent = `⏳ Upload en cours… fichier ${i + 1}/${entries.length} (Paper ID ${paperID})`;
+    if (!papers.find(p => p.paperID.toString() === paperID)) unknownPaper++;
+    const ext = file.name.toLowerCase().endsWith('.docx') ? 'docx' : 'pdf';
+    const contentType = ext === 'docx'
+      ? 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      : 'application/pdf';
+    try {
+      const { error } = await sb.storage
+        .from('papers')
+        .upload(`${paperID}.${ext}`, file, { upsert: true, contentType });
+      if (error) throw error;
+      uploaded++;
+    } catch(e) {
+      failed++; console.error('Upload échoué:', paperID, e);
+    }
+  }
+  document.getElementById('cmt-folder').value = '';
+
+  let msg = '✅ Terminé — ' + uploaded + ' fichier(s) uploadé(s) avec succès.';
+  if (failed > 0) msg += ' ' + failed + ' échec(s).';
+  statusEl.textContent = msg + (unknownPaper > 0
+    ? ' ⚠️ ' + unknownPaper + ' fichier(s) sans Paper ID correspondant dans la liste des papiers.'
+    : '');
+  showToast(msg, failed > 0 ? 'error' : 'success');
+}
+
+// =====================
+// CHARGE REVIEWERS depuis la table "reviewers" (gérée dans reviewers.html)
+// =====================
+async function loadReviewers() {
+  try {
+    const { data, error } = await sb.from('reviewers').select('*').order('nom');
+    if (error) throw error;
+    reviewers = data.map(r => ({
+      id: r.id, nom: r.nom || '', prenom: r.prenom || '', email: r.email,
+      display: (r.nom || '') + ' ' + (r.prenom || '') + ' (' + r.email + ')'
+    }));
+    document.getElementById('reviewer-count').textContent = reviewers.length;
+  } catch(e) { console.error('Erreur reviewers:', e); }
+}
+
+async function loadAssignments() {
+  try {
+    const { data, error } = await sb.from('assignments')
+      .select('id, num_reviewer, statut, date_envoi, nb_relances, date_reponse, paper:papers(id, paper_id, titre, email_auteur), reviewer:reviewers(id, nom, prenom, email)')
+      .order('num_reviewer');
+    if (error) throw error;
+    assignments = data.map(a => ({
+      id: a.id,
+      paperID: a.paper.paper_id,
+      paperUuid: a.paper.id,
+      titre: a.paper.titre,
+      emailAuteur: a.paper.email_auteur,
+      reviewerEmail: a.reviewer.email,
+      reviewerNom: (a.reviewer.nom + ' ' + a.reviewer.prenom).trim(),
+      numReviewer: a.num_reviewer,
+      statut: a.statut,
+      dateEnvoi: a.date_envoi ? new Date(a.date_envoi).toLocaleString() : '',
+      nbRelances: a.nb_relances,
+      dateReponse: a.date_reponse ? new Date(a.date_reponse).toLocaleString() : ''
+    }));
+  } catch(e) { console.error('Erreur assignments:', e); }
+}
+
+// =====================
+// CHARGE PAPIERS depuis Supabase
+// =====================
+async function loadPapers() {
+  try {
+    const { data, error } = await sb.from('papers').select('id, paper_id, titre, email_auteur, decision').order('created_at');
+    if (error) throw error;
+    papers = data.map(p => ({ id: p.id, paperID: p.paper_id, titre: p.titre, email: p.email_auteur, decision: p.decision }));
+  } catch(e) { console.error('Erreur papers:', e); }
+}
+
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  btn.classList.add('active');
+}
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderPapers();
+}
+
+// =====================
+// IMPORT CMT EXCEL → sauvegarde dans Supabase
+// =====================
+async function importCMT(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async function(e) {
+    try {
+      const wb = XLSX.read(new Uint8Array(e.target.result), {type: 'array'});
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws, {header: 1});
+      if (rows.length < 2) { showToast('Fichier vide !', 'error'); return; }
+
+      // Export Microsoft CMT : ligne 1 = nom de la conférence, ligne 2 = vide, ligne 3 = en-têtes.
+      // On cherche la ligne contenant "Paper ID" plutôt que de figer un nombre de lignes à
+      // sauter, pour rester compatible si CMT change le nombre de lignes de préambule.
+      let headerRowIdx = rows.findIndex(r => Array.isArray(r) && r.some(c => (c || '').toString().toLowerCase().trim().includes('paper id')));
+      if (headerRowIdx === -1) headerRowIdx = 0;
+      const headers = (rows[headerRowIdx] || []).map(h => (h||'').toString().toLowerCase().trim());
+      const idxID = headers.findIndex(h => h.includes('paper id') || h === 'id');
+      const idxTitle = headers.findIndex(h => h.includes('paper title') || h.includes('title'));
+      const idxEmail = headers.findIndex(h => h.includes('author email') || h.includes('email'));
+      let idxAuthorName = headers.findIndex(h => h.includes('primary contact author name'));
+      if (idxAuthorName === -1) idxAuthorName = headers.findIndex(h => h.includes('author name'));
+
+      if (idxID === -1 || idxTitle === -1) {
+        showToast('Colonnes Paper ID et Paper Title requises !', 'error'); return;
+      }
+
+      showToast('Importation en cours...', 'info');
+      let added = 0, skippedExisting = 0, skippedEmpty = 0, failed = 0, lastError = '';
+      for (let i = headerRowIdx + 1; i < rows.length; i++) {
+        const row = rows[i];
+        if (!row || row.length === 0) continue;
+        const paperID = (row[idxID] || '').toString().trim();
+        const titre = (row[idxTitle] || '').toString().trim();
+        const email = idxEmail !== -1 ? (row[idxEmail] || '').toString().trim() : '';
+        if (!paperID || !titre) { skippedEmpty++; continue; }
+
+        // "Primary Contact Author Name" (CMT) arrive en un seul champ "Prénom Nom" —
+        // on le sépare pour pré-remplir l'attestation (modifiable ensuite dans Attestations.html).
+        let prenomAuteur = '', nomAuteur = '';
+        if (idxAuthorName !== -1) {
+          const fullName = (row[idxAuthorName] || '').toString().trim();
+          if (fullName) {
+            const parts = fullName.split(/\s+/);
+            prenomAuteur = parts[0] || '';
+            nomAuteur = parts.slice(1).join(' ') || '';
+          }
+        }
+
+        const exists = papers.find(p => p.paperID === paperID);
+        if (exists) {
+          // Papier déjà importé : on complète juste le nom auteur s'il manque encore
+          // (utile pour re-passer le fichier CMT après coup sans dupliquer les papiers).
+          if (nomAuteur || prenomAuteur) {
+            try {
+              await sb.from('papers')
+                .update({ nom_auteur: nomAuteur || null, prenom_auteur: prenomAuteur || null })
+                .eq('id', exists.id)
+                .is('nom_auteur', null);
+            } catch(e) { console.error('Backfill nom_auteur échoué:', paperID, e); }
+          }
+          skippedExisting++; continue;
+        }
+        try {
+          const { data, error } = await sb.from('papers')
+            .insert({ paper_id: paperID, titre, email_auteur: email, nom_auteur: nomAuteur || null, prenom_auteur: prenomAuteur || null })
+            .select('id').single();
+          if (error) throw error;
+          papers.push({id: data.id, paperID, titre, email});
+          added++;
+        } catch(e) {
+          failed++; lastError = e.message; console.error('Import row failed:', paperID, e);
+        }
+      }
+      renderPapers(); updateStats(); input.value = '';
+      if (failed > 0) {
+        showToast(added + ' importés, ' + failed + ' échoués — erreur : ' + lastError, 'error');
+      } else if (added === 0 && skippedExisting > 0) {
+        showToast('Tous les papiers de ce fichier existent déjà (' + skippedExisting + ').', 'info');
+      } else if (added === 0 && skippedEmpty > 0) {
+        showToast('Aucune ligne valide trouvée (' + skippedEmpty + ' lignes sans Paper ID/Titre).', 'error');
+      } else {
+        showToast(added + ' papiers importés et sauvegardés !', 'success');
+      }
+    } catch(e) {
+      console.error('importCMT erreur brute:', e);
+      const msg = (e && e.message) ? e.message : (typeof e === 'string' ? e : JSON.stringify(e));
+      showToast('Erreur lecture fichier : ' + msg, 'error');
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+// Vide uniquement les FICHIERS (PDF/docx) du bucket Storage "papers" — ceux que
+// les reviewers téléchargent. Ne touche ni la table papers, ni les assignments.
+async function clearPaperFiles() {
+  if (!confirm('Supprimer tous les fichiers PDF/DOCX stockés (ceux que les reviewers téléchargent) ? Les papiers et assignments ne seront PAS touchés.')) return;
+  showToast('Suppression des fichiers en cours...', 'info');
+  try {
+    const { data: files, error: listError } = await sb.storage.from('papers').list('', { limit: 1000 });
+    if (listError) throw listError;
+    if (files && files.length > 0) {
+      const { error } = await sb.storage.from('papers').remove(files.map(f => f.name));
+      if (error) throw error;
+    }
+    showToast((files ? files.length : 0) + ' fichier(s) supprimé(s) !', 'success');
+  } catch(e) { showToast('Erreur: ' + e.message, 'error'); }
+}
+
+// Vide la table "papers" (import Excel : Paper ID/Titre/Email) et ses assignments.
+// Ne touche PAS aux fichiers déjà uploadés dans Storage.
+async function clearExcelData() {
+  const ok = await confirmDeleteWithBackup("Supprimer l'Excel importé ? Cela supprime toutes les lignes de la table papers (et leurs assignments). Les fichiers PDF/DOCX déjà uploadés ne seront PAS supprimés.");
+  if (!ok) return;
+  try {
+    const ids = papers.map(p => p.id);
+    if (ids.length) {
+      const { error } = await sb.from('papers').delete().in('id', ids);
+      if (error) throw error;
+    }
+  } catch(e) { showToast('Erreur: ' + e.message, 'error'); return; }
+  papers = []; assignments = [];
+  renderPapers(); updateStats();
+  showToast('Données Excel supprimées !', 'info');
+}
+
+// =====================
+// RENDER PAPERS
+// =====================
+function renderPapers() {
+  const search = (document.getElementById('search-input')?.value || '').toLowerCase();
+  const grid = document.getElementById('papers-grid');
+
+  if (papers.length === 0) {
+    grid.innerHTML = '<div class="empty-state">Importez des papiers depuis CMT pour commencer ! 😊</div>';
+    return;
+  }
+
+  let filtered = papers.filter(p => {
+    const matchSearch = p.paperID.toLowerCase().includes(search) || p.titre.toLowerCase().includes(search);
+    if (!matchSearch) return false;
+    const pa = assignments.filter(a => a.paperID.toString() === p.paperID.toString());
+    if (currentFilter === 'All') return true;
+    if (currentFilter === 'responded') return pa.some(a => a.statut === 'Review reçue');
+    if (currentFilter === 'pending') return pa.some(a => a.statut === 'En attente');
+    if (currentFilter === 'incomplete') return pa.filter(a => a.statut === 'Review reçue').length < 2;
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div class="empty-state">Aucun papier trouvé.</div>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map(p => {
+    const pa = assignments.filter(a => a.paperID.toString() === p.paperID.toString());
+    const respondedCount = pa.filter(a => a.statut === 'Review reçue').length;
+    const isHorsSujet = p.decision === 'Hors_Sujet';
+
+    return `
+    <div class="paper-card">
+      <div class="paper-header">
+        <div style="flex:1">
+          <div class="paper-id">Paper ID: ${p.paperID}</div>
+          <div class="paper-title">${p.titre}</div>
+          <div class="paper-email-info">📧 ${p.email || 'Email non disponible'}</div>
+          ${p.decision === 'Accepted_Poster' ? `<span class="status-badge" style="background:rgba(46,159,212,0.15);color:#2e9fd4;border-color:rgba(46,159,212,0.5);margin-top:6px;display:inline-block;">📋 Poster</span>` : ''}
+        </div>
+        ${isHorsSujet ? `
+        <span class="status-badge" style="background:rgba(155,89,182,0.15);color:#9b59b6;border-color:rgba(155,89,182,0.5);">🚫 Hors Sujet</span>
+        ` : `
+        <div style="text-align:right;min-width:60px;">
+          <div style="font-size:0.72rem;color:var(--muted);">Reviews</div>
+          <div style="font-size:1.4rem;font-weight:700;color:${respondedCount >= 2 ? '#2ecc71' : '#f59e0b'};">
+            ${respondedCount}/${pa.length}
+          </div>
+        </div>
+        `}
+      </div>
+
+      ${isHorsSujet ? `
+      <div style="color:var(--muted);font-size:0.82rem;padding:8px 0;">Ce papier est classé "Hors Sujet" — aucun reviewer n'est nécessaire.</div>
+      ` : `
+      <div class="reviewers-list">
+        ${pa.length === 0 ? `<div style="color:var(--muted);font-size:0.82rem;padding:8px;">Aucun reviewer assigné</div>` : ''}
+        ${pa.map(a => `
+<div class="reviewer-item ${a.statut === 'Review reçue' ? 'review-received' : ''}">
+              <div class="reviewer-info">
+              <div class="reviewer-num">Reviewer ${a.numReviewer}</div>
+              <div class="reviewer-name">${a.reviewerNom}</div>
+              <div class="reviewer-email-text">📧 ${a.reviewerEmail}</div>
+              ${a.dateEnvoi ? `<div style="font-size:0.7rem;color:var(--muted);margin-top:2px;">📤 Envoyé: ${a.dateEnvoi}</div>` : ''}
+              ${a.nbRelances > 0 ? `<div style="font-size:0.7rem;color:var(--sky-blue);">↺ Relances: ${a.nbRelances}</div>` : ''}
+              ${a.dateReponse ? `<div style="font-size:0.7rem;color:var(--orange);">🟠 Review reçue: ${a.dateReponse}</div>` : ''}
+            </div>
+            <div class="reviewer-actions">
+              <span class="status-badge ${a.statut === 'Review reçue' ? 'status-responded' : (a.nbRelances > 0 ? 'status-relanced' : 'status-pending')}">
+                ${a.statut === 'Review reçue' ? '🟠 Review reçue' : '⏳ En attente'}
+              </span>
+${a.statut !== 'Review reçue' ? `
+  <button class="btn ${a.dateEnvoi ? 'btn-success' : 'btn-sky'}" style="padding:5px 10px;font-size:0.75rem;" onclick="envoyerEmail('${a.id}')">
+    ${a.dateEnvoi ? '✅ Envoyé' : '📧 Envoyer'}
+  </button>
+  <button class="btn btn-warning" style="padding:5px 10px;font-size:0.75rem;" onclick="relancer('${a.id}')">↺ Relancer</button>
+` : ''}
+              <button class="btn btn-danger" style="padding:5px 8px;font-size:0.75rem;" onclick="supprimerAssignment('${a.id}')">🗑</button>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="add-reviewer-form" id="form-${p.paperID}">
+        <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end;">
+          <div class="form-group">
+            <label>Choisir un Reviewer</label>
+            <select id="select-reviewer-${p.paperID}">
+              <option value="">-- Sélectionner --</option>
+              ${reviewers.map(r => `<option value="${r.id}">${r.nom} ${r.prenom} — ${r.email}</option>`).join('')}
+            </select>
+          </div>
+          <div style="display:flex;gap:6px;">
+            <button class="btn btn-sky" onclick="assignerReviewer('${p.paperID}', \`${p.titre.replace(/`/g,'').replace(/'/g,'')}\`, '${p.email}')">✅ Assigner</button>
+            <button class="btn btn-outline" onclick="toggleAddReviewer('${p.paperID}')">✕</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:10px;">
+        <button class="btn btn-outline" style="font-size:0.8rem;" onclick="toggleAddReviewer('${p.paperID}')">
+          ➕ Ajouter Reviewer ${pa.length + 1}
+        </button>
+      </div>
+      `}
+    </div>`;
+  }).join('');
+}
+
+function toggleAddReviewer(paperID) {
+  const form = document.getElementById('form-' + paperID);
+  form.classList.toggle('show');
+}
+
+async function assignerReviewer(paperID, titre, emailAuteur) {
+  const select = document.getElementById('select-reviewer-' + paperID);
+  const reviewerId = select.value;
+  if (!reviewerId) { showToast('Sélectionnez un reviewer !', 'error'); return; }
+
+  const paper = papers.find(p => p.paperID.toString() === paperID.toString());
+  if (!paper) { showToast('Papier introuvable', 'error'); return; }
+
+  const reviewer = reviewers.find(r => r.id === reviewerId);
+  if (!reviewer) { showToast('Reviewer introuvable', 'error'); return; }
+
+  const pa = assignments.filter(a => a.paperID.toString() === paperID.toString());
+  const numReviewer = pa.length + 1;
+
+  try {
+    const { data, error } = await sb.from('assignments')
+      .insert({ paper_id: paper.id, reviewer_id: reviewerId, num_reviewer: numReviewer })
+      .select('id').single();
+    if (error) throw error;
+    assignments.push({
+      id: data.id, paperID, paperUuid: paper.id, titre, emailAuteur,
+      reviewerEmail: reviewer.email, reviewerNom: (reviewer.nom + ' ' + reviewer.prenom).trim(),
+      numReviewer, statut: 'En attente', dateEnvoi: '', nbRelances: 0, dateReponse: ''
+    });
+    renderPapers(); updateStats();
+    showToast('Reviewer ' + numReviewer + ' assigné !', 'success');
+    document.getElementById('form-' + paperID).classList.remove('show');
+  } catch(e) { showToast('Erreur: ' + e.message, 'error'); }
+}
+
+// Vérifie que le PDF/DOCX du papier est bien présent dans le bucket Storage "papers"
+// avant d'envoyer l'email — évite d'envoyer un lien de review vers un fichier absent.
+async function paperFileExists(paperID) {
+  try {
+    const { data, error } = await sb.storage.from('papers').list('', { search: paperID });
+    if (error) return true; // en cas d'erreur de vérification, on n'empêche pas l'envoi
+    return (data || []).some(f => f.name === `${paperID}.pdf` || f.name === `${paperID}.docx`);
+  } catch (e) { return true; }
+}
+
+async function envoyerEmail(id) {
+  const a = assignments.find(x => x.id == id);
+  const paperID = a ? a.paperID : null;
+  const fileExists = paperID ? await paperFileExists(paperID) : true;
+  if (!fileExists) {
+    showToast(`❌ Impossible d'envoyer l'email : le PDF du papier ID ${paperID} n'est pas encore uploadé. Veuillez d'abord uploader le PDF du papier avant d'envoyer l'invitation au reviewer.`, 'error');
+    return;
+  }
+  if (!confirm('Envoyer l\'email au reviewer ?')) return;
+  showToast('Envoi en cours...', 'info');
+  try {
+    const { data, error } = await sb.functions.invoke('send-email', {
+      body: { action: 'envoyerEmailReviewer', assignmentId: id }
+    });
+    if (error) throw error;
+    if (!data || !data.succes) throw new Error(data && data.message || 'Erreur inconnue');
+    const idx = assignments.findIndex(a => a.id == id);
+    if (idx !== -1) assignments[idx].dateEnvoi = new Date().toLocaleString();
+    renderPapers(); updateStats();
+    showToast('Email envoyé avec formulaire .docx + papier PDF !', 'success');
+  } catch(e) { showToast('Erreur: ' + e.message, 'error'); }
+}
+
+async function relancer(id) {
+  if (!confirm('Envoyer une relance à ce reviewer ?')) return;
+  showToast('Envoi relance...', 'info');
+  try {
+    const { data, error } = await sb.functions.invoke('send-email', {
+      body: { action: 'relancerReviewer', assignmentId: id }
+    });
+    if (error) throw error;
+    if (!data || !data.succes) throw new Error(data && data.message || 'Erreur inconnue');
+    const idx = assignments.findIndex(a => a.id == id);
+    if (idx !== -1) assignments[idx].nbRelances = (parseInt(assignments[idx].nbRelances) || 0) + 1;
+    renderPapers(); updateStats();
+    showToast('Relance envoyée !', 'success');
+  } catch(e) { showToast('Erreur: ' + e.message, 'error'); }
+}
+
+async function supprimerAssignment(id) {
+  const ok = await confirmDeleteWithBackup('Supprimer cet assignment ?');
+  if (!ok) return;
+  try {
+    const { error } = await sb.from('assignments').delete().eq('id', id);
+    if (error) throw error;
+    assignments = assignments.filter(a => a.id != id);
+    renderPapers(); updateStats();
+    showToast('Assignment supprimé !', 'info');
+  } catch(e) { showToast('Erreur: ' + e.message, 'error'); }
+}
+
+function renderReviewers() {
+  const tbody = document.getElementById('reviewers-tbody');
+  document.getElementById('reviewer-count').textContent = reviewers.length;
+  if (reviewers.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="4"><div class="empty-state">Aucun reviewer trouvé. Ajoute-en depuis <a href="reviewers.html" style="color:var(--sky-blue);">reviewers.html</a>.</div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = reviewers.map((r, i) => {
+    const nbAssignments = assignments.filter(a => a.reviewerEmail === r.email).length;
+    return `
+    <tr>
+      <td style="color:var(--muted)">${i+1}</td>
+      <td><strong>${r.nom}</strong> ${r.prenom}</td>
+      <td style="color:var(--muted)">${r.email}</td>
+      <td>${nbAssignments > 0
+        ? `<span style="color:var(--sky-blue);font-size:0.8rem;">${nbAssignments} papier(s)</span>`
+        : `<span style="color:var(--muted);font-size:0.8rem;">Non assigné</span>`}
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function updateStats() {
+  const total = assignments.length;
+  const pending = assignments.filter(a => a.statut === 'En attente').length;
+  const responded = assignments.filter(a => a.statut === 'Review reçue').length;
+  const relanced = assignments.filter(a => (parseInt(a.nbRelances) || 0) > 0).length;
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-pending').textContent = pending;
+  document.getElementById('stat-responded').textContent = responded;
+  document.getElementById('stat-relanced').textContent = relanced;
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'show ' + type;
+  setTimeout(() => { t.className = ''; }, 3500);
+}
+</script>
+</body>
+</html>

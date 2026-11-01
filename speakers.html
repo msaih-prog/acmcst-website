@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Keynote Speakers – ACMCST 2027</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --dark-blue:#0d2137;
+  --mid-blue:#1a4a7a;
+  --sky-blue:#2e9fd4;
+  --orange:#e07b20;
+  --white:#ffffff;
+  --light:#c5e3f5;
+  --border:rgba(0,0,0,0.08);
+  --text:#1c2b3a;
+  --gray:#6b7a8d;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Times New Roman',Times,serif;color:var(--text);background:var(--white);overflow-x:hidden;}
+
+/* TOPBAR */
+.topbar{background:var(--dark-blue);padding:.45rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem;}
+.topbar-item{display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:rgba(255,255,255,0.75);}
+
+/* NAVBAR */
+nav{background:var(--white);border-bottom:3px solid var(--sky-blue);position:sticky;top:0;z-index:1000;box-shadow:0 2px 10px rgba(0,0,0,0.08);}
+.nav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;padding:0 2rem;height:70px;gap:1rem;}
+.nav-logo{display:flex;align-items:center;gap:.8rem;text-decoration:none;margin-right:1.5rem;}
+.nav-logo img{height:73px;width:auto;}
+.nav-menu{display:flex;list-style:none;height:70px;flex:1;justify-content:center;}
+.nav-item{position:relative;height:100%;display:flex;align-items:center;}
+.nav-item>a{display:flex;align-items:center;gap:.25rem;padding:0 .65rem;height:100%;font-size:.82rem;font-weight:700;color:var(--dark-blue);text-decoration:none;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-3px;transition:color .2s,border-color .2s;}
+.nav-item>a:hover,.nav-item.active>a{color:var(--sky-blue);border-bottom-color:var(--orange);}
+.nav-item>a .ch{font-size:.55rem;}
+.new-badge{display:inline-block;background:#e00;color:#fff;font-size:.6rem;font-weight:800;padding:.1rem .35rem;border-radius:2px;margin-left:.3rem;animation:blink 1s infinite;vertical-align:middle;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+.dropdown{display:none;position:absolute;top:100%;left:0;background:var(--white);box-shadow:0 6px 25px rgba(0,0,0,0.12);border-top:3px solid var(--orange);min-width:200px;z-index:200;}
+.nav-item:hover .dropdown{display:block;}
+.dropdown a{display:block;padding:.65rem 1.2rem;font-size:.8rem;color:var(--text);text-decoration:none;font-weight:600;border-bottom:1px solid var(--border);transition:background .15s,color .15s,padding-left .15s;}
+.dropdown a:hover{background:var(--light);color:var(--sky-blue);padding-left:1.6rem;}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;}
+.hamburger span{width:24px;height:2px;background:var(--dark-blue);}
+
+/* PAGE HEADER     */
+.page-header{background:linear-gradient(rgba(13,33,55,0.85),rgba(13,33,55,0.85)),url('header-bg.svg') center/cover no-repeat;padding:4rem 2rem;text-align:center;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.page-header h1{font-family:'Merriweather',serif;font-size:clamp(1.8rem,3vw,2.8rem);font-weight:900;color:var(--white);margin-bottom:.5rem;}
+.page-header p{color:rgba(255,255,255,0.7);font-size:.95rem;}
+.breadcrumb{display:flex;align-items:center;justify-content:center;gap:.5rem;font-size:.8rem;color:rgba(255,255,255,0.5);margin-top:.8rem;}
+.breadcrumb a{color:var(--sky-blue);text-decoration:none;}
+.breadcrumb span{color:rgba(255,255,255,0.3);}
+
+/* LAYOUT */
+.container{max-width:1200px;margin:0 auto;padding:0 2rem;}
+section{padding:4rem 0;}
+.sec-header{text-align:center;margin-bottom:3rem;}
+.sec-tag{font-size:.7rem;color:var(--sky-blue);letter-spacing:3px;text-transform:uppercase;font-weight:700;margin-bottom:.4rem;}
+.sec-title{font-family:'Merriweather',serif;font-size:clamp(1.5rem,2.5vw,2.2rem);font-weight:900;color:var(--dark-blue);}
+.sec-line{width:50px;height:3px;background:var(--orange);margin:.8rem auto 0;}
+
+/* CANVA BANNER — place réservée */
+.canva-banner-wrap{
+  width:100%;
+  background:var(--dark-blue);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+.canva-banner-wrap img{
+  width:100%;
+  max-height:420px;
+  object-fit:cover;
+  display:block;
+}
+.canva-banner-placeholder{
+  width:100%;
+  min-height:320px;
+  background:linear-gradient(135deg,var(--dark-blue),var(--mid-blue));
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:1rem;
+  color:rgba(255,255,255,0.5);
+  text-align:center;
+  padding:2rem;
+  border:3px dashed rgba(255,255,255,0.15);
+  margin:0;
+}
+.canva-banner-placeholder .ph-icon{font-size:3rem;opacity:.4;}
+.canva-banner-placeholder p{font-size:.9rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+.canva-banner-placeholder small{font-size:.75rem;opacity:.6;}
+
+/* INTRO */
+.intro-section{background:var(--white);padding:2.5rem 0;}
+.intro-text{max-width:900px;margin:0 auto;text-align:center;}
+.intro-text p{font-size:.95rem;color:#4a5a6a;line-height:1.9;}
+.intro-text .hl{color:var(--sky-blue);font-weight:700;}
+
+/* ANIMÉ DIVIDER */
+@keyframes moveCircle{0%{left:-20px;}100%{left:100%;}}
+.anim-divider{background:var(--dark-blue);height:3px;width:100%;position:relative;overflow:hidden;}
+.anim-divider .dot{position:absolute;top:50%;transform:translateY(-50%);width:20px;height:20px;background:white;border-radius:50%;box-shadow:0 0 10px 5px rgba(255,255,255,0.6);animation:moveCircle 8s linear infinite;}
+
+/* SPEAKERS SECTION */
+#speakers{background:var(--light);}
+
+.speaker-card{
+  background:var(--white);
+  border-radius:10px;
+  overflow:hidden;
+  box-shadow:6px 12px 35px rgba(0,0,0,0.12),-3px -3px 12px rgba(255,255,255,0.8);
+  margin-bottom:2.5rem;
+  display:grid;
+  grid-template-columns:280px 1fr;
+  transition:transform .2s,box-shadow .2s;
+  border:1px solid var(--border);
+  position:relative;
+}
+.speaker-card:hover{transform:translateY(-4px);box-shadow:8px 16px 45px rgba(0,0,0,0.18);}
+
+/* Animated left border */
+.speaker-card::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;
+  width:5px;height:100%;
+  background:var(--sky-blue);
+  z-index:2;
+}
+
+.speaker-photo-col{
+  background:var(--dark-blue);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  padding:2rem 1.5rem 1.5rem;
+  position:relative;
+  min-height:320px;
+}
+.speaker-photo-col img{
+  width:160px;
+  height:160px;
+  border-radius:50%;
+  object-fit:cover;
+  border:4px solid var(--sky-blue);
+  box-shadow:0 4px 20px rgba(0,0,0,0.4);
+  display:block;
+  margin-bottom:1rem;
+}
+.speaker-photo-placeholder{
+  width:160px;
+  height:160px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.08);
+  border:3px dashed rgba(255,255,255,0.3);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  color:rgba(255,255,255,0.4);
+  font-size:.7rem;
+  text-align:center;
+  margin-bottom:1rem;
+  gap:.3rem;
+}
+.speaker-photo-placeholder .ph-icon{font-size:2.5rem;opacity:.5;}
+.speaker-photo-placeholder span{font-size:.65rem;letter-spacing:.5px;}
+
+.speaker-name-box{text-align:center;}
+.speaker-name{font-family:'Merriweather',serif;font-size:1rem;font-weight:900;color:var(--white);margin-bottom:.2rem;line-height:1.3;}
+.speaker-institution{font-size:.72rem;color:var(--sky-blue);font-weight:700;letter-spacing:.5px;text-transform:uppercase;}
+.speaker-country{font-size:.7rem;color:rgba(255,255,255,0.5);margin-top:.2rem;}
+
+.speaker-content{padding:2rem 2.5rem;}
+.speaker-role{font-style:italic;font-size:.9rem;color:var(--gray);margin-bottom:1.2rem;padding-bottom:.8rem;border-bottom:2px solid var(--border);}
+.speaker-bio-title{font-family:'Merriweather',serif;font-size:.95rem;font-weight:900;color:var(--dark-blue);margin-bottom:.8rem;}
+.speaker-bio{font-size:.875rem;color:#4a5a6a;line-height:1.9;text-align:justify;}
+
+/* Number badge */
+.speaker-num{
+  position:absolute;
+  top:1rem;right:1rem;
+  width:36px;height:36px;
+  background:var(--orange);
+  color:var(--white);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Merriweather',serif;
+  font-weight:900;font-size:.9rem;
+  box-shadow:0 2px 8px rgba(224,123,32,0.4);
+}
+
+/* TBA card */
+.speaker-card.tba .speaker-photo-col{
+  background:linear-gradient(180deg,#0d2137,#1a4a7a);
+}
+.speaker-card.tba .speaker-content{
+  display:flex;flex-direction:column;justify-content:center;
+}
+.tba-badge{
+  display:inline-block;
+  background:var(--orange);
+  color:var(--white);
+  font-size:.7rem;
+  font-weight:800;
+  padding:.25rem .8rem;
+  border-radius:2px;
+  letter-spacing:1px;
+  margin-bottom:.8rem;
+}
+
+/* FOOTER */
+footer{background:var(--mid-blue);padding:3rem 2rem 0;}
+.footer-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:2.5rem;padding-bottom:2.5rem;}
+.footer-col h4{font-size:.85rem;font-weight:700;color:var(--white);margin-bottom:1.2rem;padding-bottom:.5rem;border-bottom:2px solid rgba(255,255,255,0.1);text-transform:uppercase;letter-spacing:.5px;}
+.footer-contact-block{display:flex;gap:.8rem;align-items:flex-start;}
+.footer-avatar{width:52px;height:52px;border-radius:50%;flex-shrink:0;background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:1.4rem;}
+.fc-name{color:var(--white);font-weight:700;font-size:.88rem;margin-bottom:.3rem;}
+.fc-info a{color:rgba(255,255,255,0.65);font-size:.8rem;text-decoration:none;display:block;margin-bottom:.2rem;}
+.fc-info a:hover{color:var(--orange);}
+.footer-links,.footer-downloads{list-style:none;}
+.footer-links li,.footer-downloads li{padding:.32rem 0;border-bottom:1px solid rgba(255,255,255,0.06);}
+.footer-links a{color:rgba(255,255,255,0.65);text-decoration:none;font-size:.82rem;transition:color .2s,padding-left .2s;display:flex;align-items:center;gap:.4rem;}
+.footer-links a:hover{color:var(--orange);padding-left:.4rem;}
+.footer-links a .nb{display:inline-block;background:#e00;color:#fff;font-size:.58rem;font-weight:800;padding:.1rem .3rem;border-radius:2px;animation:blink 1s infinite;}
+.footer-downloads a{color:rgba(255,255,255,0.65);text-decoration:none;font-size:.82rem;transition:color .2s;}
+.footer-downloads a::before{content:'↓ ';color:var(--sky-blue);}
+.footer-downloads a:hover{color:var(--orange);}
+.news-item{padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:.8rem;color:rgba(255,255,255,0.65);line-height:1.5;}
+.news-item::before{content:'● ';color:var(--orange);font-size:.55rem;vertical-align:middle;}
+.footer-bottom{max-width:1200px;margin:0 auto;padding:1rem 0;border-top:1px solid rgba(255,255,255,0.08);text-align:center;}
+.footer-copyright{font-size:.78rem;color:rgba(255,255,255,0.35);}
+.footer-copyright a{color:var(--sky-blue);text-decoration:none;}
+
+/* BACK TO TOP */
+#btt{position:fixed;bottom:2rem;right:2rem;z-index:999;width:40px;height:40px;border-radius:4px;background:var(--orange);color:var(--white);display:none;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer;text-decoration:none;box-shadow:0 4px 15px rgba(0,0,0,0.2);transition:background .2s,transform .2s;font-weight:700;}
+#btt.show{display:flex;}
+#btt:hover{background:var(--dark-blue);transform:translateY(-3px);}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .footer-grid{grid-template-columns:1fr 1fr;}
+  .speaker-card{grid-template-columns:220px 1fr;}
+}
+@media(max-width:768px){
+  .speaker-card{grid-template-columns:1fr;}
+  .speaker-photo-col{min-height:220px;padding:1.5rem 1rem 1rem;}
+  .nav-menu{display:none;flex-direction:column;position:absolute;top:70px;left:0;right:0;background:var(--white);box-shadow:0 8px 20px rgba(0,0,0,0.1);height:auto;padding:1rem 0;z-index:999;}
+  .nav-menu.open{display:flex;}
+  .nav-item{height:auto;flex-direction:column;align-items:flex-start;}
+  .nav-item>a{padding:.7rem 1.5rem;height:auto;border-bottom:1px solid var(--border);width:100%;}
+  .dropdown{position:static;box-shadow:none;border-top:none;border-left:3px solid var(--orange);margin-left:1.5rem;}
+  .hamburger{display:flex;}
+  .nav-inner{position:relative;}
+  .footer-grid{grid-template-columns:1fr;}
+  .speaker-content{padding:1.5rem;}
+}
+@media(max-width:500px){section{padding:2.5rem 0;}}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-item">🕐 Conference: 10–12 November 2027, Béni Mellal, Morocco</div>
+  <div class="topbar-item">📞 Contact: acmcst@usms.ma</div>
+</div>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <img src="logo-acmcst.png" alt="ACMCST" onerror="this.style.display='none'">
+    </a>
+    <ul class="nav-menu" id="navMenu">
+      <li class="nav-item"><a href="index.html">HOME</a></li>
+      <li class="nav-item">
+        <a href="cfp.html">CALL FOR PAPERS <span class="ch">▾</span></a>
+        <div class="dropdown">
+          <a href="cfp.html">Conference Topics</a>
+          <a href="cfp.html#special">Special Session</a>
+        </div>
+      </li>
+      <li class="nav-item active"><a href="speakers.html">KEYNOTE SPEAKERS</a></li>
+      <li class="nav-item"><a href="dates.html">IMPORTANT DATES</a></li>
+      <li class="nav-item">
+        <a href="committees.html">COMMITTEES <span class="ch">▾</span></a>
+        <div class="dropdown">
+          <a href="committees.html#organizing">Organizing Committee</a>
+          <a href="committees.html#technical">Technical Committee</a>
+          <a href="committees.html#scientific">Scientific Committee</a>
+        </div>
+      </li>
+      <li class="nav-item"><a href="venue.html">ACCESS MAP</a></li>
+      <li class="nav-item"><a href="submission.html">SUBMISSION</a></li>
+      <li class="nav-item"><a href="registration.html">REGISTRATION</a></li>
+            <li class="nav-item"><a href="previous-edition.html">PREVIOUS EDITION</a></li>
+
+    </ul>
+    <div class="hamburger" onclick="document.getElementById('navMenu').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <h1>Keynote Speakers</h1>
+  <p>ACMCST 2027 — International Conference | Béni Mellal, Morocco</p>
+  <div class="breadcrumb">
+    <a href="index.html">Home</a>
+    <span>›</span>
+    <span>Keynote Speakers</span>
+  </div>
+</div>
+
+<!-- CANVA BANNER — Place réservée pour votre image PNG -->
+<div class="canva-banner-wrap">
+  <img src="speakers-banner.png" alt="ACMCST 2027 Keynote Speakers"
+       onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+  <div class="canva-banner-placeholder" style="display:none;">
+    <div class="ph-icon">🖼️</div>
+    <p>Speakers Banner</p>
+    <small>image<br>fichier : <strong>speakers-banner.png</strong></small>
+  </div>
+</div>
+
+<!-- DIVIDER ANIMÉ -->
+<div class="anim-divider"><div class="dot"></div></div>
+
+<!-- INTRO -->
+<div class="intro-section">
+  <div class="container">
+    <div class="intro-text reveal">
+      <p>We are delighted to invite esteemed experts in their respective fields to serve as <span class="hl">Keynote Speakers</span> at <span class="hl">ACMCST 2027</span> — International Conference on Advanced Communications with Modern Circuits and Systems Technologies, to be held on <span class="hl">November 10–12, 2027</span> in Béni Mellal, Morocco.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SPEAKERS -->
+<section id="speakers">
+  <div class="container">
+    <div class="sec-header reveal">
+      <div class="sec-tag">ACMCST 2027</div>
+      <h2 class="sec-title">Keynote Speakers</h2>
+      <div class="sec-line"></div>
+    </div>
+
+    <!-- ===== SPEAKER 1 ===== -->
+    <div class="speaker-card reveal">
+      <div class="speaker-num">1</div>
+      <div class="speaker-photo-col">
+        <img src="speaker1.PNG" alt="Speaker 1"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="speaker-photo-placeholder" style="display:none;">
+          <div class="ph-icon">👤</div>
+          <span>speaker1.PNG</span>
+        </div>
+        <div class="speaker-name-box">
+          <div class="speaker-name">	Prof. Adriano Camps</div>
+          <div class="speaker-institution">Polytechnic University of Catalonia (UPC)</div>
+          <div class="speaker-country"> Spain</div>
+        </div>
+      </div>
+      <div class="speaker-content">
+        <div class="speaker-role">Full Professor Department of Signal Theory and Communications</div>
+        <div class="speaker-bio-title">Biography:</div>
+<div class="speaker-bio">
+  <p>He joined the Electromagnetics and Photonics Eng. Group, Dept. of Signal Theory and Communications, UPC, as an Assistant Professor in 1993, Associate Professor in 1997, and Full Professor since 2007. In 1999, he was on sabbatical leave at the Microwave Remote Sensing Lab., of the Univ. of Massachusetts, Amherst. Since September 2022 he is a visiting professor at the UAE University, Al Ain, Abu Dhabi, UAE.</p>
+
+  <p>His research interests are focused in: 1) microwave remote sensing, with special emphasis in microwave radiometry by aperture synthesis, 2) remote sensing using signals of opportunity (GNSS-R), 3) radio frequency interference detection and mitigation, and 4) nanosatellites as a tool to test innovative remote sensors. His publication record includes over 251 papers in peer-reviewed journals, 9 book chapters and the book Emery and Camps, "Introduction to Satellite Remote Sensing. Atmosphere, Ocean, Land and Cryosphere Applications," Elsevier, 2017, 860 pages, and more than 515 conference presentations. According to Google Scholar/Scopus his h-index is 58/46, and his publications have received more than 13611/9415 citations. According to the 2020 Stanford ranking, he is ranked in the top 1% of all researchers in all categories.</p>
+
+  <p>He holds 12 patents, and has advised 29 Ph.D. Thesis students (+ 9 on-going), and more than 150 final project and M.Eng. Theses. These PhD students have now responsibility positions at Universities, companies and research centers. It is worth mentioning that 4 are at NASA/JPL, 1 at U. Michigan, and 2 have started their own companies (BALAMIS and MITICS). A total of 5 patents have been transferred to them.</p>
+
+  <p>He was the Scientific Coordinator of the CommSensLab Research Center (María de Maeztu Excellence Research unit 2016-2020). He is the PI of the first four UPC nano-satellites: 1) 3Cat-1: 1U CubeSat with 7 tech demos, 2) 3Cat-2: a 6U CubeSat with an innovative dual-frequency dual-polarization GNSS-R payload, 3) 3Cat-4: a 1U CubeSat with a SDR implementing a microwave radiometer, a GNSS-Reflectometer, and AIS receiver, and 4) FSSCAT: a tandem mission formed by two 6U CubeSats — the first mission contributing to the Copernicus System based on CubeSats.</p>
+
+  <p>He has participated in all Technical Committee Programs of IGARSS since 2000, was Chair of uCal 2001, Co-chair of IGARSS 2007, co-chair of GNSS-R '10, and general co-chair of IGARSS 2020. He was the President-Founder of the IEEE GRSS Chapter at Spain, and 2017-2018 President of the IEEE Geoscience and Remote Sensing Society.</p>
+
+  <p><strong>Awards — Research:</strong> 2nd National Award of University Studies (1993); INDRA award to the best PhD in Remote Sensing (1997); UPC extraordinary Ph.D. Award (1999); Research Distinction of the Generalitat de Catalunya (2002); European Young Investigator Award (2004); ICREA Academia award (2009, 2015); Fellow of the IEEE (2011).</p>
+
+  <p><strong>Awards — Technology Transfer:</strong> 1st Duran Farell award (2000); Ciutat de Barcelona award (2001); "Salvà i Campillo" Award COETC (2004); 7th Duran Farell award (2010); ESNC Award-Barcelona Challenge for FENIX system (2015); Overall Winner of 2017 Copernicus Masters Competition.</p>
+
+  <p><strong>Awards — Education:</strong> Jaume Vicens Vives award 2012 from the Generalitat de Catalunya; UPC award to Teaching Quality 2012; IEEE Geoscience and Remote Sensing Society – Education Award 2021.</p>
+</div>
+</div>
+</div>
+    <!-- ===== SPEAKER 2 ===== -->
+<div class="speaker-card reveal">
+  <div class="speaker-num">2</div>
+  <div class="speaker-photo-col">
+    <img src="speaker2.png" alt="Speaker 2"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+    <div class="speaker-photo-placeholder" style="display:none;">
+      <div class="ph-icon">👤</div>
+          <span><speaker2 class="png"></speaker2></span>
+    </div>
+    <div class="speaker-name-box">
+      <div class="speaker-name">Dr. Metin Mutlu AYDIN</div>
+      <div class="speaker-institution">Ondokuz Mayıs University</div>
+      <div class="speaker-country">Türkiye</div>
+    </div>
+  </div>
+  <div class="speaker-content">
+    <div class="speaker-role">Associate Professor, Department of Civil Engineering, Division of Transportation</div>
+    <div class="speaker-bio">
+  <p>Dr. Metin Mutlu AYDIN was born in 1988 in Kırşehir, Türkiye. He completed his bachelor and master degrees in Civil Engineering at Dokuz Eylül University (BSc in 2010, MSc in 2013), and his PhD in Civil Engineering from Akdeniz University in 2017. He is currently working as a full-time Associate Professor in the Department of Civil Engineering, Division of Transportation, at the Faculty of Engineering, Ondokuz Mayıs University.</p>
+
+  <p>His research interests include Intelligent Transportation Systems (ITS), Electric and Autonomous Vehicles, Transportation Planning, Green Environment, Sustainable and Resilient Cities, and Renewable Energy in Transport. Up to date, he has served as a project manager or researcher in 24 national and 7 international projects, has produced nearly 120 scientific publications, and has attended more than 30 international conference presentations across the world.</p>
+
+  <p>In 2018, he received the <strong>"Best Transportation Paper of the Year"</strong> award from the Institute of Civil Engineers (ICE) in London, UK, the <strong>"Best Publication of the Year"</strong> award in both 2018 and 2019, and the <strong>"Best PhD Thesis of the Year"</strong> award in 2018 from the General Directorate of Highways (KGM) in Türkiye for his PhD thesis.</p>
+
+  <p>In 2023, his British Council-supported project titled <strong>"i-gCar4ITS: Innovative and Green Carrier Development for Intelligent Transportation System Applications"</strong> received the <strong>"Jury Special Award"</strong> from ITS Türkiye. In 2025, he was awarded the <strong>"Publication of the Year"</strong> in the field for his work on vehicle simulators.</p>
+
+  <p>Following his contributions to the field of Intelligent Transportation Systems, he was elected as a <strong>"Management Board Member of ITSTürkiye"</strong>, representing academia for the 2025–2027 term. He also founded the <strong>Center of Excellence in Intelligent Transportation and Structures (#CEITSSLab)</strong> in 2024. In the same year, #CEITSSLab was awarded the <strong>"Academic R&D Award"</strong> by ITSTürkiye and received an additional <strong>"R&D Award"</strong> from the Ministry of Transport and Infrastructure of Türkiye (UDHAM).</p>
+
+  <p>Since 2020, Dr. Aydın has also worked as a member of the Editorial Board of two prestigious SCI-Expanded journals: <a href="https://www.icevirtuallibrary.com/toc/jtran/current" target="_blank" style="color:var(--sky-blue);">Proceedings of the Institution of Civil Engineers – Transport</a> and <a href="https://journals.vilniustech.lt/index.php/transport" target="_blank" style="color:var(--sky-blue);">VilniusTech Transport</a>.</p>
+
+  <p><strong>Awards — Research:</strong> Best Transportation Paper of the Year – ICE London (2018); Best Publication of the Year – KGM Türkiye (2018, 2019); Best PhD Thesis of the Year – KGM Türkiye (2018); Publication of the Year (2025).</p>
+
+  <p><strong>Awards — Technology Transfer:</strong> Jury Special Award – ITS Türkiye (2023); Academic R&D Award – ITSTürkiye (2024); R&D Award – Ministry of Transport and Infrastructure of Türkiye / UDHAM (2024).</p>
+</div>
+      </div>
+    </div>
+
+    <!-- ===== SPEAKER 3 ===== -->
+<!-- ===== SPEAKER 3 ===== -->
+<div class="speaker-card reveal">
+  <div class="speaker-num">3</div>
+  <div class="speaker-photo-col">
+    <img src="speaker3.png" alt="Dr. Abdelhafid El Ouardi"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+    <div class="speaker-photo-placeholder" style="display:none;">
+      <div class="ph-icon">👤</div>
+      <span>speaker3.png</span>
+    </div>
+    <div class="speaker-name-box">
+      <div class="speaker-name">Dr. Abdelhafid El Ouardi</div>
+      <div class="speaker-institution">Université Paris-Saclay</div>
+      <div class="speaker-country">France</div>
+    </div>
+  </div>
+  <div class="speaker-content">
+    <div class="speaker-role">Associate Professor, Faculty of Sciences — SATIE Laboratory, Université Paris-Saclay</div>
+    <div class="speaker-bio-title">Biography:</div>
+    <div class="speaker-bio">
+      <p>Dr. Abdelhafid El Ouardi received his Ph.D. in Electronics and Computer Engineering from the University of Paris-Sud (France) in 2005 and his Habilitation to Supervise Research (HDR) in 2016. He is currently an Associate Professor at the Faculty of Sciences of the Université Paris-Saclay and a researcher at the SATIE Laboratory, where he leads research activities related to Hardware-Software Codesign for Embedded Systems.</p>
+
+      <p>His research focuses on embedded computing systems, heterogeneous CPU-GPU-FPGA architectures, hardware-software codesign, intelligent sensors, real-time signal and image processing, and edge artificial intelligence. His work aims at bridging the gap between algorithmic complexity and embedded computing architectures through efficient co-design methodologies. His research has been applied to a wide range of domains, including intelligent transportation systems, autonomous vehicles, SLAM (Simultaneous Localization and Mapping), precision agriculture, smart grids, industrial inspection systems, physiological signal processing, and railway infrastructure monitoring.</p>
+
+      <p>Dr. El Ouardi has supervised or co-supervised more than 18 doctoral dissertations and currently supervises several Ph.D. candidates in collaboration with industrial and academic partners. He has authored more than 100 scientific publications, including 37 journal papers and over 60 international conference contributions. His publications have appeared in leading journals such as <em>IEEE Transactions on Intelligent Transportation Systems</em>, <em>IEEE Robotics and Automation Magazine</em>, <em>Robotics and Autonomous Systems</em>, <em>Journal of Real-Time Image Processing</em>, <em>IEEE Sensors Journal</em>, and <em>Sustainable Energy, Grids and Networks</em>.</p>
+
+      <p>He serves as Associate Editor of the <em>Journal of Real-Time Image Processing</em> (Springer) and regularly acts as reviewer, program committee member, and scientific expert for numerous international conferences and journals.</p>
+
+      <p>Throughout his career, he has participated in and coordinated several national and international research projects involving industry and academia, particularly in the fields of intelligent mobility, autonomous systems, embedded artificial intelligence, and energy-efficient computing.</p>
+
+      <p><strong>Current Research Interests:</strong> Embedded AI systems, multimodal perception for autonomous vehicles, hardware acceleration of machine learning algorithms, railway infrastructure monitoring, intelligent energy management systems, and next-generation heterogeneous computing architectures for real-time applications.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SPEAKER 4 ===== -->
+    <div class="speaker-card reveal">
+      <div class="speaker-num">4</div>
+      <div class="speaker-photo-col">
+        <img src="speaker4.png" alt="Mr. Majid Lahlou"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="speaker-photo-placeholder" style="display:none;">
+          <div class="ph-icon">👤</div>
+          <span>speaker4.png</span>
+        </div>
+        <div class="speaker-name-box">
+          <div class="speaker-name">Mr. Majid LAHLOU</div>
+          <div class="speaker-institution">Ministry of Agriculture, Maritime Fisheries, Rural Development, and Water and Forests</div>
+          <div class="speaker-country">Morocco</div>
+        </div>
+      </div>
+      <div class="speaker-content">
+        <div class="speaker-role">Inspector General, Ministry of Agriculture, Maritime Fisheries, Rural Development, and Water and Forests — Member of the CNDP</div>
+        <div class="speaker-bio-title">Biography:</div>
+        <div class="speaker-bio">
+          <p>Mr. Majid LAHLOU is a renowned Moroccan expert in the fields of information technology, telecommunications, and the digital transformation of public organizations. He currently serves as Inspector General at the Ministry of Agriculture, Maritime Fisheries, Rural Development, and Water and Forests, having previously headed the Ministry's Information Systems Directorate (DSI) for many years.</p>
+
+          <p><strong>Professional Background</strong><br>
+          Mr. LAHLOU began his career in 1992 as a telecommunications engineer specializing in banking systems and electronic payment networks. In 1995, he joined Al Akhawayn University in Ifrane as Network Manager. In 2000, he joined Télécom Partners, where he served successively as Director of Development and then as CEO (2004). During this period, he expanded the company's operations in the fields of telecommunications infrastructure, IT security, satellite systems, and advanced technology solutions.</p>
+
+          <p>In 2009, Mr. Lahlou joined the Ministry of Agriculture as Director of Information Systems. There, he led the Ministry's digital transformation. In 2025, he was appointed Inspector General of the same ministry and also became a member of the CNDP (National Commission for the Control of Personal Data Protection).</p>
+
+          <p><strong>Achievements and Contributions</strong><br>
+          Throughout his career, Mr. Majid LAHLOU has actively contributed to the digitization of public services and the development of information technology in Morocco. Notably, he is the initiator of the AGRO IT DAYS events, promoting digital innovation in the agricultural sector; winner of the 2011 E-Gov E-mtiaz Award (G2B category) for the SABA system for digitizing investment files; and Morocco's focal point for the international Feeding Knowledge program at the 2015 Milan Expo. In addition, he is involved in supporting young talent as a speaker on e-commerce and a mentor to startups, particularly in the fields of agritech and digital innovation.</p>
+
+          <p><strong>Academic Background</strong><br>
+          Mr. LAHLOU holds a degree in telecommunications engineering from Institut National des Postes et Télécommunications (INPT). He has also furthered his education with an MBA (Ponts ParisTech – EHTP), a certificate in digital transformation (emlyon business school), and training in the governance of public institutions (International University of Rabat).</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SPEAKER 5 ===== -->
+    <div class="speaker-card reveal">
+      <div class="speaker-num">5</div>
+      <div class="speaker-photo-col">
+        <img src="speaker5.PNG" alt="Speaker 5"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="speaker-photo-placeholder" style="display:none;">
+          <div class="ph-icon">👤</div>
+          <span>speaker5.jpg</span>
+        </div>
+        <div class="speaker-name-box">
+          <div class="speaker-name">DR. SPEAKER NAME</div>
+          <div class="speaker-institution">Institution / University</div>
+          <div class="speaker-country">🌍 Country</div>
+        </div>
+      </div>
+      <div class="speaker-content">
+        <div class="tba-badge">To Be Announced</div>
+        <div class="speaker-role">...</div>
+        <div class="speaker-bio-title">Biography:</div>
+        <div class="speaker-bio">Dr....</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <h4>Contact Us</h4>
+      <div class="footer-contact-block">
+        <div class="footer-avatar">👤</div>
+        <div class="fc-info">
+          <div class="fc-name">Dr. SAIH Mohamed</div>
+          <a href="mailto:acmcst@usms.ma">acmcst@usms.ma</a>
+          <a href="http://www.acmcst.com">www.acmcst.com</a>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <ul class="footer-links">
+        <li><a href="cfp.html">Call for Papers</a></li>
+        <li><a href="speakers.html">Keynote Speakers</a></li>
+        <li><a href="submission.html">Submission</a></li>
+        <li><a href="registration.html">Registration</a></li>
+        <li><a href="venue.html">Access Map</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Downloads</h4>
+      <ul class="footer-downloads">
+        <li><a href="program.pdf">Conference Program</a></li>
+        <li><a href="#">CFP Flyer (PDF)</a></li>
+        <li><a href="Microsoft+Word+Proceedings+Templates.zip">Springer Template (Word)</a></li>
+        <li><a href="LaTeX2e+Proceedings+Templates.zip">Springer Template (LaTeX)</a></li>
+       <li class="js-toggle-copyright" style="display:none;"><a href="copyright.docx">Copyright Transfer Form</a></li>
+
+      </ul>
+    </div>
+    <div>
+      <h4>Recent News</h4>
+      <div class="news-item">ACMCST 2027 will take place on November 10–12, 2027, in Béni Mellal, Morocco.</div>
+      <div class="news-item">Paper submission is now open. Deadline: July 31, 2027.</div>
+      <div class="news-item">ACMCST'25 proceedings are now available on SpringerLink.</div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copyright">
+      © 2027 <a href="http://www.acmcst.com">ACMCST</a>. All rights reserved. <a href="http://www.acmcst.com">www.acmcst.com</a>
+    </div>
+  </div>
+</footer>
+
+<a href="#" id="btt" title="Back to top">↑</a>
+
+<script>
+window.addEventListener('scroll',()=>{document.getElementById('btt').classList.toggle('show',window.scrollY>400);});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="site-toggles.js?v=2"></script>
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACMCST 2027 — Paper Review</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --dark-blue:#0d2137;--mid-blue:#1a4a7a;--sky-blue:#2e9fd4;--orange:#e07b20;
+    --bg:#0a0f1a;--white:#ffffff;--text:#ffffff;--muted:#8a9ab0;
+    --border:#1e3a5a;--card-bg:#0d2137;--input-bg:#0f1e30;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Source Sans 3',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+  /* ===== STATES ===== */
+  #loading-screen, #error-screen, #success-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;text-align:center;}
+  #error-screen, #success-screen{display:none;}
+  .state-box{max-width:420px;}
+  .state-icon{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;}
+  .state-icon.error{background:rgba(231,76,60,0.15);border:2px solid rgba(231,76,60,0.4);}
+  .state-icon.success{background:rgba(46,204,113,0.15);border:2px solid rgba(46,204,113,0.4);}
+  .state-icon svg{width:30px;height:30px;}
+  .state-title{font-family:'Merriweather',serif;font-size:1.3rem;margin-bottom:0.6rem;}
+  .state-text{color:var(--muted);font-size:0.92rem;line-height:1.6;}
+  .spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--sky-blue);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 1.2rem;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* ===== MAIN ===== */
+  #main-app{display:none;}
+  .topbar{background:#060c14;padding:1.1rem 2rem;border-bottom:2px solid var(--border);text-align:center;}
+  .topbar-title{font-family:'Merriweather',serif;font-size:1.05rem;}
+  .topbar-title span{color:var(--sky-blue);}
+  .topbar-sub{color:var(--muted);font-size:0.8rem;margin-top:3px;}
+  .container{max-width:720px;margin:0 auto;padding:2rem 1.25rem 4rem;}
+
+  .paper-card{background:var(--card-bg);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1.5rem;}
+  .paper-id{font-size:0.72rem;font-weight:700;color:var(--sky-blue);letter-spacing:1px;text-transform:uppercase;}
+  .paper-title{font-family:'Merriweather',serif;font-size:1.25rem;margin-top:6px;line-height:1.4;}
+  .paper-meta{color:var(--muted);font-size:0.85rem;margin-top:10px;}
+  .download-btn{display:inline-flex;align-items:center;gap:8px;margin-top:16px;padding:11px 20px;background:var(--orange);color:var(--white);border-radius:8px;text-decoration:none;font-weight:600;font-size:0.9rem;transition:background 0.15s;}
+  .download-btn:hover{background:#c96d18;}
+  .download-btn svg{width:16px;height:16px;fill:var(--white);}
+  .download-note{color:var(--muted);font-size:0.78rem;margin-top:8px;}
+
+  .form-card{background:var(--card-bg);border:1px solid var(--border);border-radius:14px;padding:1.5rem;}
+  .form-card + .form-card{margin-top:1.25rem;}
+  .section-label{font-size:0.78rem;font-weight:700;color:var(--sky-blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;}
+
+  .score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+  .score-option{display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 8px;border:1.5px solid rgba(46,204,113,0.3);border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600;color:#2ecc71;background:rgba(46,204,113,0.05);transition:all 0.15s;text-align:center;}
+  .score-option:hover{border-color:#2ecc71;background:rgba(46,204,113,0.15);}
+  .score-option.reject{color:#e74c3c;border-color:rgba(231,76,60,0.3);background:rgba(231,76,60,0.05);}
+  .score-option.reject:hover{border-color:#e74c3c;background:rgba(231,76,60,0.15);}
+  .score-option input{display:none;}
+  .score-option:has(input:checked):not(.reject){border-color:#2ecc71;background:rgba(46,204,113,0.28);color:#fff;}
+  .score-option.reject:has(input:checked){border-color:#e74c3c;background:rgba(231,76,60,0.28);color:#fff;}
+
+  textarea{width:100%;padding:14px;border:1.5px solid var(--border);border-radius:10px;font-size:0.92rem;font-family:inherit;outline:none;background:var(--input-bg);color:var(--white);resize:vertical;min-height:150px;line-height:1.6;}
+  textarea::placeholder{color:var(--muted);}
+  textarea:focus{border-color:var(--sky-blue);}
+  .char-count{text-align:right;color:var(--muted);font-size:0.75rem;margin-top:6px;}
+
+  .submit-row{margin-top:1.5rem;}
+  .submit-btn{width:100%;padding:15px;background:var(--sky-blue);color:var(--white);border:none;border-radius:10px;font-size:0.98rem;font-family:inherit;font-weight:700;cursor:pointer;transition:background 0.15s;}
+  .submit-btn:hover:not(:disabled){background:var(--mid-blue);}
+  .submit-btn:disabled{background:var(--border);color:var(--muted);cursor:not-allowed;}
+  .submit-hint{text-align:center;color:var(--muted);font-size:0.78rem;margin-top:10px;}
+  .form-error{background:rgba(231,76,60,0.1);border:1px solid rgba(231,76,60,0.3);color:#ff8a75;padding:10px 14px;border-radius:8px;font-size:0.85rem;margin-top:1rem;display:none;}
+  .back-link{display:inline-block;margin-top:1.25rem;color:var(--sky-blue);font-size:0.85rem;text-decoration:none;}
+  .back-link:hover{text-decoration:underline;}
+
+  @media(max-width:480px){
+    .score-grid{grid-template-columns:1fr 1fr;}
+    .container{padding:1.5rem 1rem 3rem;}
+  }
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading-screen">
+  <div class="state-box">
+    <div class="spinner"></div>
+    <div class="state-text">Loading your review assignment…</div>
+  </div>
+</div>
+
+<!-- ERROR -->
+<div id="error-screen">
+  <div class="state-box">
+    <div class="state-icon error"><svg viewBox="0 0 24 24" fill="none" stroke="#e74c3c" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+    <div class="state-title">Link not valid</div>
+    <div class="state-text" id="error-text">This review link is invalid or has expired. Please contact the organizing committee at <a href="mailto:acmcst@usms.ma" style="color:var(--sky-blue);">acmcst@usms.ma</a>.</div>
+    <a class="back-link" id="back-link" href="#" style="display:none;">← Back to my review dashboard</a>
+  </div>
+</div>
+
+<!-- SUCCESS -->
+<div id="success-screen">
+  <div class="state-box">
+    <div class="state-icon success"><svg viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div>
+    <div class="state-title">Review submitted</div>
+    <div class="state-text">Thank you for your evaluation. Your review has been recorded and the organizing committee has been notified.</div>
+    <a class="back-link" id="back-link-success" href="#">← Back to my review dashboard</a>
+  </div>
+</div>
+
+<!-- MAIN FORM -->
+<div id="main-app">
+  <div class="topbar">
+    <div class="topbar-title">ACMCST <span>2027</span></div>
+    <div class="topbar-sub">Peer Review Submission</div>
+  </div>
+
+  <div class="container">
+    <div class="paper-card">
+      <div class="paper-id" id="paper-id">Paper ID</div>
+      <div class="paper-title" id="paper-title">—</div>
+      <div class="paper-meta" id="paper-meta">—</div>
+      <a href="#" id="download-link" class="download-btn" download rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M12 16l-6-6h4V4h4v6h4l-6 6zm-8 2h16v2H4v-2z"/></svg>
+        Download paper
+      </a>
+      <div class="download-note">Please read the full paper before submitting your evaluation.</div>
+    </div>
+
+    <div class="form-card">
+      <div class="section-label">Your score</div>
+      <div class="score-grid">
+        <label class="score-option"><input type="radio" name="score" value="Strongly Accept">Strongly<br>Accept</label>
+        <label class="score-option"><input type="radio" name="score" value="Accept">Accept</label>
+        <label class="score-option"><input type="radio" name="score" value="Weakly Accept">Weakly<br>Accept</label>
+        <label class="score-option reject"><input type="radio" name="score" value="Weakly Reject">Weakly<br>Reject</label>
+        <label class="score-option reject"><input type="radio" name="score" value="Reject">Reject</label>
+        <label class="score-option reject"><input type="radio" name="score" value="Strongly Reject">Strongly<br>Reject</label>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div class="section-label">Your comments to the authors</div>
+      <textarea id="comment" placeholder="Summarize the paper's contribution, strengths, weaknesses, and any suggestions for the authors…" maxlength="4000" oninput="updateCharCount()"></textarea>
+      <div class="char-count"><span id="char-count">0</span> / 4000</div>
+    </div>
+
+    <div class="form-error" id="form-error"></div>
+
+    <div class="submit-row">
+      <button class="submit-btn" id="submit-btn" onclick="submitReview()">Submit Review</button>
+      <div class="submit-hint">Once submitted, your review cannot be edited. Make sure your comments are complete.</div>
+    </div>
+  </div>
+</div>
+
+<script src="supabase-config.js"></script>
+<script>
+const FUNCTIONS_BASE = SUPABASE_URL + "/functions/v1";
+
+const params = new URLSearchParams(window.location.search);
+const token = params.get('token');
+const assignmentId = params.get('assignment');
+document.getElementById('back-link').href = 'reviewer-dashboard.html?token=' + encodeURIComponent(token || '');
+document.getElementById('back-link-success').href = 'reviewer-dashboard.html?token=' + encodeURIComponent(token || '');
+
+async function init() {
+  if (!token || !assignmentId) {
+    showError("This link is missing required information. Please use the link from your review-request email.");
+    return;
+  }
+  try {
+    const res = await fetch(`${FUNCTIONS_BASE}/reviewer-get?token=${encodeURIComponent(token)}&assignment=${encodeURIComponent(assignmentId)}`);
+    const data = await res.json();
+
+    if (!data.succes) {
+      showError(data.message || "This link is invalid or has expired.");
+      return;
+    }
+    const a = data.data;
+    if (a.statut === 'Review reçue') {
+      showError("A review has already been submitted for this assignment. Thank you!");
+      return;
+    }
+
+    renderAssignment(a);
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('main-app').style.display = 'block';
+  } catch (e) {
+    showError("We couldn't load your review assignment. Please try again later.");
+  }
+}
+
+function renderAssignment(a) {
+  document.getElementById('paper-id').textContent = 'Paper ID: ' + a.paperID;
+  document.getElementById('paper-title').textContent = a.titre;
+  document.getElementById('paper-meta').textContent = 'Reviewer ' + a.numReviewer + ' — ACMCST 2027';
+  const link = document.getElementById('download-link');
+  if (a.pdfUrl) {
+    link.href = a.pdfUrl;
+  } else {
+    link.href = '#';
+    link.style.opacity = '0.5';
+    link.style.pointerEvents = 'none';
+    link.textContent = 'Paper file not available yet';
+  }
+}
+
+function updateCharCount() {
+  const val = document.getElementById('comment').value;
+  document.getElementById('char-count').textContent = val.length;
+}
+
+function showError(msg) {
+  document.getElementById('loading-screen').style.display = 'none';
+  document.getElementById('error-text').textContent = msg;
+  if (token) document.getElementById('back-link').style.display = 'inline-block';
+  document.getElementById('error-screen').style.display = 'flex';
+}
+
+function showFormError(msg) {
+  const el = document.getElementById('form-error');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+async function submitReview() {
+  const score = document.querySelector('input[name="score"]:checked')?.value;
+  const comment = document.getElementById('comment').value.trim();
+  const errorEl = document.getElementById('form-error');
+  errorEl.style.display = 'none';
+
+  if (!score) { showFormError('Please select a score before submitting.'); return; }
+  if (comment.length < 20) { showFormError('Please provide a more detailed comment (at least 20 characters).'); return; }
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
+
+  try {
+    const res = await fetch(`${FUNCTIONS_BASE}/reviewer-submit`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, assignmentId, score, commentaire: comment })
+    });
+    const result = await res.json();
+
+    if (result.succes) {
+      document.getElementById('main-app').style.display = 'none';
+      document.getElementById('success-screen').style.display = 'flex';
+    } else {
+      showFormError(result.message || 'Something went wrong. Please try again.');
+      btn.disabled = false;
+      btn.textContent = 'Submit Review';
+    }
+  } catch (e) {
+    showFormError('Connection error. Please check your internet and try again.');
+    btn.disabled = false;
+    btn.textContent = 'Submit Review';
+  }
+}
+
+init();
+</script>
+</body>
+</html>

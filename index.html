@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACMCST 2027 – International Conference | Béni Mellal, Morocco</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --dark-blue:#0d2137;
+  --mid-blue:#1a4a7a;
+  --sky-blue:#2e9fd4;
+  --orange:#e07b20;
+  --white:#ffffff;
+  --light:#c5e3f5;
+  --border:rgba(0,0,0,0.08);
+  --text:#1c2b3a;
+  --gray:#6b7a8d;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Times New Roman',Times,serif;color:var(--text);background:var(--white);overflow-x:hidden;}
+
+/* TOPBAR */
+.topbar{background:var(--dark-blue);padding:.45rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem;}
+.topbar-item{display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:rgba(255,255,255,0.75);}
+
+/* NAVBAR */
+nav{background:var(--white);border-bottom:3px solid var(--sky-blue);position:sticky;top:0;z-index:1000;box-shadow:0 2px 10px rgba(0,0,0,0.08);}
+.nav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;padding:0 2rem;height:70px;gap:1rem;}
+.nav-logo{display:flex;align-items:center;gap:.8rem;text-decoration:none;margin-right:1.5rem;}
+.nav-logo img{height:73px;width:auto;}
+.nav-logo-text .name{font-family:'Merriweather',serif;font-weight:900;font-size:.95rem;color:var(--dark-blue);line-height:1.2;}
+.nav-logo-text .sub{font-size:.62rem;color:var(--gray);letter-spacing:.5px;}
+.nav-menu{display:flex;list-style:none;height:70px;flex:1;justify-content:center;}
+.nav-item{position:relative;height:100%;display:flex;align-items:center;}
+.nav-item>a{display:flex;align-items:center;gap:.25rem;padding:0 .65rem;height:100%;font-size:.82rem;font-weight:700;color:var(--dark-blue);text-decoration:none;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-3px;transition:color .2s,border-color .2s;}
+.nav-item>a:hover,.nav-item.active>a{color:var(--sky-blue);border-bottom-color:var(--orange);}
+.nav-item>a .ch{font-size:.55rem;}
+.new-badge{display:inline-block;background:#e00;color:#fff;font-size:.6rem;font-weight:800;padding:.1rem .35rem;border-radius:2px;margin-left:.3rem;animation:blink 1s infinite;vertical-align:middle;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+@keyframes moveRight{0%{left:-20px;}100%{left:100%;}}
+@keyframes moveLeft{0%{left:100%;}100%{left:-20px;}}
+@keyframes moveDown{0%{top:-20px;}100%{top:100%;}}
+@keyframes moveUp{0%{top:100%;}100%{top:-20px;}}
+
+
+.dropdown{display:none;position:absolute;top:100%;left:0;background:var(--white);box-shadow:0 6px 25px rgba(0,0,0,0.12);border-top:3px solid var(--orange);min-width:200px;z-index:200;}
+.nav-item:hover .dropdown{display:block;}
+.dropdown a{display:block;padding:.65rem 1.2rem;font-size:.8rem;color:var(--text);text-decoration:none;font-weight:600;border-bottom:1px solid var(--border);transition:background .15s,color .15s,padding-left .15s;}
+.dropdown a:hover{background:var(--light);color:var(--sky-blue);padding-left:1.6rem;}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;}
+.hamburger span{width:24px;height:2px;background:var(--dark-blue);}
+
+/* SLIDER */
+.slider-wrap{position:relative;width:100%;overflow:hidden;background:#000;}
+.slides{display:flex;transition:transform .7s cubic-bezier(.4,0,.2,1);}
+.slide{min-width:100%;position:relative;height:480px;overflow:hidden;background:var(--dark-blue);}
+.slide video{width:100%;height:100%;object-fit:cover;display:block;}
+.slide-placeholder{width:100%;height:480px;background:linear-gradient(135deg,var(--dark-blue),var(--mid-blue),var(--sky-blue));display:flex;flex-direction:column;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);font-size:1rem;letter-spacing:2px;text-align:center;gap:1rem;}
+.slide-placeholder .snum{font-family:'Merriweather',serif;font-size:6rem;font-weight:900;opacity:.08;}
+.sarrow{position:absolute;top:50%;transform:translateY(-50%);z-index:10;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.2);color:var(--white);width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.4rem;transition:background .2s;}
+.sarrow:hover{background:rgba(224,123,32,0.7);}
+.sarrow.prev{left:1.5rem;}
+.sarrow.next{right:1.5rem;}
+.sdots{position:absolute;bottom:1.2rem;left:50%;transform:translateX(-50%);display:flex;gap:.5rem;z-index:10;}
+.dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.35);cursor:pointer;transition:all .2s;}
+.dot.active{background:var(--orange);transform:scale(1.3);}
+
+/* THEME BAND */
+.theme-band{background:var(--dark-blue);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;}
+.theme-band-text{font-size:.85rem;font-weight:700;color:var(--white);text-transform:uppercase;letter-spacing:.5px;line-height:1.5;}
+.btn-submit{background:var(--white);color:var(--dark-blue);padding:.55rem 1.5rem;border-radius:2px;font-size:.88rem;font-weight:700;text-decoration:none;white-space:nowrap;border:2px solid var(--white);transition:background .2s,color .2s;}
+.btn-submit:hover{background:var(--orange);color:var(--white);border-color:var(--orange);}
+
+/* TICKER */
+.ticker-wrap{background:var(--light);border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow:hidden;padding:.55rem 0;}
+.ticker{display:flex;white-space:nowrap;animation:ticker 35s linear infinite;}
+.ticker:hover{animation-play-state:paused;}
+.ticker-item{display:inline-block;padding-right:4rem;font-size:.82rem;font-weight:600;color:var(--dark-blue);}
+.ticker-item span{color:var(--orange);font-weight:700;}
+.ticker-item .sep{color:var(--sky-blue);margin:0 1rem;}
+@keyframes ticker{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+.hybrid-band{text-align:center;padding:.55rem;background:var(--white);border-bottom:2px solid var(--border);font-size:.82rem;font-weight:700;color:var(--sky-blue);letter-spacing:1.5px;}
+
+/* LAYOUT */
+.container{max-width:1200px;margin:0 auto;padding:0 2rem;}
+section{padding:4.5rem 0;}
+.sec-header{text-align:center;margin-bottom:3rem;}
+.sec-tag{font-size:.7rem;color:var(--sky-blue);letter-spacing:3px;text-transform:uppercase;font-weight:700;margin-bottom:.4rem;}
+.sec-title{font-family:'Merriweather',serif;font-size:clamp(1.5rem,2.5vw,2.2rem);font-weight:900;color:var(--dark-blue);}
+.sec-line{width:50px;height:3px;background:var(--orange);margin:.8rem auto 0;}
+
+/* PRESENTATION */
+#presentation{background:var(--white);}
+.pres-grid{display:grid;grid-template-columns:1fr 1.5fr;gap:3rem;align-items:center;}
+.pres-video{border-radius:6px;overflow:hidden;box-shadow:0 4px 25px rgba(0,0,0,0.12);background:var(--dark-blue);aspect-ratio:16/9;position:relative;}
+.pres-video video{width:100%;height:100%;object-fit:cover;display:block;}
+.pres-video .vph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:rgba(255,255,255,0.2);text-align:center;gap:.5rem;}
+.pres-video .vph .vi{font-size:3rem;}
+.pres-video .vph p{font-size:.8rem;letter-spacing:1px;}
+.pres-text h3{font-family:'Merriweather',serif;font-size:1.2rem;font-weight:900;color:var(--dark-blue);margin-bottom:1rem;line-height:1.4;}
+.pres-text p{color:#4a5a6a;line-height:1.9;margin-bottom:.9rem;font-size:.92rem;text-align:justify;}
+.pres-text .hl{color:var(--sky-blue);font-weight:700;}
+
+/* TRACKS */
+#tracks{background:var(--light);}
+.tracks-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;}
+.track-card{background:var(--white);border-radius:6px;padding:1.8rem;display:flex;flex-direction:column;gap:1rem;border:none;box-shadow:8px 16px 40px rgba(0,0,0,0.25),-4px -4px 15px rgba(255,255,255,0.9);;transition:transform .2s,box-shadow .2s;position:relative;overflow:visible;}.track-card:hover{transform:translateY(-4px);box-shadow:0 8px 30px rgba(0,0,0,0.1);}
+.track-icon{transition:transform .3s ease;}
+.track-card:hover .track-icon{transform:scale(1.15);}
+
+
+.track-icon{width:80px;height:80px;border-radius:50%;flex-shrink:0;background:var(--dark-blue);display:flex;align-items:center;justify-content:center;}
+.track-icon img{width:50px;height:50px;object-fit:contain;filter:brightness(0) invert(1);}
+.track-icon .tif{font-size:1.6rem;}
+.track-num{font-size:.7rem;color:var(--sky-blue);font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:.3rem;}
+.track-title{font-family:'Merriweather',serif;font-size:.98rem;font-weight:700;color:var(--dark-blue);margin-bottom:.6rem;line-height:1.3;border-bottom:2px solid #e00;padding-bottom:.5rem;}
+.track-list{list-style:none;}
+.track-list li{font-size:.82rem;color:#4a5a6a;padding:.2rem 0 .2rem 1rem;position:relative;}
+.track-list li::before{content:'›';position:absolute;left:0;color:var(--orange);font-weight:900;}
+
+/* PROCEEDINGS */
+#proceedings{background:var(--white);}
+.proc-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;}
+.proc-col h3{font-family:'Merriweather',serif;font-size:1rem;font-weight:900;color:var(--sky-blue);margin-bottom:1rem;border-bottom:2px solid var(--border);padding-bottom:.5rem;}
+.proc-text{font-size:.85rem;color:#4a5a6a;line-height:1.8;margin-bottom:1.2rem;}
+.proc-text strong{color:var(--sky-blue);}
+.proc-img-wrap{display:flex;flex-direction:column;gap:.8rem;}
+.proc-book-img{width:100%;aspect-ratio:732/1110;border-radius:4px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.15);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;text-decoration:none;transition:transform .2s,box-shadow .2s;}
+.proc-book-img:hover{transform:translateY(-4px);box-shadow:0 10px 30px rgba(0,0,0,0.2);}
+.proc-ph{text-align:center;color:rgba(255,255,255,0.75);padding:1rem;}
+.proc-ph .pi{font-size:2.5rem;margin-bottom:.5rem;}
+.proc-ph p{font-size:.72rem;font-weight:700;letter-spacing:.5px;line-height:1.5;}
+.proc-badges{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.8rem;}
+.badge-springer{display:inline-flex;align-items:center;gap:.3rem;border:1px solid var(--border);border-radius:3px;padding:.35rem .7rem;font-size:.75rem;font-weight:700;color:var(--dark-blue);}
+.badge-scopus{display:inline-flex;align-items:center;gap:.3rem;border:1px solid var(--border);border-radius:3px;padding:.35rem .7rem;font-size:.75rem;font-weight:700;color:#0066cc;}
+
+/* BOOK PAGE TURN */
+.book-section{display:flex;flex-direction:column;align-items:center;gap:1rem;}
+.book-viewer{
+  position:relative;
+  width:100%;
+  max-width:250px;
+aspect-ratio:732/1110;
+perspective:1200px;
+}
+
+.book-spine{
+  position:absolute;top:0;left:0;bottom:0;width:12px;
+  background:linear-gradient(90deg,#4a0a02,#8b1a0a,#c0392b);
+  border-radius:4px 0 0 4px;
+  z-index:0;
+  box-shadow:none;
+}
+
+.page{
+  position:absolute;
+  inset:0;
+  transform-origin:left center;
+  transform-style:preserve-3d;
+  transition:transform 0.7s cubic-bezier(.645,.045,.355,1);
+  border-radius:0 6px 6px 0;
+}
+.page.flipped{transform:rotateY(-180deg);}
+.page-front,.page-back{
+  position:absolute;inset:0;
+  backface-visibility:hidden;
+  overflow:hidden;
+  border-radius:0 6px 6px 0;
+}
+
+.page-front{
+  box-shadow:4px 0 8px rgba(0,0,0,0.15);
+}
+.page-back{
+  transform:rotateY(180deg);
+  box-shadow:-4px 0 8px rgba(0,0,0,0.15);
+}
+
+.page-front img,.page-back img{
+
+  width:100%;height:100%;object-fit:cover;display:block;
+
+}
+}
+/* Page curl shadow effect */
+.page.flipped .page-front::after{
+  content:'';
+  position:absolute;inset:0;
+  background:none;
+}
+.book-shadow{
+  width:80%;height:12px;
+  background:radial-gradient(ellipse,rgba(0,0,0,0.2),transparent);
+  filter:blur(6px);
+}
+.book-controls{
+  display:flex;align-items:center;gap:1rem;
+}
+.book-btn{
+  width:34px;height:34px;border-radius:50%;
+  background:var(--dark-blue);color:var(--white);
+  border:none;cursor:pointer;font-size:1.1rem;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s,transform .2s;
+  font-weight:700;
+}
+.book-btn:hover{background:var(--orange);transform:scale(1.1);}
+.book-page-num{font-size:.8rem;color:var(--gray);min-width:90px;text-align:center;}
+.view-springer-btn{
+  display:inline-block;
+  background:var(--orange);color:var(--white);
+  padding:.55rem 1.5rem;border-radius:3px;
+  font-size:.82rem;font-weight:700;text-decoration:none;
+  transition:background .2s;
+}
+.view-springer-btn:hover{background:var(--dark-blue);}
+
+/* PARTNERS */
+#partners{background:var(--light);}
+.partners-label{font-size:.75rem;font-weight:700;color:var(--sky-blue);letter-spacing:2px;text-transform:uppercase;margin-bottom:1.2rem;padding-bottom:.5rem;border-bottom:2px solid var(--border);}
+.partners-uni{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:2.5rem;margin-bottom:2.5rem;}
+.partners-lab{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:1.5rem;}
+.uni-logo{height:100px;width:auto;max-width:170px;object-fit:contain;filter:grayscale(20%);transition:filter .2s,transform .2s;}
+.uni-logo:hover{filter:grayscale(0%);transform:scale(1.05);}
+.lab-logo{height:48px;width:auto;max-width:120px;object-fit:contain;filter:grayscale(20%);transition:filter .2s,transform .2s;}
+.lab-logo:hover{filter:grayscale(0%);transform:scale(1.05);}
+.ph-uni{height:120px;width:150px;border:2px dashed var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.68rem;color:var(--gray);text-align:center;padding:.5rem;}
+.ph-lab{height:48px;width:110px;border:2px dashed var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.65rem;color:var(--gray);text-align:center;}
+
+/* FOOTER */
+footer{background:var(--mid-blue);padding:3rem 2rem 0;}
+.footer-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:2.5rem;padding-bottom:2.5rem;}
+.footer-col h4{font-size:.85rem;font-weight:700;color:var(--white);margin-bottom:1.2rem;padding-bottom:.5rem;border-bottom:2px solid rgba(255,255,255,0.1);text-transform:uppercase;letter-spacing:.5px;}
+.footer-contact-block{display:flex;gap:.8rem;align-items:flex-start;}
+.footer-avatar{width:52px;height:52px;border-radius:50%;flex-shrink:0;background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:1.4rem;}
+.fc-name{color:var(--white);font-weight:700;font-size:.88rem;margin-bottom:.3rem;}
+.fc-info a{color:rgba(255,255,255,0.65);font-size:.8rem;text-decoration:none;display:block;margin-bottom:.2rem;}
+.fc-info a:hover{color:var(--orange);}
+.footer-links,.footer-downloads{list-style:none;}
+.footer-links li,.footer-downloads li{padding:.32rem 0;border-bottom:1px solid rgba(255,255,255,0.06);}
+.footer-links a{color:rgba(255,255,255,0.65);text-decoration:none;font-size:.82rem;transition:color .2s,padding-left .2s;display:flex;align-items:center;gap:.4rem;}
+.footer-links a:hover{color:var(--orange);padding-left:.4rem;}
+.footer-links a .nb{display:inline-block;background:#e00;color:#fff;font-size:.58rem;font-weight:800;padding:.1rem .3rem;border-radius:2px;animation:blink 1s infinite;}
+.footer-downloads a{color:rgba(255,255,255,0.65);text-decoration:none;font-size:.82rem;transition:color .2s;}
+.footer-downloads a::before{content:'↓ ';color:var(--sky-blue);}
+.footer-downloads a:hover{color:var(--orange);}
+.news-item{padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:.8rem;color:rgba(255,255,255,0.65);line-height:1.5;}
+.news-item::before{content:'● ';color:var(--orange);font-size:.55rem;vertical-align:middle;}
+.footer-bottom{max-width:1200px;margin:0 auto;padding:1rem 0;border-top:1px solid rgba(255,255,255,0.08);text-align:center;}
+.footer-copyright{font-size:.78rem;color:rgba(255,255,255,0.35);}
+.footer-copyright a{color:var(--sky-blue);text-decoration:none;}
+
+/* BACK TO TOP */
+#btt{position:fixed;bottom:2rem;right:2rem;z-index:999;width:40px;height:40px;border-radius:4px;background:var(--orange);color:var(--white);display:none;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer;text-decoration:none;box-shadow:0 4px 15px rgba(0,0,0,0.2);transition:background .2s,transform .2s;font-weight:700;}
+#btt.show{display:flex;}
+#btt:hover{background:var(--dark-blue);transform:translateY(-3px);}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .tracks-grid,.pres-grid,.proc-grid{grid-template-columns:1fr;}
+  .nav-menu{display:none;flex-direction:column;position:absolute;top:70px;left:0;right:0;background:var(--white);box-shadow:0 8px 20px rgba(0,0,0,0.1);height:auto;padding:1rem 0;z-index:999;}
+  .nav-menu.open{display:flex;}
+  .nav-item{height:auto;flex-direction:column;align-items:flex-start;}
+  .nav-item>a{padding:.7rem 1.5rem;height:auto;border-bottom:1px solid var(--border);width:100%;}
+  .dropdown{position:static;box-shadow:none;border-top:none;border-left:3px solid var(--orange);margin-left:1.5rem;}
+  .hamburger{display:flex;}
+  .nav-inner{position:relative;}
+  .footer-grid{grid-template-columns:1fr;}
+  .theme-band{flex-direction:column;text-align:center;}
+  .desktop-only{display:none !important;}
+  .mobile-only{display:block !important;}
+    video.mobile-only{display:block !important;}
+  .slide{height:500px !important;}
+  .theme-band-text{font-size:.7rem !important;}
+}
+
+@media(max-width:500px){
+  .topbar{justify-content:center;gap:.3rem;}
+  section{padding:3rem 0;}
+}
+
+@media(min-width:769px){
+  .mobile-only{display:none !important;}
+}
+
+@keyframes fadeInUp {
+  0%  { opacity:0; transform:translateY(30px); }
+  100%{ opacity:1; transform:translateY(0); }
+}
+@keyframes typing {
+  from { width:0; }
+  to   { width:100%; }
+}
+
+</style>
+
+
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-item">🕐 Conference: 10–12 November 2027, Béni Mellal, Morocco</div>
+  <div class="topbar-item">📞 Contact: acmcst@usms.ma</div>
+</div>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-inner">
+ 
+<a href="index.html" class="nav-logo">
+  <img src="logo-acmcst.png" alt="ACMCST" onerror="this.style.display='none'">
+</a>
+
+    <ul class="nav-menu" id="navMenu">
+      <li class="nav-item active"><a href="index.html">HOME</a></li>
+      <li class="nav-item">
+        <a href="cfp.html">CALL FOR PAPERS <span class="ch">▾</span></a>
+        <div class="dropdown">
+          <a href="cfp.html">Conference Topics</a>
+          <a href="cfp.html#special">Special Session</a>
+        </div>
+      </li>
+      <li class="nav-item"><a href="speakers.html">KEYNOTE SPEAKERS</a></li>
+      <li class="nav-item"><a href="dates.html">IMPORTANT DATES</a></li>
+      <li class="nav-item">
+        <a href="committees.html">COMMITTEES <span class="ch">▾</span></a>
+        <div class="dropdown">
+          <a href="committees.html#organizing">Organizing Committee</a>
+          <a href="committees.html#scientific">Scientific Committee</a>
+          <a href="committees.html#technical">Technical Committee</a>
+        </div>                   
+      </li>
+<li class="nav-item"><a href="venue.html">ACCESS MAP</a></li>   
+<li class="nav-item"><a href="submission.html" target="_blank">SUBMISSION</a></li>
+<li class="nav-item"><a href="registration.html">REGISTRATION</a></li>
+<li class="nav-item"><a href="previous-edition.html">PREVIOUS EDITION</a></li>
+
+    </ul>
+    <div class="hamburger" onclick="document.getElementById('navMenu').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+<!-- SLIDER -->
+<div class="slider-wrap">
+  <div class="slides" id="slides">
+
+<!-- SLIDE 1 -->
+<div class="slide" style="position:relative; background:var(--dark-blue); overflow:hidden;">
+  
+  <!-- MOBILE UNIQUEMENT -->
+  <video class="mobile-only" autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover; display:none;">
+    <source src="slide1-mobile.mp4" type="video/mp4">
+  </video>
+
+  <!-- DESKTOP UNIQUEMENT -->
+  <video class="desktop-only" autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover; display:block;">
+    <source src="slide1.mp4" type="video/mp4">
+  </video>
+
+</div>
+
+    <!-- SLIDE 2 -->
+    <div class="slide" style="position:relative; background:var(--dark-blue); overflow:hidden;">
+      
+      <!-- MOBILE UNIQUEMENT -->
+      <!-- MOBILE UNIQUEMENT -->
+<video class="mobile-only" autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover; display:none;">
+  <source src="slide2-mobile.mp4" type="video/mp4">
+</video>       
+      <!-- DESKTOP UNIQUEMENT -->
+      <div class="desktop-only">
+        <img src="slide2.svg" style="width:100%; height:100%; object-fit:cover; display:block;">
+        <div id="slide2-text" style="position:absolute; top:25%; left:50%; transform:translate(-50%,-50%); text-align:center; z-index:10;">
+          <div style="font-family:'Merriweather',serif; font-size:1.2rem; font-weight:900; color:#ffffff; line-height:1.6; text-shadow:0 2px 10px rgba(0,0,0,0.5); animation:fadeInUp 1s ease forwards;">
+            THE 2ND INTERNATIONAL CONFERENCE ON ADVANCED COMMUNICATIONS
+          </div>
+          <div style="font-family:'Merriweather',serif; font-size:1.2rem; font-weight:900; color:#ffffff; line-height:1.6; text-shadow:0 2px 10px rgba(0,0,0,0.5); animation:fadeInUp 1s ease 0.5s forwards; opacity:0;">
+            WITH MODERN CIRCUITS
+          </div>
+          <div style="font-family:'Merriweather',serif; font-size:1.2rem; font-weight:900; color:#ffffff; line-height:1.6; text-shadow:0 2px 10px rgba(0,0,0,0.5); animation:fadeInUp 1s ease 1s forwards; opacity:0;">
+            AND SYSTEMS TECHNOLOGIES
+          </div>
+          <div style="width:80px; height:4px; background:var(--orange); margin:1rem auto 0; animation:fadeInUp 1s ease 1.5s forwards; opacity:0;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 3 -->
+    <div class="slide" style="position:relative; background:var(--dark-blue); overflow:hidden;">
+      <!-- MOBILE UNIQUEMENT -->
+<img src="slide3-mobile.svg" class="mobile-only" style="width:100%; height:100%; object-fit:cover; display:none;">
+      <!-- DESKTOP UNIQUEMENT -->
+      <img src="slide3.svg" class="desktop-only" style="width:100%; height:100%; object-fit:cover; display:block;">
+    </div>
+
+ 
+
+  </div>
+  <div class="sarrow prev" onclick="move(-1)">&#8249;</div>
+  <div class="sarrow next" onclick="move(1)">&#8250;</div>
+  <div class="sdots">
+    <div class="dot active" onclick="go(0)"></div>
+    <div class="dot" onclick="go(1)"></div>
+    <div class="dot" onclick="go(2)"></div>
+  </div>
+</div>
+
+
+
+
+
+
+
+<!-- THEME BAND -->
+<div class="theme-band">
+  <div class="theme-band-text">THE 2ND INTERNATIONAL CONFERENCE ON ADVANCED COMMUNICATIONS WITH MODERN CIRCUITS AND SYSTEMS TECHNOLOGIES — ACMCST 2027</div>
+  <a href="https://cmt3.research.microsoft.com/User/Login?ReturnUrl=%2FACMCST2027" class="btn-submit">Submit Paper</a>
+  <!--<a href="https://docs.google.com/forms/d/e/1FAIpQLSfywM60KpPlY7B2ERyv_P-XH2xbtAsJmC9WuyjvOQm94Hh3Kw/viewform" target="_blank" class="btn-submit">Register Now</a>-->
+</div>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <div class="ticker-item">
+       <span>Important Dates:</span> &nbsp; Paper Submission Deadline: <span>July 31, 2027</span>
+    <!-- Activé cette Ligne suivante pour Extended Submission Deadline et mettre la ligne précedente en commentaire-->
+     <!-- <span>Important Dates:</span> &nbsp; Paper Submission Deadline: <span style="text-decoration:line-through;opacity:0.5;">July 31, 2027</span> <span style="color:var(--orange);font-weight:700;">August 15, 2027</span> -->
+      <span class="sep">✦✦✦</span> Notification of Acceptance: <span>September 15, 2027</span>
+      <span class="sep">✦✦✦</span> Camera-Ready Paper Deadline: <span>October 15, 2027</span>
+      <span class="sep">✦✦✦</span> Early Bird Registration Deadline: <span>October 5, 2027</span>
+      <span class="sep">✦✦✦</span> Regular Registration Deadline: <span>October 15, 2027</span>
+      <span class="sep">✦✦✦</span>
+    </div>
+  </div>
+</div>
+<div class="hybrid-band">✦✦✦ &nbsp; Hybrid Conference &nbsp; ✦✦✦ &nbsp; ( In Person / Online )</div>
+
+
+
+<!-- BLOC EXTENDED SUBMISSION DEADLINE — visibilité pilotée depuis assignments.html (config.show_extended_deadline_banner) -->
+<div class="js-toggle-deadline-banner" style="display:none;">
+<style>
+@keyframes moveTimeline{0%{left:-40px;}100%{left:calc(100% + 40px);}}
+@keyframes blinkBadge{0%,100%{opacity:1;}50%{opacity:0;}}
+.ext-wrap{background:var(--dark-blue);padding:1.8rem 2rem;}
+.ext-header{display:flex;align-items:center;justify-content:center;gap:.8rem;margin-bottom:1.8rem;}
+.ext-badge{background:var(--orange);color:#fff;font-size:.62rem;font-weight:900;padding:.2rem .55rem;border-radius:2px;letter-spacing:2px;text-transform:uppercase;animation:blinkBadge 1s infinite;}
+.ext-title{font-family:'Merriweather',serif;font-size:.95rem;font-weight:900;color:#fff;text-transform:uppercase;letter-spacing:2px;}
+.ext-timeline-line{position:relative;height:3px;background:rgba(255,255,255,0.15);border-radius:2px;overflow:hidden;}
+.ext-timeline-line .glow{position:absolute;top:50%;transform:translateY(-50%);width:28px;height:28px;background:#fff;border-radius:50%;box-shadow:0 0 12px 6px rgba(255,255,255,0.5);animation:moveTimeline 5s linear infinite;}
+.ext-steps{display:grid;grid-template-columns:repeat(5,1fr);gap:0;}
+.ext-step{padding:.8rem .5rem 0 0;position:relative;}
+.ext-step::before{content:'';position:absolute;top:-8px;left:0;width:2px;height:8px;background:rgba(255,255,255,0.35);}
+.ext-step-label{font-size:.6rem;font-weight:900;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:.4rem;line-height:1.3;}
+.ext-date-old{font-size:.72rem;font-weight:700;color:rgba(255,255,255,0.3);text-decoration:line-through;margin-bottom:.15rem;}
+.ext-date-new{font-size:.85rem;font-weight:900;color:#fff;}
+.ext-date-new::before{content:'→ ';font-size:.7rem;color:var(--orange);}
+.ext-date-normal{font-size:.8rem;font-weight:700;color:var(--sky-blue);}
+
+
+
+
+</style>
+
+<div class="ext-wrap">
+  <div class="ext-header">
+    <span class="ext-badge">new</span>
+    <span class="ext-title"> Extended Submission Deadline</span>
+    <span class="ext-badge">new</span>
+  </div>
+  <div class="ext-timeline-line">
+    <div class="glow"></div>
+  </div>
+  <div class="ext-steps">
+    <div class="ext-step">
+      <div class="ext-step-label">Submission<br>Deadline</div>
+      <div class="ext-date-old">July 31, 2027</div>
+      <div class="ext-date-new">August 15, 2027 </div>
+    </div>
+    <div class="ext-step">
+      <div class="ext-step-label">Notification of<br>Acceptance</div>
+      <div class="ext-date-normal">September 15, 2027</div>
+    </div>
+    <div class="ext-step">
+      <div class="ext-step-label">Camera-Ready<br>Paper</div>
+      <div class="ext-date-normal">October 15, 2027</div>
+    </div>
+    <div class="ext-step">
+      <div class="ext-step-label">Regular<br>Registration</div>
+      <div class="ext-date-normal">October 15, 2027</div>
+    </div>
+    <div class="ext-step">
+      <div class="ext-step-label">Conference<br>Days</div>
+      <div class="ext-date-normal">10, 11 & 12 Nov. 2027</div>
+    </div>
+  </div>
+</div>
+</div>
+<!--============================================================ -->
+
+<!-- PRESENTATION -->
+<section id="presentation">
+  <div class="container">
+    <div class="sec-header reveal">
+      <div class="sec-tag">About the Conference</div>
+      <h2 class="sec-title">Welcome to ACMCST 2027</h2>
+      <div class="sec-line"></div>
+    </div>
+    <div class="pres-grid">
+
+      <!-- VIDEOS (gauche) -->
+      <div style="display:flex; flex-direction:column; gap:1rem;">
+        
+        <!-- VIDEO 1 il faut ajouter embed dans le lien -->
+        <div class="pres-video reveal">
+          <iframe 
+            src="https://www.youtube.com/embed/2FwoD7woZ4o"
+            style="width:100%; height:100%; border:none;"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+
+        <!-- VIDEO 2 il faut ajouter embed dans le lien -->
+        <div class="pres-video reveal">
+          <iframe 
+          
+            src="https://www.youtube.com/embed/HSZbqGdmtPA"     
+            style="width:100%; height:100%; border:none;"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+
+      </div>
+
+<!-- TEXTE (droite) -->
+      <div class="pres-text reveal">
+        <h3>The 2nd International Conference on Advanced Communications with Modern Circuits and Systems Technologies</h3>
+        <p>The <span class="hl">ACMCST 2027</span> is an international event organized by the <span class="hl">MISET Research Laboratory</span> at Sultan Moulay Slimane University, Béni Mellal, Morocco.</p>
+        <p>This conference brings together renowned researchers, experts, and professionals in the fields of advanced communication technologies, modern circuits, and intelligent systems. Its primary objective is to explore the latest advances in electronic engineering, telecommunications, advanced technologies, and smart systems.</p>
+        <p>ACMCST 2027 provides an interactive platform for participants to share ideas, present research findings, and exchange experiences. The conference welcomes researchers, academics, engineers, industry professionals, and students from around the world.</p>
+        <p>With a strong emphasis on networking, collaboration, and knowledge exchange, <strong>ACMCST 2027</strong> represents an excellent opportunity for participants to stay informed about recent developments and emerging trends in communication technologies, electronic systems, and multidisciplinary engineering fields.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- La partie ci-dessous sera mise en commentaire jusqu’à la préparation du programme. Je procéderai ensuite à la mise à jour de la page en format JPG ainsi que du programme en PDF -->
+
+
+<!-- PROGRAMME + CARTE ROOMS — visibilité pilotée depuis assignments.html (config.show_programme / config.show_conference_rooms) -->
+<section id="program" class="js-toggle-program-section" style="display:none;background:var(--white);padding:0 0 3rem;">
+    <div class="container">
+    <div class="sec-header reveal">
+      <div class="sec-tag">Conference Program</div>
+      <h2 class="sec-title">Scientific Program & Venue</h2>
+      <div class="sec-line"></div>
+    </div>
+
+    <div id="program-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;" class="reveal">
+
+      <!-- GAUCHE : PROGRAMME -->
+      <div class="js-toggle-programme" style="display:none;text-align:center;">
+        <p style="color:#4a5a6a;font-size:.9rem;margin-bottom:1.2rem;">Click on the program below to download it.</p>
+        <a href="program.pdf" download="ACMCST2027-Program.pdf">
+          <img src="program-preview.jpg" alt="ACMCST 2027 Conference Program"
+               style="max-width:300px;border-radius:6px;box-shadow:0 8px 30px rgba(0,0,0,0.15);border:2px solid var(--border);cursor:pointer;transition:transform .2s,box-shadow .2s;"
+               onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 16px 40px rgba(0,0,0,0.2)'"
+               onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 8px 30px rgba(0,0,0,0.15)'"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+          <div style="display:none;width:100%;min-height:200px;background:var(--dark-blue);border-radius:6px;flex-direction:column;align-items:center;justify-content:center;gap:1rem;cursor:pointer;">
+            <div style="font-size:3rem;">📄</div>
+            <div style="font-family:'Merriweather',serif;font-size:1rem;font-weight:900;color:#fff;">ACMCST 2027 — Conference Program</div>
+            <div style="font-size:.8rem;color:rgba(255,255,255,0.6);">Click to download PDF</div>
+          </div>
+        </a>
+        <div style="margin-top:1rem;">
+          <a href="program.pdf" download="ACMCST2027-Program.pdf"
+             style="display:inline-flex;align-items:center;gap:.5rem;background:var(--dark-blue);color:#fff;padding:.6rem 1.5rem;border-radius:3px;font-size:.85rem;font-weight:700;text-decoration:none;transition:background .2s;"
+             onmouseover="this.style.background='var(--orange)'"
+             onmouseout="this.style.background='var(--dark-blue)'">
+            ⬇ Download Program (PDF)
+          </a>
+        </div>
+      </div>
+
+      <!-- DROITE : CARTE ROOMS -->
+      <div class="js-toggle-rooms" style="display:none;">
+        <p style="color:#4a5a6a;font-size:.9rem;margin-bottom:1.2rem;text-align:center;">Conference Rooms — FST Béni Mellal</p>
+        <div id="map2-index" style="height:420px;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.15);border:3px solid var(--sky-blue);"></div>
+        <div style="display:flex;align-items:center;gap:1.5rem;margin-top:.8rem;flex-wrap:wrap;">
+          <div style="display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:#4a5a6a;">
+            <div style="width:14px;height:14px;border-radius:50%;background:#e74c3c;"></div><span>Conference Hall</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:#4a5a6a;">
+            <div style="width:14px;height:14px;border-radius:50%;background:#0d2137;"></div><span>Room 1</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:#4a5a6a;">
+            <div style="width:14px;height:14px;border-radius:50%;background:#2e9fd4;"></div><span>Room 2</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+</section>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+// CARTE ROOMS — index.html
+const mapIdx = L.map('map2-index').setView([32.377000, -6.318500], 17);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© OpenStreetMap contributors', maxZoom: 20
+}).addTo(mapIdx);
+
+const room1Pts = [
+  [32.377360, -6.317879],[32.377592, -6.318331],
+  [32.377745, -6.318504],[32.377932, -6.318958],
+  [32.377048, -6.320312],[32.376936, -6.320251]
+];
+const room2Pts = [
+  [32.377360, -6.317879],[32.376813, -6.318152],
+  [32.376694, -6.318030],[32.376894, -6.317601],
+  [32.376599, -6.317058],[32.376433, -6.316842],
+  [32.376071, -6.316893]
+];
+
+// Marqueurs
+const hallIco = L.divIcon({className:'',html:`<div style="position:relative;width:30px;height:30px;"><div style="position:absolute;width:30px;height:30px;background:rgba(231,76,60,0.3);border-radius:50%;animation:rPi 1.5s infinite;"></div><div style="position:absolute;top:5px;left:5px;width:20px;height:20px;background:#e74c3c;border:3px solid white;border-radius:50%;"></div></div><style>@keyframes rPi{0%{transform:scale(1);opacity:1;}100%{transform:scale(2.5);opacity:0;}}</style>`,iconSize:[30,30],iconAnchor:[15,15]});
+const r1Ico = L.divIcon({className:'',html:`<div style="position:relative;width:30px;height:30px;"><div style="position:absolute;width:30px;height:30px;background:rgba(13,33,55,0.3);border-radius:50%;animation:dPi 1.5s infinite;"></div><div style="position:absolute;top:5px;left:5px;width:20px;height:20px;background:#0d2137;border:3px solid white;border-radius:50%;"></div></div><style>@keyframes dPi{0%{transform:scale(1);opacity:1;}100%{transform:scale(2.5);opacity:0;}}</style>`,iconSize:[30,30],iconAnchor:[15,15]});
+const r2Ico = L.divIcon({className:'',html:`<div style="position:relative;width:30px;height:30px;"><div style="position:absolute;width:30px;height:30px;background:rgba(46,159,212,0.3);border-radius:50%;animation:bPi 1.5s infinite;"></div><div style="position:absolute;top:5px;left:5px;width:20px;height:20px;background:#2e9fd4;border:3px solid white;border-radius:50%;"></div></div><style>@keyframes bPi{0%{transform:scale(1);opacity:1;}100%{transform:scale(2.5);opacity:0;}}</style>`,iconSize:[30,30],iconAnchor:[15,15]});
+
+L.marker(room1Pts[0],{icon:hallIco}).addTo(mapIdx).bindTooltip('<b>🏛️ Conference Hall</b>',{permanent:true,direction:'top',className:'map-label',offset:[0,-15]});
+L.marker(room1Pts[room1Pts.length-1],{icon:r1Ico}).addTo(mapIdx).bindTooltip('<b>Room 1</b>',{permanent:true,direction:'top',className:'map-label',offset:[0,-15]});
+L.marker(room2Pts[room2Pts.length-1],{icon:r2Ico}).addTo(mapIdx).bindTooltip('<b>Room 2</b>',{permanent:true,direction:'top',className:'map-label',offset:[0,-15]});
+
+// Lignes statiques
+L.polyline(room1Pts,{color:'#0d2137',weight:3,opacity:0.2,dashArray:'8,8'}).addTo(mapIdx);
+L.polyline(room2Pts,{color:'#2e9fd4',weight:3,opacity:0.2,dashArray:'8,8'}).addTo(mapIdx);
+
+// Animation
+function interp(p1,p2,t){return[p1[0]+(p2[0]-p1[0])*t,p1[1]+(p2[1]-p1[1])*t];}
+function buildPos(pts){
+  const sp=0.000150,pos=[];
+  for(let s=0;s<pts.length-1;s++){
+    const p1=pts[s],p2=pts[s+1],dist=Math.sqrt(Math.pow(p2[0]-p1[0],2)+Math.pow(p2[1]-p1[1],2));
+    const steps=Math.max(2,Math.round(dist/sp));
+    for(let d=0;d<steps;d++) pos.push(interp(p1,p2,d/steps));
+  }
+  pos.push(pts[pts.length-1]);
+  return pos;
+}
+const pos1=buildPos(room1Pts), pos2=buildPos(room2Pts);
+
+function dI1(){return L.divIcon({className:'',html:`<div style="width:10px;height:10px;background:#0d2137;border:2px solid white;border-radius:50%;box-shadow:0 0 6px rgba(13,33,55,0.9);"></div>`,iconSize:[10,10],iconAnchor:[5,5]});}
+function dI2(){return L.divIcon({className:'',html:`<div style="width:10px;height:10px;background:#2e9fd4;border:2px solid white;border-radius:50%;box-shadow:0 0 6px rgba(46,159,212,0.9);"></div>`,iconSize:[10,10],iconAnchor:[5,5]});}
+
+let pm1=[],pi1=0;
+function anim1(){
+  if(pi1<pos1.length){pm1.push(L.marker(pos1[pi1],{icon:dI1()}).addTo(mapIdx));pi1++;setTimeout(anim1,200);}
+  else{setTimeout(()=>{pm1.forEach(m=>mapIdx.removeLayer(m));pm1=[];pi1=0;setTimeout(anim1,500);},1500);}
+}
+let pm2=[],pi2=0;
+function anim2(){
+  if(pi2<pos2.length){pm2.push(L.marker(pos2[pi2],{icon:dI2()}).addTo(mapIdx));pi2++;setTimeout(anim2,200);}
+  else{setTimeout(()=>{pm2.forEach(m=>mapIdx.removeLayer(m));pm2=[];pi2=0;setTimeout(anim2,500);},1500);}
+}
+anim1();
+setTimeout(anim2,1000);
+</script>
+
+
+
+<!-- TRACKS -->
+<section id="tracks">
+  <div class="container">
+    <div class="sec-header reveal">
+      <div class="sec-tag">Call for Papers</div>
+      <h2 class="sec-title">Conference Tracks & Topics</h2>
+      <div class="sec-line"></div>
+    </div>
+
+<div class="tracks-grid">
+
+<div class="track-card reveal">
+<!-- 4 BORDURES ANIMÉES -->
+  <div style="position:absolute;top:0;left:0;width:6px;height:100%;background:var(--dark-blue);overflow:hidden;">
+    <div style="position:absolute;left:50%;transform:translateX(-50%);width:20px;height:20px;background:white;border-radius:50%;box-shadow:0 0 10px 5px rgba(255,255,255,0.6);animation:moveUp 4s linear infinite 3s;"></div>
+  </div>
+
+
+<!-- FIN BORDURES -->
+ <div style="display:flex;align-items:center;gap:1rem;">
+  <div class="track-icon"><img src="icon1.png" alt="T1" onerror="this.outerHTML='<div class=tif>🧠</div>'"></div>
+  <div>
+    <div class="track-num">Track A</div>
+    <div class="track-title">Intelligent Systems and Advanced Technologies</div>
+  </div>
+</div>
+<ul class="track-list">
+  <li>Connected Systems</li>
+  <li>Industrial IoT</li>
+  <li>Control of Connected Vehicle Systems</li>
+  <li>Robotics and Autonomous Systems</li>
+  <li>Smart Homes, Smart Cities</li>
+  <li>IA for Embedded Systems</li>
+  <li>Smart IoT, Embedded Systems & Industry 4.0</li>
+  <li>Machine Learning for IoT</li>
+  <li>Connected Car, Automotive</li>
+  <li>Smart Systems</li>
+  <li>Technologies in Intelligent Systems</li>
+</ul>
+</div>
+<div class="track-card reveal"> 
+
+
+      <!-- 4 BORDURES ANIMÉES-->
+ 
+  <div style="position:absolute;top:0;left:0;width:6px;height:100%;background:var(--dark-blue);overflow:hidden;">
+    <div style="position:absolute;left:50%;transform:translateX(-50%);width:20px;height:20px;background:white;border-radius:50%;box-shadow:0 0 10px 5px rgba(255,255,255,0.6);animation:moveUp 4s linear infinite 3s;"></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:1rem;">
+  <div class="track-icon"><img src="icon2.png" alt="T2" onerror="this.outerHTML='<div class=tif>⚡</div>'"></div>
+  <div>
+    <div class="track-num">Track B</div>
+    <div class="track-title">Power & Energy</div>
+  </div>
+</div>
+<ul class="track-list">
+  <li>Power Electronics, Systems and Applications</li>
+  <li>Smart Grids & Microgrids</li>
+  <li>Command and Control Systems for Renewable Energy</li>
+  <li>Electric power generation, transmission & distribution</li>
+  <li>Energy conversion systems</li>
+  <li>Energy storage components & systems</li>
+  <li>Energy harvesting</li>
+  <li>Power semiconductor devices</li>
+  <li>Energy efficiency</li>
+</ul>
+</div>
+<div class="track-card reveal">
+  <div style="position:absolute;top:0;left:0;width:6px;height:100%;background:var(--dark-blue);overflow:hidden;">
+    <div style="position:absolute;left:50%;transform:translateX(-50%);width:20px;height:20px;background:white;border-radius:50%;box-shadow:0 0 10px 5px rgba(255,255,255,0.6);animation:moveUp 4s linear infinite 3s;"></div>
+  </div>
+  <!-- FIN BORDURES -->
+  <div style="display:flex;align-items:center;gap:1rem;">
+    <div class="track-icon"><img src="icon3.png" alt="T3" onerror="this.outerHTML='<div class=tif>📡</div>'"></div>
+    <div>
+      <div class="track-num">Track C</div>
+      <div class="track-title">Information and Communication Technologies</div>
+    </div>
+  </div>
+  <ul class="track-list">
+    <li>RFID technology and applications</li>
+    <li>Satellite and Space Communications</li>
+    <li>Network and Security</li>
+    <li>Telecommunication Systems</li>
+    <li>Mobile and Ubiquitous Computing</li>
+    <li>Wireless Communications and Networking</li>
+    <li>Antenna Systems and Architectures</li>
+    <li>Telecommunications Applied to Transportation</li>
+    <li>Access Systems and Networks</li>
+    <li>Hybrid information technology</li>
+    <li>Electromagnetic computation methods</li>
+  </ul>
+</div>
+<div class="track-card reveal">
+  
+
+      <!-- 4 BORDURES ANIMÉES -->
+
+  <div style="position:absolute;top:0;left:0;width:6px;height:100%;background:var(--dark-blue);overflow:hidden;">
+    <div style="position:absolute;left:50%;transform:translateX(-50%);width:20px;height:20px;background:white;border-radius:50%;box-shadow:0 0 10px 5px rgba(255,255,255,0.6);animation:moveUp 4s linear infinite 3s;"></div>
+  </div>
+ 
+<div style="display:flex;align-items:center;gap:1rem;">
+  <div class="track-icon"><img src="icon4.png" alt="T4" onerror="this.outerHTML='<div class=tif>🔌</div>'"></div>
+  <div>
+    <div class="track-num">Track D</div>
+    <div class="track-title">Electronics Circuits and Systems</div>
+  </div>
+</div>
+<ul class="track-list">
+  <li>Microsystems and Embedded Systems</li>
+  <li>Sensors and Sensing Systems</li>
+  <li>Low-Power and Low-Voltage Design</li>
+  <li>EDA, Test and Reliability</li>
+  <li>Signal Processing, Image and Video</li>
+  <li>Linear and Non-Linear Circuits and Systems</li>
+  <li>Neural Networks, Machine and Deep Learning</li>
+  <li>VLSI Systems and Applications</li>
+  <li>Digital Circuits and Systems</li>
+</ul>
+</div>
+</div>
+
+
+
+
+  </div>
+</section>
+
+<!-- PROCEEDINGS -->
+<section id="proceedings">
+  <div class="container">
+    <div class="sec-header reveal">
+      <div class="sec-tag">Publication</div>
+      <h2 class="sec-title">Proceedings & Indexing</h2>
+      <div class="sec-line"></div>
+    </div>
+    <div class="proc-grid">
+
+     <!-- COL 1: ACMCST'25 (maintenant à gauche) -->
+  <div class="proc-col reveal">
+    <h3>Last Proceeding — ACMCST'25</h3>
+    <p class="proc-text">Browse the pages of <strong>ACMCST'25</strong> proceedings using the arrows below. Click the button to access the full proceedings on SpringerLink.</p>
+    <div class="book-section">
+      <div class="book-viewer" id="bookViewer">
+        <div class="book-spine"></div>
+      </div>
+      <div class="book-shadow"></div>
+      <div class="book-controls">
+        <button class="book-btn" onclick="prevPage()">‹</button>
+        <span class="book-page-num" id="pageNum">Page 1 / 18</span>
+        <button class="book-btn" onclick="nextPage()">›</button>
+      </div>
+      <a href="https://link.springer.com/book/10.1007/978-3-032-18857-1" target="_blank" class="view-springer-btn">
+         View Full Proceedings on Springer →
+      </a>
+    </div>
+  </div>
+
+  <!-- COL 2: ACMCST'27 (maintenant à droite) -->
+  <div class="proc-col reveal">
+    <h3>ACMCST'27 Proceeding</h3>
+    <p class="proc-text">The proceedings of <strong>ACMCST'27</strong> will be published by <strong>Springer Lecture Notes in Networks & Systems</strong> (Indexing: SCOPUS, INSPEC, WTI Frankfurt eG, zbMATH, SCImago).</p>
+    <div class="proc-img-wrap">
+      <div class="proc-book-img" style="max-width:250px;margin:0 auto;aspect-ratio:732/1110;">
+        <img src="proceeding2027.jpg" alt="ACMCST 2027 Proceedings" style="width:100%;height:100%;object-fit:cover;display:block;">
+      </div>
+      <div class="proc-badges">
+        <div class="badge-springer"> Springer LNNS</div>
+        <div class="badge-scopus"> Scopus</div>
+      </div>
+    </div>
+  </div>
+
+</div> 
+
+
+
+      
+</section>
+
+<!-- PARTNERS -->
+<section id="partners">
+  <div class="container">
+    <div class="sec-header reveal">
+      <div class="sec-tag">In Partnership With</div>
+      <h2 class="sec-title">Partners</h2>
+      <div class="sec-line"></div>
+    </div>
+    <div class="reveal">
+      <div class="partners-label">Universities & Institutions</div>
+      <div class="partners-uni">
+        <img src="uni1.png" class="uni-logo" alt="University 1" onerror="this.outerHTML='<div class=ph-uni>uni1.png</div>'">
+        <img src="uni2.png" class="uni-logo" alt="University 2" onerror="this.outerHTML='<div class=ph-uni>uni2.png</div>'">
+        <img src="uni3.png" class="uni-logo" alt="University 3" onerror="this.outerHTML='<div class=ph-uni>uni3.png</div>'">
+        <img src="uni4.png" class="uni-logo" alt="University 4" onerror="this.outerHTML='<div class=ph-uni>uni4.png</div>'">
+        <img src="uni5.png" class="uni-logo" alt="University 5" onerror="this.outerHTML='<div class=ph-uni>uni4.png</div>'">
+
+
+      </div>
+      <div class="partners-label">Research Laboratories</div>
+      <div class="partners-lab">
+        <img src="lab1.png" class="lab-logo" alt="Lab 1" onerror="this.outerHTML='<div class=ph-lab>lab1.png</div>'">
+        <img src="lab2.png" class="lab-logo" alt="Lab 2" onerror="this.outerHTML='<div class=ph-lab>lab2.png</div>'">
+        <img src="lab3.png" class="lab-logo" alt="Lab 3" onerror="this.outerHTML='<div class=ph-lab>lab3.png</div>'">
+        <img src="lab4.png" class="lab-logo" alt="Lab 4" onerror="this.outerHTML='<div class=ph-lab>lab4.png</div>'">
+        <img src="lab5.png" class="lab-logo" alt="Lab 5" onerror="this.outerHTML='<div class=ph-lab>lab4.png</div>'">
+        <img src="lab6.png" class="lab-logo" alt="Lab 6" onerror="this.outerHTML='<div class=ph-lab>lab4.png</div>'">
+
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <h4>Contact Us</h4>
+      <div class="footer-contact-block">
+        <div class="footer-avatar">👤</div>
+        <div class="fc-info">
+          <div class="fc-name">Dr. SAIH Mohamed</div>
+          <a href="mailto:acmcst@usms.ma">acmcst@usms.ma</a>
+          <a href="http://www.acmcst.com">www.acmcst.com</a>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <ul class="footer-links">
+        <li><a href="cfp.html">Call for Papers</a></li>
+        <li><a href="speakers.html">Keynote Speakers</a></li>
+        <li><a href="submission.html">Submission</a></li>
+        <li><a href="registration.html">Registration</a></li>
+        <li><a href="venue.html">Access Map</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Downloads</h4>
+      <ul class="footer-downloads">
+        <li><a href="program.pdf">Conference Program</a></li>
+        <li><a href="CFP.pdf">CFP Flyer (PDF)</a></li>
+        <li><a href="Microsoft+Word+Proceedings+Templates.zip">Springer Template (Word)</a></li>
+        <li><a href="LaTeX2e+Proceedings+Templates.zip">Springer Template (LaTeX)</a></li>
+                <li class="js-toggle-copyright" style="display:none;"><a href="copyright.docx">Copyright Transfer Form</a></li>
+
+      </ul>
+    </div>
+    <div>
+      <h4>Recent News</h4>
+      <div class="news-item">ACMCST 2027 will take place on November 10–12, 2027, in Béni Mellal, Morocco.</div>
+      <div class="news-item">Paper submission is now open. Deadline: July 31, 2027.</div>
+      <div class="news-item">ACMCST'25 proceedings are now available on SpringerLink.</div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copyright">
+      © 2027 <a href="http://www.acmcst.com">ACMCST</a>. All rights reserved. <a href="http://www.acmcst.com">www.acmcst.com</a>
+    </div>
+  </div>
+</footer>
+
+<a href="#" id="btt" title="Back to top">↑</a>
+
+<script>
+// SLIDER
+let cur=0,total=3,timer;
+function go(n){
+  cur=n;
+  document.getElementById('slides').style.transform=`translateX(-${100*n}%)`;
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===n));
+  if(n===1) replaySlide2Anim();
+}
+
+function move(d){go((cur+d+total)%total);
+  
+resetTimer();}
+function resetTimer(){clearInterval(timer);timer=setInterval(()=>go((cur+1)%total),10000);}
+
+
+function replaySlide2Anim() {
+  const els = document.querySelectorAll('#slide2-text div');
+  els.forEach((el, i) => {
+    el.style.animation = 'none';
+    el.style.opacity = '0';
+    el.offsetHeight;
+    const delays = [0, 0.3, 0.6, 0.9, 1.2];
+    setTimeout(() => {
+      el.style.animation = `fadeInUp 1s ease ${delays[i]}s forwards`;
+    }, 50);
+  });
+}
+
+resetTimer();
+
+
+
+
+// VIDEO PLACEHOLDERS
+// VIDEO PLACEHOLDERS
+document.querySelectorAll('.slide video:not(.mobile-only)').forEach(v=>{
+  v.addEventListener('error',function(){
+    const src=this.querySelector('source')?.src||'';
+    const name=src.split('/').pop()||'video';
+    this.parentElement.innerHTML=`<div class="slide-placeholder"><div class="snum">${name}</div></div>`;
+  });
+});
+const presVid=document.querySelector('.pres-video video');
+if(presVid){presVid.addEventListener('error',function(){this.style.display='none';document.querySelector('.vph').style.display='flex';});}
+
+// BOOK PAGE TURN
+const bookImages=[
+  'book/last_book_Page1.jpg','book/last_book_Page2.jpg',
+  'book/last_book_Page3.jpg','book/last_book_Page4.jpg',
+  'book/last_book_Page5.jpg','book/last_book_Page6.jpg',
+  'book/last_book_Page7.jpg','book/last_book_Page8.jpg',
+  'book/last_book_Page9.jpg','book/last_book_Page10.jpg',
+  'book/last_book_Page11.jpg','book/last_book_Page12.jpg',
+  'book/last_book_Page13.jpg','book/last_book_Page14.jpg',
+  'book/last_book_Page15.jpg','book/last_book_Page16.jpg',
+  'book/last_book_Page17.jpg','book/last_book_Page18.jpg'
+];
+
+let cp=0;
+const viewer=document.getElementById('bookViewer');
+
+function buildBook(){
+  // Build pages in reverse so first page is on top
+  for(let i=bookImages.length-1;i>=0;i--){
+    const page=document.createElement('div');
+    page.className='page';
+    page.id='page-'+i;
+    page.style.zIndex=bookImages.length-i;
+    const nextSrc=bookImages[i+1]||bookImages[i];
+    page.innerHTML=`
+      <div class="page-front"><img src="${bookImages[i]}" alt="Page ${i+1}" loading="lazy"></div>
+      <div class="page-back"><img src="${nextSrc}" alt="Page ${i+2}" loading="lazy"></div>`;
+    viewer.appendChild(page);
+  }
+}
+buildBook();
+
+function updatePageNum(){
+  document.getElementById('pageNum').textContent=`Page ${cp+1} / ${bookImages.length}`;
+}
+let closeTimer;
+
+function resetCloseTimer(){
+  clearTimeout(closeTimer);
+  if(cp > 0){
+    closeTimer = setTimeout(()=>{
+      const closeInterval = setInterval(()=>{
+        if(cp <= 0){ clearInterval(closeInterval); } 
+        else { prevPage(); }
+      }, 400);
+    }, 5000);
+  }
+}
+
+function nextPage(){
+  if(cp>=bookImages.length-1) return;
+  const page=document.getElementById('page-'+cp);
+  if(page){
+    page.style.zIndex=bookImages.length+1;
+    page.classList.add('flipped');
+    setTimeout(()=>{
+      page.style.zIndex=cp;
+      cp++;
+      updatePageNum();
+    },700);
+  }
+  resetCloseTimer();
+}
+
+function prevPage(){
+  if(cp<=0) return;
+  cp--;
+  const page=document.getElementById('page-'+cp);
+  if(page){
+    page.classList.remove('flipped');
+    page.style.zIndex=bookImages.length-cp;
+  }
+  updatePageNum();
+  resetCloseTimer();
+}
+
+
+
+
+
+// BACK TO TOP
+window.addEventListener('scroll',()=>{document.getElementById('btt').classList.toggle('show',window.scrollY>400);});
+
+// SCROLL REVEAL
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="site-toggles.js?v=2"></script>
+</body>
+</html>

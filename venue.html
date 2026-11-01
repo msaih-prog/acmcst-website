@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Access Map – ACMCST 2027</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<style>
+:root{
+  --dark-blue:#0d2137;
+  --mid-blue:#1a4a7a;
+  --sky-blue:#2e9fd4;
+  --orange:#e07b20;
+  --white:#ffffff;
+  --light:#c5e3f5;
+  --border:rgba(0,0,0,0.08);
+  --text:#1c2b3a;
+  --gray:#6b7a8d;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Times New Roman',Times,serif;color:var(--text);background:var(--white);overflow-x:hidden;}
+
+.topbar{background:var(--dark-blue);padding:.45rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem;}
+.topbar-item{display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:rgba(255,255,255,0.75);}
+
+nav{background:var(--white);border-bottom:3px solid var(--sky-blue);position:sticky;top:0;z-index:1000;box-shadow:0 2px 10px rgba(0,0,0,0.08);}
+.nav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;padding:0 2rem;height:70px;gap:1rem;}
+.nav-logo{display:flex;align-items:center;gap:.8rem;text-decoration:none;margin-right:1.5rem;}
+.nav-logo img{height:73px;width:auto;}
+.nav-menu{display:flex;list-style:none;height:70px;flex:1;justify-content:center;}
+.nav-item{position:relative;height:100%;display:flex;align-items:center;}
+.nav-item>a{display:flex;align-items:center;gap:.25rem;padding:0 .65rem;height:100%;font-size:.82rem;font-weight:700;color:var(--dark-blue);text-decoration:none;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-3px;transition:color .2s,border-color .2s;}
+.nav-item>a:hover,.nav-item.active>a{color:var(--sky-blue);border-bottom-color:var(--orange);}
+.nav-item>a .ch{font-size:.55rem;}
+.new-badge{display:inline-block;background:#e00;color:#fff;font-size:.6rem;font-weight:800;padding:.1rem .35rem;border-radius:2px;margin-left:.3rem;animation:blink 1s infinite;vertical-align:middle;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+.dropdown{display:none;position:absolute;top:100%;left:0;background:var(--white);box-shadow:0 6px 25px rgba(0,0,0,0.12);border-top:3px solid var(--orange);min-width:200px;z-index:200;}
+.nav-item:hover .dropdown{display:block;}
+.dropdown a{display:block;padding:.65rem 1.2rem;font-size:.8rem;color:var(--text);text-decoration:none;font-weight:600;border-bottom:1px solid var(--border);transition:background .15s,color .15s,padding-left .15s;}
+.dropdown a:hover{background:var(--light);color:var(--sky-blue);padding-left:1.6rem;}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;}
+.hamburger span{width:24px;height:2px;background:var(--dark-blue);}
+
+.page-header{background:linear-gradient(rgba(13,33,55,0.8),rgba(13,33,55,0.8)),url('header-bg.svg') center/cover no-repeat;padding:4rem 2rem;text-align:center;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.page-header h1{font-family:'Merriweather',serif;font-size:clamp(1.8rem,3vw,2.8rem);font-weight:900;color:var(--white);margin-bottom:.5rem;}
+.page-header p{color:rgba(255,255,255,0.7);font-size:.95rem;}
+.breadcrumb{display:flex;align-items:center;justify-content:center;gap:.5rem;font-size:.8rem;color:rgba(255,255,255,0.5);margin-top:.8rem;}
+.breadcrumb a{color:var(--sky-blue);text-decoration:none;}
+.breadcrumb span{color:rgba(255,255,255,0.3);}
+
+.container{max-width:1200px;margin:0 auto;padding:0 2rem;}
+section{padding:4rem 0;}
+#venue{background:var(--white);}
+.venue-grid{display:grid;grid-template-columns:1fr 350px;gap:2rem;align-items:start;}
+#map{height:550px;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.15);border:3px solid var(--sky-blue);z-index:1;}
+#map2{height:500px;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.15);border:3px solid var(--sky-blue);z-index:1;margin-bottom:1rem;}
+
+.info-cards{display:flex;flex-direction:column;gap:1.2rem;}
+.info-card{background:var(--white);border-radius:12px;padding:1.2rem;box-shadow:4px 8px 20px rgba(0,0,0,0.1);border-left:4px solid var(--sky-blue);opacity:0;transform:translateX(30px);transition:opacity .6s ease,transform .6s ease;}
+.info-card.visible{opacity:1;transform:translateX(0);}
+.info-card-header{display:flex;align-items:center;gap:.8rem;margin-bottom:.6rem;}
+.info-card-icon{width:40px;height:40px;border-radius:50%;background:var(--sky-blue);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+.info-card-title{font-family:'Merriweather',serif;font-size:.9rem;font-weight:900;color:var(--dark-blue);}
+.info-card p{font-size:.82rem;color:#4a5a6a;line-height:1.6;}
+.info-card a{color:var(--sky-blue);text-decoration:none;font-size:.82rem;}
+
+.map-legend{display:flex;align-items:center;gap:1.5rem;margin-top:1rem;flex-wrap:wrap;margin-bottom:1rem;}
+.legend-item{display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:#4a5a6a;}
+.legend-dot{width:14px;height:14px;border-radius:50%;}
+
+.sec-header{margin-bottom:2rem;}
+.sec-tag{font-size:.7rem;color:var(--sky-blue);letter-spacing:3px;text-transform:uppercase;font-weight:700;margin-bottom:.4rem;}
+.sec-title{font-family:'Merriweather',serif;font-size:clamp(1.3rem,2vw,1.8rem);font-weight:900;color:var(--dark-blue);}
+.sec-line{width:50px;height:3px;background:var(--orange);margin:.8rem 0 0;}
+
+.map-label{background:var(--dark-blue);color:white;border:none;border-radius:4px;padding:3px 8px;font-size:11px;font-weight:700;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.3);}
+
+footer{background:var(--mid-blue);padding:3rem 2rem 0;}
+.footer-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:2.5rem;padding-bottom:2.5rem;}
+.footer-col h4{font-size:.85rem;font-weight:700;color:var(--white);margin-bottom:1.2rem;padding-bottom:.5rem;border-bottom:2px solid rgba(255,255,255,0.1);text-transform:uppercase;letter-spacing:.5px;}
+.footer-contact-block{display:flex;gap:.8rem;align-items:flex-start;}
+.footer-avatar{width:52px;height:52px;border-radius:50%;flex-shrink:0;background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:1.4rem;}
+.fc-name{color:var(--white);font-weight:700;font-size:.88rem;margin-bottom:.3rem;}
+.fc-info a{color:rgba(255,255,255,0.65);font-size:.8rem;text-decoration:none;display:block;margin-bottom:.2rem;}
+.fc-info a:hover{color:var(--orange);}
+.footer-links{list-style:none;}
+.footer-links li{padding:.32rem 0;border-bottom:1px solid rgba(255,255,255,0.06);}
+.footer-links a{color:rgba(255,255,255,0.65);text-decoration:none;font-size:.82rem;transition:color .2s,padding-left .2s;display:flex;align-items:center;gap:.4rem;}
+.footer-links a:hover{color:var(--orange);padding-left:.4rem;}
+.footer-links a .nb{display:inline-block;background:#e00;color:#fff;font-size:.58rem;font-weight:800;padding:.1rem .3rem;border-radius:2px;animation:blink 1s infinite;}
+.footer-downloads{list-style:none;}
+.footer-downloads li{padding:.32rem 0;border-bottom:1px solid rgba(255,255,255,0.06);}
+.footer-downloads a{color:rgba(255,255,255,0.65);text-decoration:none;font-size:.82rem;}
+.footer-downloads a::before{content:'↓ ';color:var(--sky-blue);}
+.footer-downloads a:hover{color:var(--orange);}
+.news-item{padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:.8rem;color:rgba(255,255,255,0.65);line-height:1.5;}
+.news-item::before{content:'● ';color:var(--orange);font-size:.55rem;vertical-align:middle;}
+.footer-bottom{max-width:1200px;margin:0 auto;padding:1rem 0;border-top:1px solid rgba(255,255,255,0.08);text-align:center;}
+.footer-copyright{font-size:.78rem;color:rgba(255,255,255,0.35);}
+.footer-copyright a{color:var(--sky-blue);text-decoration:none;}
+
+#btt{position:fixed;bottom:2rem;right:2rem;z-index:999;width:40px;height:40px;border-radius:4px;background:var(--orange);color:var(--white);display:none;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer;text-decoration:none;box-shadow:0 4px 15px rgba(0,0,0,0.2);transition:background .2s,transform .2s;font-weight:700;}
+#btt.show{display:flex;}
+#btt:hover{background:var(--dark-blue);transform:translateY(-3px);}
+
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:1024px){.venue-grid{grid-template-columns:1fr;}.footer-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:768px){
+  .nav-menu{display:none;flex-direction:column;position:absolute;top:70px;left:0;right:0;background:var(--white);box-shadow:0 8px 20px rgba(0,0,0,0.1);height:auto;padding:1rem 0;z-index:999;}
+  .nav-menu.open{display:flex;}
+  .nav-item{height:auto;flex-direction:column;align-items:flex-start;}
+  .nav-item>a{padding:.7rem 1.5rem;height:auto;border-bottom:1px solid var(--border);width:100%;}
+  .dropdown{position:static;box-shadow:none;border-top:none;border-left:3px solid var(--orange);margin-left:1.5rem;}
+  .hamburger{display:flex;}
+  .nav-inner{position:relative;}
+  .footer-grid{grid-template-columns:1fr;}
+  #map,#map2{height:350px;}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-item">🕐 Conference: 10–12 November 2027, Béni Mellal, Morocco</div>
+  <div class="topbar-item">📞 Contact: acmcst@usms.ma</div>
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <img src="logo-acmcst.png" alt="ACMCST" onerror="this.style.display='none'">
+    </a>
+    <ul class="nav-menu" id="navMenu">
+      <li class="nav-item"><a href="index.html">HOME</a></li>
+      <li class="nav-item">
+        <a href="cfp.html">CALL FOR PAPERS <span class="ch">▾</span></a>
+        <div class="dropdown">
+          <a href="cfp.html">Conference Topics</a>
+          <a href="cfp.html#special">Special Session</a>
+        </div>
+      </li>
+      <li class="nav-item"><a href="speakers.html">KEYNOTE SPEAKERS</a></li>
+      <li class="nav-item"><a href="dates.html">IMPORTANT DATES</a></li>
+      <li class="nav-item">
+        <a href="committees.html">COMMITTEES <span class="ch">▾</span></a>
+        <div class="dropdown">
+          <a href="committees.html#organizing">Organizing Committee</a>
+          <a href="committees.html#technical">Technical Committee</a>
+          <a href="committees.html#scientific">Scientific Committee</a>
+        </div>
+      </li>
+      <li class="nav-item active"><a href="venue.html">ACCESS MAP</a></li>
+      <li class="nav-item"><a href="submission.html">SUBMISSION</a></li>
+      <li class="nav-item"><a href="registration.html">REGISTRATION</a></li>
+            <li class="nav-item"><a href="previous-edition.html">PREVIOUS EDITION</a></li>
+
+    </ul>
+    <div class="hamburger" onclick="document.getElementById('navMenu').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <h1>Access Map</h1>
+  <p>FST Béni Mellal — Faculty of Sciences and Techniques</p>
+  <div class="breadcrumb">
+    <a href="index.html">Home</a>
+    <span>›</span>
+    <span>Access Map</span>
+  </div>
+</div>
+
+<section id="venue">
+  <div class="container">
+
+    <!-- CARTE 1 : ENTRÉE → SALLE -->
+    <div class="sec-header reveal">
+      <div class="sec-tag">Location</div>
+      <h2 class="sec-title">Conference Venue</h2>
+      <div class="sec-line"></div>
+    </div>
+    <div class="venue-grid">
+      <div>
+        <div id="map"></div>
+        <div class="map-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#e74c3c;"></div><span>Conference Hall</span></div>
+          <div class="legend-item"><div class="legend-dot" style="background:#0d2137;"></div><span>FST Entrance</span></div>
+          <div class="legend-item"><div class="legend-dot" style="background:#2e9fd4;"></div><span>Animated Route</span></div>
+        </div>
+      </div>
+      <div class="info-cards">
+        <div class="info-card">
+          <div class="info-card-header">
+<div class="info-card-icon"><img src="venue-icon2.png" style="width:24px;height:24px;object-fit:contain;filter:brightness(0) invert(1);"></div>            <div class="info-card-title">Venue</div>
+          </div>
+          <p>Faculty of Sciences and Techniques (FST)<br>Sultan Moulay Slimane University<br>Béni Mellal, Morocco</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-header">
+<div class="info-card-icon"><img src="venue-icon1.png" style="width:24px;height:24px;object-fit:contain;filter:brightness(0) invert(1);"></div>            <div class="info-card-title">By Air</div>
+          </div>
+          <p>Nearest airport: <strong>Marrakech Menara Airport</strong> (RAK) — 180 km<br>Then by bus or taxi to Béni Mellal (2h)</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-header">
+<div class="info-card-icon"><img src="venue-icon3.png" style="width:24px;height:24px;object-fit:contain;filter:brightness(0) invert(1);"></div>            <div class="info-card-title">By Bus</div>
+          </div>
+          <p>CTM and Supratours buses connect Béni Mellal to major Moroccan cities daily.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-header">
+<div class="info-card-icon"><img src="venue-icon4.png" style="width:24px;height:24px;object-fit:contain;filter:brightness(0) invert(1);"></div>            <div class="info-card-title">By Car</div>
+          </div>
+          <p>From Casablanca: A7 motorway → N8 road → Béni Mellal (220 km, ~2h30)</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-header">
+<div class="info-card-icon"><img src="venue-icon5.png" style="width:24px;height:24px;object-fit:contain;filter:brightness(0) invert(1);"></div>            <div class="info-card-title">Contact</div>
+          </div>
+          <p><a href="mailto:acmcst@usms.ma">acmcst@usms.ma</a><br><a href="http://www.acmcst.com">www.acmcst.com</a></p>
+        </div>
+      </div>
+    </div>
+
+<!-- CARTE 2 : ROOMS — visibilité pilotée depuis assignments.html (config.show_conference_rooms) -->
+<div class="js-toggle-rooms" style="display:none;">
+    <div class="sec-header reveal" style="margin-top:4rem;">
+      <div class="sec-tag">Inside FST</div>
+      <h2 class="sec-title">Conference Rooms</h2>
+      <div class="sec-line"></div>
+    </div>
+    <div class="venue-grid">
+      <div>
+        <div id="map2"></div>
+        <div class="map-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#e74c3c;"></div><span>Conference Hall (Start)</span></div>
+          <div class="legend-item"><div class="legend-dot" style="background:#0d2137;"></div><span>Room 1</span></div>
+          <div class="legend-item"><div class="legend-dot" style="background:#2e9fd4;"></div><span>Room 2</span></div>
+        </div>
+      </div>
+      <div class="info-cards">
+        <div class="info-card">
+          <div class="info-card-header">
+<div class="info-card-icon"><img src="venue-icon6.png" style="width:24px;height:24px;object-fit:contain;filter:brightness(0) invert(1);"></div>            <div class="info-card-title">Conference Hall</div>
+          </div>
+          <p>Starting point — the main conference hall where all plenary sessions take place.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-header">
+<div class="info-card-icon"><img src="venue-icon7.png" style="width:24px;height:24px;object-fit:contain;filter:brightness(0) invert(1);"></div>            <div class="info-card-title">Room 1</div>
+          </div>
+          <p>Located to the west of the conference hall. Follow the <strong style="color:#0d2137;">dark blue</strong> animated route.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-header">
+<div class="info-card-icon"><img src="venue-icon8.png" style="width:24px;height:24px;object-fit:contain;filter:brightness(0) invert(1);"></div>            <div class="info-card-title">Room 2</div>
+          </div>
+          <p>Located to the south of the conference hall. Follow the <strong style="color:#2e9fd4;">light blue</strong> animated route.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <h4>Contact Us</h4>
+      <div class="footer-contact-block">
+        <div class="footer-avatar">👤</div>
+        <div class="fc-info">
+          <div class="fc-name">Dr. SAIH Mohamed</div>
+          <a href="mailto:acmcst@usms.ma">acmcst@usms.ma</a>
+          <a href="http://www.acmcst.com">www.acmcst.com</a>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <ul class="footer-links">
+        <li><a href="cfp.html">Call for Papers</a></li>
+        <li><a href="speakers.html">Keynote Speakers</a></li>
+        <li><a href="submission.html">Submission</a></li>
+        <li><a href="registration.html">Registration</a></li>
+        <li><a href="venue.html">Access Map</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Downloads</h4>
+      <ul class="footer-downloads">
+        <li><a href="program.pdf">Conference Program</a></li>
+        <li><a href="CFP.pdf">CFP Flyer (PDF)</a></li>
+        <li><a href="Microsoft+Word+Proceedings+Templates.zip">Springer Template (Word)</a></li>
+        <li><a href="LaTeX2e+Proceedings+Templates.zip">Springer Template (LaTeX)</a></li>
+         <li class="js-toggle-copyright" style="display:none;"><a href="copyright.docx">Copyright Transfer Form</a></li>
+
+      </ul>
+    </div>
+    <div>
+      <h4>Recent News</h4>
+      <div class="news-item">ACMCST 2027 will take place on November 10–12, 2027, in Béni Mellal, Morocco.</div>
+      <div class="news-item">Paper submission is now open. Deadline: July 31, 2027.</div>
+      <div class="news-item">ACMCST'25 proceedings are now available on SpringerLink.</div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copyright">
+      © 2027 <a href="http://www.acmcst.com">ACMCST</a>. All rights reserved. <a href="http://www.acmcst.com">www.acmcst.com</a>
+    </div>
+  </div>
+</footer>
+
+<a href="#" id="btt" title="Back to top">↑</a>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+
+// ===================================================
+// CARTE 1 : ENTRÉE FST → SALLE DE CONFÉRENCE
+// ===================================================
+const map = L.map('map').setView([32.377600, -6.319500], 18);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© OpenStreetMap contributors', maxZoom: 20
+}).addTo(map);
+
+const routePoints = [
+  [32.377064, -6.321178],
+  [32.377785, -6.319977],
+  [32.377467, -6.319666],
+  [32.377936, -6.318956],
+  [32.377746, -6.318500],
+  [32.377527, -6.318288],
+  [32.377360, -6.317879]
+];
+
+// Marqueur entrée FST
+const entranceIcon = L.divIcon({
+  className:'',
+  html:`<div style="position:relative;width:30px;height:30px;">
+    <div style="position:absolute;width:30px;height:30px;background:rgba(39,174,96,0.3);border-radius:50%;animation:gP 1.5s infinite;"></div>
+    <div style="position:absolute;top:5px;left:5px;width:20px;height:20px;background:#0d2137;border:3px solid white;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.3);"></div>
+  </div>
+  <style>@keyframes gP{0%{transform:scale(1);opacity:1;}100%{transform:scale(2.5);opacity:0;}}</style>`,
+  iconSize:[30,30], iconAnchor:[15,15]
+});
+L.marker(routePoints[1], {icon: entranceIcon}).addTo(map)
+  .bindTooltip('<b>🚪 FST Entrance</b>', {permanent:true, direction:'bottom', className:'map-label', offset:[0,15]});
+
+// Marqueur salle de conférence
+const hallIcon = L.divIcon({
+  className:'',
+  html:`<div style="position:relative;width:30px;height:30px;">
+    <div style="position:absolute;width:30px;height:30px;background:rgba(231,76,60,0.3);border-radius:50%;animation:rP 1.5s infinite;"></div>
+    <div style="position:absolute;top:5px;left:5px;width:20px;height:20px;background:#e74c3c;border:3px solid white;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.3);"></div>
+  </div>
+  <style>@keyframes rP{0%{transform:scale(1);opacity:1;}100%{transform:scale(2.5);opacity:0;}}</style>`,
+  iconSize:[30,30], iconAnchor:[15,15]
+});
+L.marker(routePoints[routePoints.length-1], {icon: hallIcon}).addTo(map)
+  .bindTooltip('<b>🏛️ Conference Hall</b>', {permanent:true, direction:'bottom', className:'map-label', offset:[0,15]});
+
+// Ligne statique
+L.polyline(routePoints, {color:'#2e9fd4', weight:3, opacity:0.2, dashArray:'8,8'}).addTo(map);
+
+// Génération positions
+function interpolate(p1, p2, t){
+  return [p1[0]+(p2[0]-p1[0])*t, p1[1]+(p2[1]-p1[1])*t];
+}
+const dotSpacing = 0.000150;
+let allPositions = [];
+for(let s=0; s<routePoints.length-1; s++){
+  const p1=routePoints[s], p2=routePoints[s+1];
+  const dist=Math.sqrt(Math.pow(p2[0]-p1[0],2)+Math.pow(p2[1]-p1[1],2));
+  const steps=Math.max(2, Math.round(dist/dotSpacing));
+  for(let d=0; d<steps; d++) allPositions.push(interpolate(p1,p2,d/steps));
+}
+allPositions.push(routePoints[routePoints.length-1]);
+
+function dotIcon(){
+  return L.divIcon({
+    className:'',
+    html:`<div style="width:10px;height:10px;background:#2e9fd4;border:2px solid white;border-radius:50%;box-shadow:0 0 6px rgba(46,159,212,0.9);"></div>`,
+    iconSize:[10,10], iconAnchor:[5,5]
+  });
+}
+
+let placedMarkers=[], currentIndex=0;
+function placeNextDot(){
+  if(currentIndex < allPositions.length){
+    placedMarkers.push(L.marker(allPositions[currentIndex], {icon:dotIcon()}).addTo(map));
+    currentIndex++;
+    setTimeout(placeNextDot, 200);
+  } else {
+    setTimeout(()=>{
+      placedMarkers.forEach(m=>map.removeLayer(m));
+      placedMarkers=[]; currentIndex=0;
+      setTimeout(placeNextDot, 500);
+    }, 1500);
+  }
+}
+placeNextDot();
+
+// ===================================================
+// CARTE 2 : SALLE → ROOM 1 & ROOM 2
+// ===================================================
+const map2 = L.map('map2').setView([32.377000, -6.318500], 17);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© OpenStreetMap contributors', maxZoom: 20
+}).addTo(map2);
+
+const room1Points = [
+  [32.377360, -6.317879],
+  [32.377592, -6.318331],
+  [32.377745, -6.318504],
+  [32.377932, -6.318958],
+  [32.377048, -6.320312],
+  [32.376936, -6.320251]
+];
+
+const room2Points = [
+  [32.377360, -6.317879],
+  [32.376813, -6.318152],
+  [32.376694, -6.318030],
+  [32.376894, -6.317601],
+  [32.376599, -6.317058],
+  [32.376433, -6.316842],
+  [32.376071, -6.316893]
+];
+
+// Marqueur Conference Hall (départ)
+const startIcon2 = L.divIcon({
+  className:'',
+  html:`<div style="position:relative;width:30px;height:30px;">
+    <div style="position:absolute;width:30px;height:30px;background:rgba(231,76,60,0.3);border-radius:50%;animation:rP2 1.5s infinite;"></div>
+    <div style="position:absolute;top:5px;left:5px;width:20px;height:20px;background:#e74c3c;border:3px solid white;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.3);"></div>
+  </div>
+  <style>@keyframes rP2{0%{transform:scale(1);opacity:1;}100%{transform:scale(2.5);opacity:0;}}</style>`,
+  iconSize:[30,30], iconAnchor:[15,15]
+});
+L.marker(room1Points[0], {icon:startIcon2}).addTo(map2)
+  .bindTooltip('<b>🏛️ Conference Hall</b>', {permanent:true, direction:'top', className:'map-label', offset:[0,-15]});
+
+// Marqueur Room 1
+const room1Icon = L.divIcon({
+  className:'',
+  html:`<div style="position:relative;width:30px;height:30px;">
+    <div style="position:absolute;width:30px;height:30px;background:rgba(39,174,96,0.3);border-radius:50%;animation:gP2 1.5s infinite;"></div>
+    <div style="position:absolute;top:5px;left:5px;width:20px;height:20px;background:#0d2137;border:3px solid white;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.3);"></div>
+  </div>
+  <style>@keyframes gP2{0%{transform:scale(1);opacity:1;}100%{transform:scale(2.5);opacity:0;}}</style>`,
+  iconSize:[30,30], iconAnchor:[15,15]
+});
+L.marker(room1Points[room1Points.length-1], {icon:room1Icon}).addTo(map2)
+  .bindTooltip('<b>⚪ Room 1</b>', {permanent:true, direction:'top', className:'map-label', offset:[0,-15]});
+
+// Marqueur Room 2
+const room2Icon = L.divIcon({
+  className:'',
+  html:`<div style="position:relative;width:30px;height:30px;">
+    <div style="position:absolute;width:30px;height:30px;background:rgba(230,126,34,0.3);border-radius:50%;animation:oP 1.5s infinite;"></div>
+    <div style="position:absolute;top:5px;left:5px;width:20px;height:20px;background:#2e9fd4;border:3px solid white;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.3);"></div>
+  </div>
+  <style>@keyframes oP{0%{transform:scale(1);opacity:1;}100%{transform:scale(2.5);opacity:0;}}</style>`,
+  iconSize:[30,30], iconAnchor:[15,15]
+});
+L.marker(room2Points[room2Points.length-1], {icon:room2Icon}).addTo(map2)
+  .bindTooltip('<b>⚪ Room 2</b>', {permanent:true, direction:'top', className:'map-label', offset:[0,-15]});
+
+// Lignes statiques
+L.polyline(room1Points, {color:'#0d2137', weight:3, opacity:0.2, dashArray:'8,8'}).addTo(map2);
+L.polyline(room2Points, {color:'#2e9fd4', weight:3, opacity:0.2, dashArray:'8,8'}).addTo(map2);
+
+// Génération positions
+const dotSpacing2 = 0.000150;
+let allPos1=[], allPos2=[];
+
+for(let s=0; s<room1Points.length-1; s++){
+  const p1=room1Points[s], p2=room1Points[s+1];
+  const dist=Math.sqrt(Math.pow(p2[0]-p1[0],2)+Math.pow(p2[1]-p1[1],2));
+  const steps=Math.max(2, Math.round(dist/dotSpacing2));
+  for(let d=0; d<steps; d++) allPos1.push(interpolate(p1,p2,d/steps));
+}
+allPos1.push(room1Points[room1Points.length-1]);
+
+for(let s=0; s<room2Points.length-1; s++){
+  const p1=room2Points[s], p2=room2Points[s+1];
+  const dist=Math.sqrt(Math.pow(p2[0]-p1[0],2)+Math.pow(p2[1]-p1[1],2));
+  const steps=Math.max(2, Math.round(dist/dotSpacing2));
+  for(let d=0; d<steps; d++) allPos2.push(interpolate(p1,p2,d/steps));
+}
+allPos2.push(room2Points[room2Points.length-1]);
+
+function dotIcon1(){
+  return L.divIcon({
+    className:'',
+    html:`<div style="width:10px;height:10px;background:#0d2137;border:2px solid white;border-radius:50%;box-shadow:0 0 6px rgba(13,33,55,0.9);"></div>`,
+    iconSize:[10,10], iconAnchor:[5,5]
+  });
+}
+function dotIcon2(){
+  return L.divIcon({
+    className:'',
+    html:`<div style="width:10px;height:10px;background:#2e9fd4;border:2px solid white;border-radius:50%;box-shadow:0 0 6px rgba(46,159,212,0.9);"></div>`,
+    iconSize:[10,10], iconAnchor:[5,5]
+  });
+}
+
+// Animation Room 1
+let placed1=[], idx1=0;
+function animateRoom1(){
+  if(idx1 < allPos1.length){
+    placed1.push(L.marker(allPos1[idx1], {icon:dotIcon1()}).addTo(map2));
+    idx1++;
+    setTimeout(animateRoom1, 200);
+  } else {
+    setTimeout(()=>{
+      placed1.forEach(m=>map2.removeLayer(m));
+      placed1=[]; idx1=0;
+      setTimeout(animateRoom1, 500);
+    }, 1500);
+  }
+}
+
+// Animation Room 2
+let placed2=[], idx2=0;
+function animateRoom2(){
+  if(idx2 < allPos2.length){
+    placed2.push(L.marker(allPos2[idx2], {icon:dotIcon2()}).addTo(map2));
+    idx2++;
+    setTimeout(animateRoom2, 200);
+  } else {
+    setTimeout(()=>{
+      placed2.forEach(m=>map2.removeLayer(m));
+      placed2=[]; idx2=0;
+      setTimeout(animateRoom2, 500);
+    }, 1500);
+  }
+}
+
+animateRoom1();
+setTimeout(animateRoom2, 1000);
+
+
+// ===================================================
+// SCROLL & REVEAL
+// ===================================================
+window.addEventListener('scroll', () => {
+  document.getElementById('btt').classList.toggle('show', window.scrollY > 400);
+});
+
+const cardObs = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if(e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), i*150);
+  });
+}, {threshold:0.1});
+document.querySelectorAll('.info-card').forEach(c => cardObs.observe(c));
+
+const obs = new IntersectionObserver(e => {
+  e.forEach(x => { if(x.isIntersecting) x.target.classList.add('visible'); });
+}, {threshold:.1});
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="site-toggles.js?v=2"></script>
+</body>
+</html>

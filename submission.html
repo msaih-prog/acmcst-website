@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Submission – ACMCST 2027</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --dark-blue:#0d2137;
+  --mid-blue:#1a4a7a;
+  --sky-blue:#2e9fd4;
+  --orange:#e07b20;
+  --white:#ffffff;
+  --light:#c5e3f5;
+  --border:rgba(0,0,0,0.08);
+  --text:#1c2b3a;
+  --gray:#6b7a8d;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Times New Roman',Times,serif;color:var(--text);background:var(--white);overflow-x:hidden;}
+
+.topbar{background:var(--dark-blue);padding:.45rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem;}
+.topbar-item{display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:rgba(255,255,255,0.75);}
+
+nav{background:var(--white);border-bottom:3px solid var(--sky-blue);position:sticky;top:0;z-index:1000;box-shadow:0 2px 10px rgba(0,0,0,0.08);}
+.nav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;padding:0 2rem;height:70px;gap:1rem;}
+.nav-logo{display:flex;align-items:center;gap:.8rem;text-decoration:none;margin-right:1.5rem;}
+.nav-logo img{height:73px;width:auto;}
+.nav-menu{display:flex;list-style:none;height:70px;flex:1;justify-content:center;}
+.nav-item{position:relative;height:100%;display:flex;align-items:center;}
+.nav-item>a{display:flex;align-items:center;gap:.25rem;padding:0 .65rem;height:100%;font-size:.82rem;font-weight:700;color:var(--dark-blue);text-decoration:none;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-3px;transition:color .2s,border-color .2s;}
+.nav-item>a:hover,.nav-item.active>a{color:var(--sky-blue);border-bottom-color:var(--orange);}
+.nav-item>a .ch{font-size:.55rem;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+.dropdown{display:none;position:absolute;top:100%;left:0;background:var(--white);box-shadow:0 6px 25px rgba(0,0,0,0.12);border-top:3px solid var(--orange);min-width:200px;z-index:200;}
+.nav-item:hover .dropdown{display:block;}
+.dropdown a{display:block;padding:.65rem 1.2rem;font-size:.8rem;color:var(--text);text-decoration:none;font-weight:600;border-bottom:1px solid var(--border);transition:background .15s,color .15s,padding-left .15s;}
+.dropdown a:hover{background:var(--light);color:var(--sky-blue);padding-left:1.6rem;}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;}
+.hamburger span{width:24px;height:2px;background:var(--dark-blue);}
+
+/* PAGE HEADER */
+.page-header{background:linear-gradient(rgba(13,33,55,0.85),rgba(13,33,55,0.85)),url('header-bg.svg') center/cover no-repeat;padding:4rem 2rem;text-align:center;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.page-header h1{font-family:'Merriweather',serif;font-size:clamp(1.8rem,3vw,2.8rem);font-weight:900;color:var(--white);margin-bottom:.5rem;}
+.page-header p{color:rgba(255,255,255,0.7);font-size:.95rem;}
+.breadcrumb{display:flex;align-items:center;justify-content:center;gap:.5rem;font-size:.8rem;color:rgba(255,255,255,0.5);margin-top:.8rem;}
+.breadcrumb a{color:var(--sky-blue);text-decoration:none;}
+.breadcrumb span{color:rgba(255,255,255,0.3);}
+
+.container{max-width:1200px;margin:0 auto;padding:0 2rem;}
+section{padding:4rem 0;}
+
+.sec-header{margin-bottom:2.5rem;}
+.sec-tag{font-size:.7rem;color:var(--sky-blue);letter-spacing:3px;text-transform:uppercase;font-weight:700;margin-bottom:.4rem;}
+.sec-title{font-family:'Merriweather',serif;font-size:clamp(1.3rem,2vw,1.8rem);font-weight:900;color:var(--dark-blue);}
+.sec-line{width:50px;height:3px;background:var(--orange);margin:.8rem 0 0;}
+
+/* CMT NOTICE */
+.cmt-notice{background:var(--light);border-left:5px solid var(--sky-blue);border-radius:0 8px 8px 0;padding:1.5rem 2rem;margin-bottom:2rem;display:flex;align-items:flex-start;gap:1rem;}
+.cmt-notice-icon{font-size:2rem;flex-shrink:0;}
+.cmt-notice p{font-size:.92rem;color:var(--dark-blue);line-height:1.8;font-style:italic;}
+.cmt-notice strong{color:var(--sky-blue);font-style:normal;}
+
+/* STEPS */
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-top:1rem;}
+.step-card{background:var(--white);border-radius:8px;padding:2rem 1.5rem;box-shadow:0 4px 20px rgba(0,0,0,0.08);border-top:4px solid var(--sky-blue);text-align:center;transition:transform .2s,box-shadow .2s;}
+.step-card:hover{transform:translateY(-4px);box-shadow:0 8px 30px rgba(0,0,0,0.12);}
+.step-num{width:50px;height:50px;border-radius:50%;background:var(--dark-blue);color:var(--white);font-family:'Merriweather',serif;font-size:1.3rem;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;}
+.step-title{font-family:'Merriweather',serif;font-size:.95rem;font-weight:700;color:var(--dark-blue);margin-bottom:.6rem;}
+.step-text{font-size:.85rem;color:#4a5a6a;line-height:1.7;}
+
+/* GUIDELINES */
+#guidelines{background:var(--light);}
+.guidelines-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;}
+.guideline-block{background:var(--white);border-radius:8px;padding:2rem;box-shadow:0 4px 20px rgba(0,0,0,0.06);}
+.guideline-block h4{font-family:'Merriweather',serif;font-size:1rem;font-weight:900;color:var(--dark-blue);margin-bottom:1rem;padding-bottom:.5rem;border-bottom:2px solid var(--border);}
+.guideline-list{list-style:none;}
+.guideline-list li{font-size:.88rem;color:#4a5a6a;padding:.4rem 0 .4rem 1.2rem;position:relative;line-height:1.6;}
+.guideline-list li::before{content:'›';position:absolute;left:0;color:var(--orange);font-weight:900;font-size:1rem;}
+
+/* TEMPLATES */
+#templates{background:var(--white);}
+.templates-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;}
+.template-card{background:var(--white);border:2px solid var(--border);border-radius:8px;padding:1.8rem;display:flex;align-items:center;gap:1.5rem;transition:border-color .2s,box-shadow .2s;}
+.template-card:hover{border-color:var(--sky-blue);box-shadow:0 4px 20px rgba(0,0,0,0.08);}
+.template-icon{width:60px;height:60px;border-radius:8px;background:var(--dark-blue);display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0;}
+.template-info h4{font-family:'Merriweather',serif;font-size:.95rem;font-weight:700;color:var(--dark-blue);margin-bottom:.4rem;}
+.template-info p{font-size:.82rem;color:var(--gray);margin-bottom:.8rem;}
+.btn-download{display:inline-flex;align-items:center;gap:.4rem;background:var(--dark-blue);color:var(--white);padding:.45rem 1rem;border-radius:3px;font-size:.8rem;font-weight:700;text-decoration:none;transition:background .2s;}
+.btn-download:hover{background:var(--orange);}
+
+/* SUBMIT BUTTON */
+.submit-section{background:var(--sky-blue);padding:3rem 2rem;text-align:center;}
+.submit-section h3{font-family:'Merriweather',serif;font-size:1.5rem;font-weight:900;color:var(--white);margin-bottom:.8rem;}
+.submit-section p{color:rgba(255,255,255,0.85);font-size:.9rem;margin-bottom:1.5rem;}
+.btn-submit-main{display:inline-block;background:var(--white);color:var(--dark-blue);padding:.9rem 3rem;border-radius:3px;font-size:1rem;font-weight:700;text-decoration:none;transition:background .2s,transform .2s;border:2px solid var(--white);}
+.btn-submit-main:hover{background:var(--orange);color:var(--white);border-color:var(--orange);transform:translateY(-2px);}
+
+/* FOOTER */
+footer{background:var(--mid-blue);padding:3rem 2rem 0;}
+.footer-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:2.5rem;padding-bottom:2.5rem;}
+.footer-col h4{font-size:.85rem;font-weight:700;color:var(--white);margin-bottom:1.2rem;padding-bottom:.5rem;border-bottom:2px solid rgba(255,255,255,0.1);text-transform:uppercase;letter-spacing:.5px;}
+.footer-contact-block{display:flex;gap:.8rem;align-items:flex-start;}
+.footer-avatar{width:52px;height:52px;border-radius:50%;flex-shrink:0;background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:1.4rem;}
+.fc-name{color:var(--white);font-weight:700;font-size:.88rem;margin-bottom:.3rem;}
+.fc-info a{color:rgba(255,255,255,0.65);font-size:.8rem;text-decoration:none;display:block;margin-bottom:.2rem;}
+.fc-info a:hover{color:var(--orange);}
+.footer-links,.footer-downloads{list-style:none;}
+.footer-links li,.footer-downloads li{padding:.32rem 0;border-bottom:1px solid rgba(255,255,255,0.06);}
+.footer-links a{color:rgba(255,255,255,0.65);text-decoration:none;font-size:.82rem;transition:color .2s,padding-left .2s;display:flex;align-items:center;gap:.4rem;}
+.footer-links a:hover{color:var(--orange);padding-left:.4rem;}
+.footer-downloads a{color:rgba(255,255,255,0.65);text-decoration:none;font-size:.82rem;}
+.footer-downloads a::before{content:'↓ ';color:var(--sky-blue);}
+.footer-downloads a:hover{color:var(--orange);}
+.news-item{padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:.8rem;color:rgba(255,255,255,0.65);line-height:1.5;}
+.news-item::before{content:'● ';color:var(--orange);font-size:.55rem;vertical-align:middle;}
+.footer-bottom{max-width:1200px;margin:0 auto;padding:1rem 0;border-top:1px solid rgba(255,255,255,0.08);text-align:center;}
+.footer-copyright{font-size:.78rem;color:rgba(255,255,255,0.35);}
+.footer-copyright a{color:var(--sky-blue);text-decoration:none;}
+
+#btt{position:fixed;bottom:2rem;right:2rem;z-index:999;width:40px;height:40px;border-radius:4px;background:var(--orange);color:var(--white);display:none;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer;text-decoration:none;box-shadow:0 4px 15px rgba(0,0,0,0.2);transition:background .2s,transform .2s;font-weight:700;}
+#btt.show{display:flex;}
+#btt:hover{background:var(--dark-blue);transform:translateY(-3px);}
+
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:768px){
+  .steps-grid,.guidelines-grid,.templates-grid{grid-template-columns:1fr;}
+  .nav-menu{display:none;flex-direction:column;position:absolute;top:70px;left:0;right:0;background:var(--white);box-shadow:0 8px 20px rgba(0,0,0,0.1);height:auto;padding:1rem 0;z-index:999;}
+  .nav-menu.open{display:flex;}
+  .nav-item{height:auto;flex-direction:column;align-items:flex-start;}
+  .nav-item>a{padding:.7rem 1.5rem;height:auto;border-bottom:1px solid var(--border);width:100%;}
+  .dropdown{position:static;box-shadow:none;border-top:none;border-left:3px solid var(--orange);margin-left:1.5rem;}
+  .hamburger{display:flex;}
+  .nav-inner{position:relative;}
+  .footer-grid{grid-template-columns:1fr;}
+}
+@media(max-width:500px){section{padding:2.5rem 0;}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-item">🕐 Conference: 10–12 November 2027, Béni Mellal, Morocco</div>
+  <div class="topbar-item">📞 Contact: acmcst@usms.ma</div>
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <img src="logo-acmcst.png" alt="ACMCST" onerror="this.style.display='none'">
+    </a>
+    <ul class="nav-menu" id="navMenu">
+      <li class="nav-item"><a href="index.html">HOME</a></li>
+      <li class="nav-item">
+        <a href="cfp.html">CALL FOR PAPERS <span class="ch">▾</span></a>
+        <div class="dropdown">
+          <a href="cfp.html">Conference Topics</a>
+          <a href="cfp.html#special">Special Session</a>
+        </div>
+      </li>
+      <li class="nav-item"><a href="speakers.html">KEYNOTE SPEAKERS</a></li>
+      <li class="nav-item"><a href="dates.html">IMPORTANT DATES</a></li>
+      <li class="nav-item">
+        <a href="committees.html">COMMITTEES <span class="ch">▾</span></a>
+        <div class="dropdown">
+          <a href="committees.html#organizing">Organizing Committee</a>
+          <a href="committees.html#technical">Technical Committee</a>
+          <a href="committees.html#scientific">Scientific Committee</a>
+        </div>
+      </li>
+      <li class="nav-item"><a href="venue.html">ACCESS MAP</a></li>
+      <li class="nav-item active"><a href="submission.html">SUBMISSION</a></li>
+      <li class="nav-item"><a href="registration.html">REGISTRATION</a></li>
+            <li class="nav-item"><a href="previous-edition.html">PREVIOUS EDITION</a></li>
+
+    </ul>
+    <div class="hamburger" onclick="document.getElementById('navMenu').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <h1>Paper Submission</h1>
+  <p>ACMCST 2027 — International Conference | Béni Mellal, Morocco</p>
+  <div class="breadcrumb">
+    <a href="index.html">Home</a>
+    <span>›</span>
+    <span>Submission</span>
+  </div>
+</div>
+
+<!-- SUBMIT BUTTON -->
+<div class="submit-section">
+  <h3>Ready to Submit Your Paper?</h3>
+  <p>Click the button below to access the Microsoft CMT submission platform.</p>
+  <a href="https://cmt3.research.microsoft.com/User/Login?ReturnUrl=%2FACMCST2027" target="_blank" class="btn-submit-main"> Submit Your Paper </a>
+</div>
+
+
+
+
+
+<!-- SUBMISSION STEPS -->
+<section id="steps">
+  <div class="container">
+    <div class="sec-header reveal">
+      <div class="sec-tag">How to Submit</div>
+      <h2 class="sec-title">Submission Process</h2>
+      <div class="sec-line"></div>
+    </div>
+
+    <!-- CMT NOTICE -->
+ <p>The Microsoft CMT service was used for managing the peer-reviewing process for this conference. This service was provided for free by Microsoft and they bore all expenses, including costs for Azure cloud services as well as for software development and support.</p>
+
+    <div class="steps-grid reveal">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-title">Prepare Your Paper</div>
+        <div class="step-text">Format your paper using the Springer LNNS template. Papers must be written in English and should not exceed 12 pages including references.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-title">Submit via CMT</div>
+        <div class="step-text">Submit your paper through the Microsoft CMT platform. Create an account if you don't have one and follow the submission instructions carefully.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-title">Peer Review</div>
+        <div class="step-text">Your paper will be reviewed by at least two independent experts. Authors will be notified of acceptance by September 30, 2027.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GUIDELINES -->
+<section id="guidelines">
+  <div class="container">
+    <div class="sec-header reveal">
+      <div class="sec-tag">Instructions</div>
+      <h2 class="sec-title">Submission Guidelines</h2>
+      <div class="sec-line"></div>
+    </div>
+    <div class="guidelines-grid reveal">
+      <div class="guideline-block">
+        <h4>✓ Paper Requirements</h4>
+        <ul class="guideline-list">
+          <li>Papers must be written in English</li>
+          <li>Maximum 12 pages including references</li>
+          <li>Must follow the Springer LNNS format</li>
+          <li>PDF format only for initial submission</li>
+          <li>Anonymous review — remove author information</li>
+          <li>Original and unpublished work only</li>
+        </ul>
+      </div>
+      <div class="guideline-block">
+        <h4>✓ Important Notes</h4>
+        <ul class="guideline-list">
+          <li>At least one author must register for the conference</li>
+          <li>Accepted papers must be presented at the conference</li>
+          <li>Plagiarism will result in immediate rejection</li>
+          <li>Simultaneous submission to other venues is not allowed</li>
+          <li>Camera-ready papers due: October 20, 2027</li>
+          <li>Source files (LaTeX or Word) required after acceptance</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEMPLATES -->
+<section id="templates">
+  <div class="container">
+    <div class="sec-header reveal">
+      <div class="sec-tag">Downloads</div>
+      <h2 class="sec-title">Springer Templates</h2>
+      <div class="sec-line"></div>
+    </div>
+    <div class="templates-grid reveal">
+      <div class="template-card">
+        <div class="template-icon">📝</div>
+        <div class="template-info">
+          <h4>Microsoft Word Template</h4>
+          <p>Springer LNNS template for Word users (.docx format)</p>
+          <a href="Microsoft+Word+Proceedings+Templates.zip" class="btn-download">⬇ Download Word Template</a>
+        </div>
+      </div>
+      <div class="template-card">
+        <div class="template-icon">📝</div>
+        <div class="template-info">
+          <h4>LaTeX Template</h4>
+          <p>Springer LNNS template for LaTeX users (.zip format)</p>
+          <a href="LaTeX2e+Proceedings+Templates.zip" class="btn-download">⬇ Download LaTeX Template</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SUBMIT BUTTON -->
+<div class="submit-section">
+  <h3>Ready to Submit Your Paper?</h3>
+  <p>Click the button below to access the Microsoft CMT submission platform.</p>
+  <a href="https://cmt3.research.microsoft.com/User/Login?ReturnUrl=%2FACMCST2027" target="_blank" class="btn-submit-main"> Submit Your Paper </a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <h4>Contact Us</h4>
+      <div class="footer-contact-block">
+        <div class="footer-avatar">👤</div>
+        <div class="fc-info">
+          <div class="fc-name">Dr. SAIH Mohamed</div>
+          <a href="mailto:acmcst@usms.ma">acmcst@usms.ma</a>
+          <a href="http://www.acmcst.com">www.acmcst.com</a>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <ul class="footer-links">
+        <li><a href="cfp.html">Call for Papers</a></li>
+        <li><a href="speakers.html">Keynote Speakers</a></li>
+        <li><a href="submission.html">Submission</a></li>
+        <li><a href="registration.html">Registration</a></li>
+        <li><a href="venue.html">Access Map</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Downloads</h4>
+      <ul class="footer-downloads">
+        <li><a href="program.pdf">Conference Program</a></li>
+        <li><a href="CFP.pdf">CFP Flyer (PDF)</a></li>
+        <li><a href="Microsoft+Word+Proceedings+Templates.zip">Springer Template (Word)</a></li>
+        <li><a href="LaTeX2e+Proceedings+Templates.zip">Springer Template (LaTeX)</a></li>
+                <li class="js-toggle-copyright" style="display:none;"><a href="copyright.docx">Copyright Transfer Form</a></li>
+
+      </ul>
+    </div>
+    <div>
+      <h4>Recent News</h4>
+      <div class="news-item">ACMCST 2027 will take place on November 10–12, 2027, in Béni Mellal, Morocco.</div>
+      <div class="news-item">Paper submission is now open. Deadline: July 31, 2027.</div>
+      <div class="news-item">ACMCST'25 proceedings are now available on SpringerLink.</div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copyright">
+      © 2027 <a href="http://www.acmcst.com">ACMCST</a>. All rights reserved. <a href="http://www.acmcst.com">www.acmcst.com</a>
+    </div>
+  </div>
+</footer>
+
+<a href="#" id="btt" title="Back to top">↑</a>
+
+<script>
+window.addEventListener('scroll',()=>{document.getElementById('btt').classList.toggle('show',window.scrollY>400);});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="site-toggles.js?v=2"></script>
+</body>
+</html>

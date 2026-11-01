@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Previous Editions – ACMCST 2025</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --dark-blue:#0d2137;
+  --mid-blue:#1a4a7a;
+  --sky-blue:#2e9fd4;
+  --orange:#e07b20;
+  --white:#ffffff;
+  --light:#c5e3f5;
+  --border:rgba(0,0,0,0.08);
+  --text:#1c2b3a;
+  --gray:#6b7a8d;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Times New Roman',Times,serif;color:var(--text);background:var(--white);overflow-x:hidden;}
+
+.topbar{background:var(--dark-blue);padding:.45rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem;}
+.topbar-item{display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:rgba(255,255,255,0.75);}
+
+nav{background:var(--white);border-bottom:3px solid var(--sky-blue);position:sticky;top:0;z-index:1000;box-shadow:0 2px 10px rgba(0,0,0,0.08);}
+.nav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;padding:0 2rem;height:70px;gap:1rem;}
+.nav-logo{display:flex;align-items:center;gap:.8rem;text-decoration:none;margin-right:1.5rem;}
+.nav-logo img{height:73px;width:auto;}
+.nav-menu{display:flex;list-style:none;height:70px;flex:1;justify-content:center;}
+.nav-item{position:relative;height:100%;display:flex;align-items:center;}
+.nav-item>a{display:flex;align-items:center;gap:.25rem;padding:0 .65rem;height:100%;font-size:.82rem;font-weight:700;color:var(--dark-blue);text-decoration:none;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-3px;transition:color .2s,border-color .2s;}
+.nav-item>a:hover,.nav-item.active>a{color:var(--sky-blue);border-bottom-color:var(--orange);}
+.nav-item>a .ch{font-size:.55rem;}
+.dropdown{display:none;position:absolute;top:100%;left:0;background:var(--white);box-shadow:0 6px 25px rgba(0,0,0,0.12);border-top:3px solid var(--orange);min-width:200px;z-index:200;}
+.nav-item:hover .dropdown{display:block;}
+.dropdown a{display:block;padding:.65rem 1.2rem;font-size:.8rem;color:var(--text);text-decoration:none;font-weight:600;border-bottom:1px solid var(--border);transition:background .15s,color .15s,padding-left .15s;}
+.dropdown a:hover{background:var(--light);color:var(--sky-blue);padding-left:1.6rem;}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;}
+.hamburger span{width:24px;height:2px;background:var(--dark-blue);}
+
+/* PAGE HEADER */
+.page-header{background:linear-gradient(rgba(13,33,55,0.85),rgba(13,33,55,0.85)),url('header-bg.svg') center/cover no-repeat;padding:4rem 2rem;text-align:center;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.page-header h1{font-family:'Merriweather',serif;font-size:clamp(1.8rem,3vw,2.8rem);font-weight:900;color:var(--white);margin-bottom:.5rem;}
+.page-header p{color:rgba(255,255,255,0.7);font-size:.95rem;}
+.breadcrumb{display:flex;align-items:center;justify-content:center;gap:.5rem;font-size:.8rem;color:rgba(255,255,255,0.5);margin-top:.8rem;}
+.breadcrumb a{color:var(--sky-blue);text-decoration:none;}
+.breadcrumb span{color:rgba(255,255,255,0.3);}
+
+.container{max-width:1280px;margin:0 auto;padding:0 2rem;}
+section{padding:4rem 0;}
+.sec-header{text-align:center;margin-bottom:2.5rem;}
+.sec-tag{font-size:.7rem;color:var(--sky-blue);letter-spacing:3px;text-transform:uppercase;font-weight:700;margin-bottom:.4rem;}
+.sec-title{font-family:'Merriweather',serif;font-size:clamp(1.3rem,2vw,1.8rem);font-weight:900;color:var(--dark-blue);}
+.sec-line{width:50px;height:3px;background:var(--orange);margin:.8rem auto 0;}
+
+/* =====================
+   EDITION CARDS
+   ===================== */
+#editions{background:#f4f8fc;padding:4rem 0;}
+
+.editions-grid{
+  display:flex;
+  flex-wrap:wrap;
+  gap:2rem;
+  justify-content:center;
+}
+
+.edition-card{
+  background:var(--white);
+  border-radius:12px;
+  box-shadow:0 4px 24px rgba(13,33,55,0.10);
+  overflow:hidden;
+  width:300px;
+  flex-shrink:0;
+  transition:transform .25s,box-shadow .25s;
+  border:1px solid rgba(13,33,55,0.08);
+}
+.edition-card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 16px 40px rgba(13,33,55,0.18);
+}
+
+.edition-card-img{
+  position:relative;
+  width:100%;
+  height:190px;
+  overflow:hidden;
+  background:var(--light);
+}
+.edition-card-img img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transition:transform .4s ease;
+}
+.edition-card:hover .edition-card-img img{transform:scale(1.05);}
+
+/* Placeholder if no image */
+.edition-card-img .img-ph{
+  width:100%;height:100%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:.5rem;color:var(--gray);font-size:.8rem;background:linear-gradient(135deg,#e8f4fc,#c5e3f5);
+}
+.edition-card-img .img-ph .phi{font-size:2.5rem;opacity:.4;}
+
+/* Overlay badges on image */
+.img-badge-left{
+  position:absolute;bottom:.7rem;left:.7rem;
+  background:rgba(13,33,55,0.82);color:var(--white);
+  font-size:.72rem;font-weight:700;padding:.3rem .7rem;border-radius:4px;
+  letter-spacing:.3px;
+}
+.img-badge-right{
+  position:absolute;bottom:.7rem;right:.7rem;
+  background:rgba(46,159,212,0.88);color:var(--white);
+  font-size:.72rem;font-weight:600;padding:.3rem .7rem;border-radius:4px;
+}
+
+/* Card body */
+.edition-card-body{padding:1.2rem 1.3rem 1.4rem;}
+
+.edition-card-head{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  margin-bottom:.6rem;gap:.5rem;
+}
+.edition-card-title{
+  font-family:'Merriweather',serif;
+  font-size:1.05rem;font-weight:900;color:var(--dark-blue);
+  flex:1;
+}
+.badge-archive{
+  background:#ffe4e4;color:#c0392b;
+  font-size:.68rem;font-weight:700;
+  padding:.22rem .65rem;border-radius:50px;
+  white-space:nowrap;flex-shrink:0;
+  letter-spacing:.2px;
+}
+.edition-card-desc{
+  font-size:.83rem;color:var(--gray);line-height:1.55;margin-bottom:1.1rem;
+  font-family:'Source Sans 3',sans-serif;
+}
+
+/* Buttons */
+.edition-card-actions{display:flex;gap:.6rem;flex-wrap:wrap;}
+.btn-website{
+  display:inline-flex;align-items:center;gap:.4rem;
+  background:#1d6f42;color:#fff;
+  padding:.45rem 1.1rem;border-radius:5px;
+  font-size:.8rem;font-weight:700;text-decoration:none;
+  transition:background .2s,transform .15s;
+  font-family:'Source Sans 3',sans-serif;
+}
+.btn-website:hover{background:#155233;transform:translateY(-1px);}
+.btn-proceedings{
+  display:inline-flex;align-items:center;gap:.4rem;
+  background:transparent;color:var(--dark-blue);
+  padding:.43rem 1.1rem;border-radius:5px;
+  font-size:.8rem;font-weight:700;text-decoration:none;
+  border:1.5px solid rgba(13,33,55,0.25);
+  transition:border-color .2s,color .2s,background .2s,transform .15s;
+  font-family:'Source Sans 3',sans-serif;
+}
+.btn-proceedings:hover{border-color:var(--sky-blue);color:var(--sky-blue);background:rgba(46,159,212,0.05);transform:translateY(-1px);}
+
+/* =====================
+   COMBINED SECTION — card left + gallery right
+   ===================== */
+#editions-gallery{background:#f4f8fc;padding:4rem 0;}
+
+.eg-layout{
+  display:flex;
+  align-items:stretch;
+  gap:2.5rem;
+}
+
+/* LEFT: card */
+.eg-left{
+  flex-shrink:0;
+  width:300px;
+}
+
+/* RIGHT: gallery */
+.eg-right{
+  flex:1;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  overflow:hidden;
+}
+
+.eg-right-header{
+  margin-bottom:1rem;
+}
+.eg-right-header .sec-tag{text-align:left;}
+.eg-right-header .sec-title{text-align:left;font-size:1.2rem;}
+.eg-right-header .sec-line{margin:0.6rem 0 0;}
+
+.gallery-track-wrap{
+  width:100%;
+  overflow:hidden;
+  position:relative;
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,black 60px,black calc(100% - 60px),transparent 100%);
+  mask-image:linear-gradient(to right,transparent 0%,black 60px,black calc(100% - 60px),transparent 100%);
+}
+
+.gallery-track{
+  display:flex;
+  gap:12px;
+  width:max-content;
+  animation: galleryScroll 35s linear infinite;
+}
+.gallery-track:hover{animation-play-state:paused;}
+
+@keyframes galleryScroll{
+  0%  { transform: translateX(0); }
+  100%{ transform: translateX(-50%); }
+}
+
+.gallery-item{
+  flex-shrink:0;
+  width:175px;
+  height:230px;
+  border-radius:10px;
+  overflow:hidden;
+  background:var(--light);
+  box-shadow:0 4px 18px rgba(0,0,0,0.12);
+  position:relative;
+  cursor:pointer;
+}
+.gallery-item img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transition:transform .4s ease;
+}
+.gallery-item:hover img{transform:scale(1.06);}
+.gallery-item .g-ph{
+  width:100%;height:100%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:.4rem;color:var(--gray);font-size:.7rem;text-align:center;padding:.5rem;
+  background:linear-gradient(135deg,#e8f4fc,#c5e3f5);
+}
+.gallery-item .g-ph .phi{font-size:1.8rem;opacity:.3;}
+
+.gallery-item .g-ov{
+  position:absolute;inset:0;
+  background:rgba(13,33,55,0.45);
+  opacity:0;transition:opacity .3s;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:1.6rem;
+}
+.gallery-item:hover .g-ov{opacity:1;}
+
+/* Lightbox */
+#lightbox{
+  display:none;position:fixed;inset:0;z-index:9999;
+  background:rgba(0,0,0,0.88);
+  align-items:center;justify-content:center;
+}
+#lightbox.open{display:flex;}
+#lightbox img{
+  max-width:90vw;max-height:90vh;border-radius:8px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.5);
+  object-fit:contain;
+}
+#lb-close{
+  position:absolute;top:1.5rem;right:2rem;
+  color:#fff;font-size:2rem;cursor:pointer;
+  background:none;border:none;line-height:1;opacity:.8;
+  transition:opacity .2s;
+}
+#lb-close:hover{opacity:1;}
+
+/* FOOTER */
+footer{background:var(--mid-blue);padding:3rem 2rem 0;}
+.footer-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:2.5rem;padding-bottom:2.5rem;}
+.footer-col h4{font-size:.85rem;font-weight:700;color:var(--white);margin-bottom:1.2rem;padding-bottom:.5rem;border-bottom:2px solid rgba(255,255,255,0.1);text-transform:uppercase;letter-spacing:.5px;}
+.footer-contact-block{display:flex;gap:.8rem;align-items:flex-start;}
+.footer-avatar{width:52px;height:52px;border-radius:50%;flex-shrink:0;background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:1.4rem;}
+.fc-name{color:var(--white);font-weight:700;font-size:.88rem;margin-bottom:.3rem;}
+.fc-info a{color:rgba(255,255,255,0.65);font-size:.8rem;text-decoration:none;display:block;margin-bottom:.2rem;}
+.fc-info a:hover{color:var(--orange);}
+.footer-links,.footer-downloads{list-style:none;}
+.footer-links li,.footer-downloads li{padding:.32rem 0;border-bottom:1px solid rgba(255,255,255,0.06);}
+.footer-links a{color:rgba(255,255,255,0.65);text-decoration:none;font-size:.82rem;transition:color .2s,padding-left .2s;display:flex;align-items:center;gap:.4rem;}
+.footer-links a:hover{color:var(--orange);padding-left:.4rem;}
+.footer-downloads a{color:rgba(255,255,255,0.65);text-decoration:none;font-size:.82rem;}
+.footer-downloads a::before{content:'↓ ';color:var(--sky-blue);}
+.footer-downloads a:hover{color:var(--orange);}
+.news-item{padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:.8rem;color:rgba(255,255,255,0.65);line-height:1.5;}
+.news-item::before{content:'● ';color:var(--orange);font-size:.55rem;vertical-align:middle;}
+.footer-bottom{max-width:1200px;margin:0 auto;padding:1rem 0;border-top:1px solid rgba(255,255,255,0.08);text-align:center;}
+.footer-copyright{font-size:.78rem;color:rgba(255,255,255,0.35);}
+.footer-copyright a{color:var(--sky-blue);text-decoration:none;}
+
+#btt{position:fixed;bottom:2rem;right:2rem;z-index:998;width:40px;height:40px;border-radius:4px;background:var(--orange);color:var(--white);display:none;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer;text-decoration:none;box-shadow:0 4px 15px rgba(0,0,0,0.2);transition:background .2s,transform .2s;font-weight:700;}
+#btt.show{display:flex;}
+#btt:hover{background:var(--dark-blue);transform:translateY(-3px);}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:900px){
+  .eg-layout{flex-direction:column;}
+  .eg-left{width:100%;max-width:360px;margin:0 auto;}
+}
+@media(max-width:768px){
+  .edition-card{width:100%;max-width:360px;}
+  .nav-menu{display:none;flex-direction:column;position:absolute;top:70px;left:0;right:0;background:var(--white);box-shadow:0 8px 20px rgba(0,0,0,0.1);height:auto;padding:1rem 0;z-index:999;}
+  .nav-menu.open{display:flex;}
+  .nav-item{height:auto;flex-direction:column;align-items:flex-start;}
+  .nav-item>a{padding:.7rem 1.5rem;height:auto;border-bottom:1px solid var(--border);width:100%;}
+  .dropdown{position:static;box-shadow:none;border-top:none;border-left:3px solid var(--orange);margin-left:1.5rem;}
+  .hamburger{display:flex;}
+  .nav-inner{position:relative;}
+  .footer-grid{grid-template-columns:1fr;}
+  .gallery-item{width:130px;height:175px;}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-item">🕐 Conference: 10–12 November 2027, Béni Mellal, Morocco</div>
+  <div class="topbar-item">📞 Contact: acmcst@usms.ma</div>
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <img src="logo-acmcst.png" alt="ACMCST" onerror="this.style.display='none'">
+    </a>
+    <ul class="nav-menu" id="navMenu">
+      <li class="nav-item"><a href="index.html">HOME</a></li>
+      <li class="nav-item">
+        <a href="cfp.html">CALL FOR PAPERS <span class="ch">▾</span></a>
+        <div class="dropdown">
+          <a href="cfp.html">Conference Topics</a>
+          <a href="cfp.html#special">Special Session</a>
+        </div>
+      </li>
+      <li class="nav-item"><a href="speakers.html">KEYNOTE SPEAKERS</a></li>
+      <li class="nav-item"><a href="dates.html">IMPORTANT DATES</a></li>
+      <li class="nav-item">
+        <a href="committees.html">COMMITTEES <span class="ch">▾</span></a>
+        <div class="dropdown">
+          <a href="committees.html#organizing">Organizing Committee</a>
+          <a href="committees.html#technical">Technical Committee</a>
+          <a href="committees.html#scientific">Scientific Committee</a>
+        </div>
+      </li>
+      <li class="nav-item"><a href="venue.html">ACCESS MAP</a></li>
+      <li class="nav-item"><a href="submission.html">SUBMISSION</a></li>
+      <li class="nav-item"><a href="registration.html">REGISTRATION</a></li>
+      <li class="nav-item active"><a href="previous-edition.html">PREVIOUS EDITIONS</a></li>
+    </ul>
+    <div class="hamburger" onclick="document.getElementById('navMenu').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <h1>Previous Edition</h1>
+  <p>Explore archives, programmes and highlights from past ACMCST conferences</p>
+  <div class="breadcrumb">
+    <a href="index.html">Home</a>
+    <span>›</span>
+    <span>Previous Editions</span>
+  </div>
+</div>
+
+<!-- ========================
+     EDITIONS + GALLERY côte à côte
+     ======================== -->
+<section id="editions-gallery">
+  <div class="container">
+    <div class="sec-header reveal">
+      <div class="sec-tag">Archive</div>
+      <h2 class="sec-title">Past Edition</h2>
+      <div class="sec-line"></div>
+    </div>
+
+    <div class="eg-layout reveal">
+
+      <!-- GAUCHE : carte édition -->
+      <div class="eg-left">
+        <div class="edition-card">
+          <div class="edition-card-img">
+            <img src="venue-2025.svg" alt="ACMCST 2025 Venue"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="img-ph" style="display:none">
+              <div class="phi">🏛️</div>
+              <span>Béni Mellal, Morocco</span>
+            </div>
+            <div class="img-badge-left">ACMCST 2025</div>
+            <div class="img-badge-right">Béni Mellal, Morocco</div>
+          </div>
+          <div class="edition-card-body">
+            <div class="edition-card-head">
+              <div class="edition-card-title">Website &amp; Resources</div>
+              <span class="badge-archive">Archive</span>
+            </div>
+            <p class="edition-card-desc">
+              Explore program highlights, proceedings, and community updates from the 2025 edition.
+            </p>
+            <div class="edition-card-actions">
+              <a href="https://acmcst.sciencesconf.org/" target="_blank" class="btn-website">
+                ↗ Website
+              </a>
+              <a href="https://link.springer.com/book/10.1007/978-3-032-18857-1" target="_blank" class="btn-proceedings">
+                📁 Proceedings
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DROITE : galerie défilante -->
+      <div class="eg-right">
+        <div class="eg-right-header">
+          <div class="sec-tag">Memories</div>
+          <h2 class="sec-title">Photo Gallery — ACMCST 2025</h2>
+          <div class="sec-line"></div>
+        </div>
+        <div class="gallery-track-wrap">
+          <div class="gallery-track" id="galleryTrack">
+            <!-- Items injectés par JS -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <h4>Contact Us</h4>
+      <div class="footer-contact-block">
+        <div class="footer-avatar">👤</div>
+        <div class="fc-info">
+          <div class="fc-name">Dr. SAIH Mohamed</div>
+          <a href="mailto:acmcst@usms.ma">acmcst@usms.ma</a>
+          <a href="http://www.acmcst.com">www.acmcst.com</a>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <ul class="footer-links">
+        <li><a href="cfp.html">Call for Papers</a></li>
+        <li><a href="speakers.html">Keynote Speakers</a></li>
+        <li><a href="submission.html">Submission</a></li>
+        <li><a href="registration.html">Registration</a></li>
+        <li><a href="venue.html">Access Map</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Downloads</h4>
+      <ul class="footer-downloads">
+        <li><a href="program.pdf">Conference Program 2027</a></li>
+        <li><a href="program-2025.pdf">Conference Program 2025</a></li>
+        <li><a href="CFP.pdf">CFP Flyer (PDF)</a></li>
+        <li><a href="Microsoft+Word+Proceedings+Templates.zip">Springer Template (Word)</a></li>
+                <!-- <li><a href="copyright.docx">Copyright Transfer Form</a></li> -->
+
+      </ul>
+    </div>
+    <div>
+      <h4>Recent News</h4>
+      <div class="news-item">ACMCST 2027 will take place on November 10–12, 2027, in Béni Mellal, Morocco.</div>
+      <div class="news-item">Paper submission is now open. Deadline: July 31, 2027.</div>
+      <div class="news-item">ACMCST'25 proceedings are now available on SpringerLink.</div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copyright">
+      © 2027 <a href="http://www.acmcst.com">ACMCST</a>. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<a href="#" id="btt" title="Back to top">↑</a>
+
+<!-- Lightbox -->
+<div id="lightbox">
+  <button id="lb-close" onclick="closeLightbox()">✕</button>
+  <img id="lb-img" src="" alt="">
+</div>
+
+<script>
+/* ============================================================
+   PHOTOS — ajoutez / modifiez vos chemins ici
+   ============================================================ */
+const photos = [
+  'gallery/photo1.jpg',
+  'gallery/photo2.jpg',
+  'gallery/photo3.jpg',
+  'gallery/photo4.jpg',
+  'gallery/photo5.jpg',
+  'gallery/photo6.jpg',
+  'gallery/photo7.jpg',
+  'gallery/photo8.jpg',
+  'gallery/photo9.jpg',
+  'gallery/photo10.jpg',
+  'gallery/photo11.jpg',
+];
+
+/* Build infinite track: duplicate items for seamless loop */
+function buildGallery() {
+  const track = document.getElementById('galleryTrack');
+  // duplicate list for seamless loop
+  const full = [...photos, ...photos];
+  full.forEach(src => {
+    const item = document.createElement('div');
+    item.className = 'gallery-item';
+
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = '';
+    img.onerror = function(){
+      this.style.display = 'none';
+      item.querySelector('.g-ph').style.display = 'flex';
+    };
+
+    const ph = document.createElement('div');
+    ph.className = 'g-ph';
+    ph.style.display = 'none';
+    ph.innerHTML = '<div class="phi">📸</div><span>Conference photo</span>';
+
+    const ov = document.createElement('div');
+    ov.className = 'g-ov';
+    ov.innerHTML = '🔍';
+
+    item.appendChild(img);
+    item.appendChild(ph);
+    item.appendChild(ov);
+
+    item.addEventListener('click', () => openLightbox(src));
+    track.appendChild(item);
+  });
+}
+
+buildGallery();
+
+/* Lightbox */
+function openLightbox(src) {
+  document.getElementById('lb-img').src = src;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+document.getElementById('lightbox').addEventListener('click', function(e){
+  if (e.target === this) closeLightbox();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+/* Back to top */
+window.addEventListener('scroll', () => {
+  document.getElementById('btt').classList.toggle('show', window.scrollY > 400);
+});
+
+/* Reveal on scroll */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(x => { if (x.isIntersecting) x.target.classList.add('visible'); });
+}, {threshold: .1});
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>

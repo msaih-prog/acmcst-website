@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Call for Papers – ACMCST 2027</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --dark-blue:#0d2137;
+  --mid-blue:#1a4a7a;
+  --sky-blue:#2e9fd4;
+  --orange:#e07b20;
+  --white:#ffffff;
+  --light:#c5e3f5;
+  --border:rgba(0,0,0,0.08);
+  --text:#1c2b3a;
+  --gray:#6b7a8d;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Times New Roman',Times,serif;color:var(--text);background:var(--white);overflow-x:hidden;}
+
+/* TOPBAR */
+.topbar{background:var(--dark-blue);padding:.45rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem;}
+.topbar-item{display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:rgba(255,255,255,0.75);}
+
+/* NAVBAR */
+nav{background:var(--white);border-bottom:3px solid var(--sky-blue);position:sticky;top:0;z-index:1000;box-shadow:0 2px 10px rgba(0,0,0,0.08);}
+.nav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;padding:0 2rem;height:70px;gap:1rem;}
+.nav-logo{display:flex;align-items:center;gap:.8rem;text-decoration:none;margin-right:1.5rem;}
+.nav-logo img{height:73px;width:auto;}
+.nav-menu{display:flex;list-style:none;height:70px;flex:1;justify-content:center;}
+.nav-item{position:relative;height:100%;display:flex;align-items:center;}
+.nav-item>a{display:flex;align-items:center;gap:.25rem;padding:0 .65rem;height:100%;font-size:.82rem;font-weight:700;color:var(--dark-blue);text-decoration:none;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-3px;transition:color .2s,border-color .2s;}
+.nav-item>a:hover,.nav-item.active>a{color:var(--sky-blue);border-bottom-color:var(--orange);}
+.nav-item>a .ch{font-size:.55rem;}
+.new-badge{display:inline-block;background:#e00;color:#fff;font-size:.6rem;font-weight:800;padding:.1rem .35rem;border-radius:2px;margin-left:.3rem;animation:blink 1s infinite;vertical-align:middle;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+.dropdown{display:none;position:absolute;top:100%;left:0;background:var(--white);box-shadow:0 6px 25px rgba(0,0,0,0.12);border-top:3px solid var(--orange);min-width:200px;z-index:200;}
+.nav-item:hover .dropdown{display:block;}
+.dropdown a{display:block;padding:.65rem 1.2rem;font-size:.8rem;color:var(--text);text-decoration:none;font-weight:600;border-bottom:1px solid var(--border);transition:background .15s,color .15s,padding-left .15s;}
+.dropdown a:hover{background:var(--light);color:var(--sky-blue);padding-left:1.6rem;}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;}
+.hamburger span{width:24px;height:2px;background:var(--dark-blue);}
+
+/* PAGE HEADER BAND */
+.page-header{background:linear-gradient(rgba(13,33,55,0.8),rgba(13,33,55,0.8)),url('header-bg.svg') center/cover no-repeat;padding:4rem 2rem;text-align:center;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.page-header h1{font-family:'Merriweather',serif;font-size:clamp(1.8rem,3vw,2.8rem);font-weight:900;color:var(--white);margin-bottom:.5rem;}
+.page-header p{color:rgba(255,255,255,0.7);font-size:.95rem;}
+
+.breadcrumb{display:flex;align-items:center;justify-content:center;gap:.5rem;font-size:.8rem;color:rgba(255,255,255,0.5);margin-top:.8rem;}
+.breadcrumb a{color:var(--sky-blue);text-decoration:none;}
+.breadcrumb span{color:rgba(255,255,255,0.3);}
+
+/* LAYOUT */
+.container{max-width:1200px;margin:0 auto;padding:0 2rem;}
+section{padding:4rem 0;}
+
+/* INTRO SECTION */
+.intro-section{background:var(--white);padding:3rem 0;}
+.intro-text{max-width:900px;margin:0 auto;text-align:center;}
+.intro-text p{font-size:1rem;color:#4a5a6a;line-height:1.9;margin-bottom:0;}
+.intro-text .hl{color:var(--sky-blue);font-weight:700;}
+
+/* SECTION HEADERS */
+.sec-header{margin-bottom:2.5rem;}
+.sec-tag{font-size:.7rem;color:var(--sky-blue);letter-spacing:3px;text-transform:uppercase;font-weight:700;margin-bottom:.4rem;}
+.sec-title{font-family:'Merriweather',serif;font-size:clamp(1.3rem,2vw,1.8rem);font-weight:900;color:var(--dark-blue);}
+.sec-line{width:50px;height:3px;background:var(--orange);margin:.8rem 0 0;}
+
+/* TOPICS GRID */
+#topics{background:var(--light);}
+.topics-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2rem;}
+.topic-card{background:var(--white);border-radius:8px;overflow:hidden;box-shadow:0 2px 15px rgba(0,0,0,0.06);transition:transform .2s,box-shadow .2s;border:1px solid var(--border);}
+.topic-card:hover{transform:translateY(-4px);box-shadow:0 8px 30px rgba(0,0,0,0.1);}
+.topic-card-header{background:var(--dark-blue);padding:1.2rem 1.5rem;display:flex;align-items:center;gap:1rem;}
+.topic-icon{width:55px;height:55px;border-radius:50%;background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .3s ease;}
+.topic-card:hover .topic-icon{transform:scale(1.15);}
+.topic-icon img{width:32px;height:32px;object-fit:contain;filter:brightness(0) invert(1);}
+.topic-icon .tif{font-size:1.5rem;}
+.topic-card-header h3{font-family:'Merriweather',serif;font-size:.95rem;font-weight:900;color:var(--white);line-height:1.3;}
+.topic-card-header .track-label{font-size:.65rem;color:var(--sky-blue);font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:.2rem;}
+.topic-body{padding:1.5rem;}
+.topic-list{list-style:none;}
+.topic-list li{font-size:.85rem;color:#4a5a6a;padding:.25rem 0 .25rem 1.2rem;position:relative;line-height:1.4;border-bottom:1px solid rgba(0,0,0,0.04);}
+.topic-list li:last-child{border-bottom:none;}
+.topic-list li::before{content:'›';position:absolute;left:0;color:var(--orange);font-weight:900;}
+
+/* SUBMISSION GUIDELINES */
+#guidelines{background:var(--light);}
+.guidelines-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+.guideline-card{background:var(--white);border-radius:16px;padding:0;display:flex;align-items:stretch;box-shadow:4px 8px 20px rgba(0,0,0,0.15),-2px -2px 10px rgba(255,255,255,0.8);overflow:hidden;border:none;transition:transform .2s,box-shadow .2s;}
+.guideline-card:hover{transform:translateY(-4px);box-shadow:6px 12px 30px rgba(0,0,0,0.2),-2px -2px 10px rgba(255,255,255,0.8);}
+.guideline-icon-box{background:var(--sky-blue);width:120px;min-width:120px;display:flex;align-items:center;justify-content:center;border-radius:16px 0 0 16px;font-size:2.5rem;padding:1.5rem;}
+.guideline-content{padding:1.5rem;}
+.guideline-content h4{font-family:'Merriweather',serif;font-size:1rem;font-weight:900;color:var(--dark-blue);margin-bottom:.8rem;text-transform:uppercase;letter-spacing:1px;}
+.guideline-content ul{list-style:none;}
+.guideline-content ul li{font-size:.85rem;color:#4a5a6a;padding:.3rem 0;border-bottom:1px solid var(--border);}
+.guideline-content ul li:last-child{border-bottom:none;}
+.guideline-content ul li::before{content:'✓ ';color:var(--sky-blue);font-weight:900;}
+
+/* SUBMIT BUTTON SECTION */
+.submit-section{background:var(--sky-blue);padding:3rem 2rem;text-align:center;}
+.submit-section h3{font-family:'Merriweather',serif;font-size:1.5rem;font-weight:900;color:var(--white);margin-bottom:.8rem;}
+.submit-section p{color:rgba(255,255,255,0.85);font-size:.9rem;margin-bottom:1.5rem;}
+.btn-submit-lg{display:inline-block;background:var(--white);color:var(--dark-blue);padding:.8rem 3rem;border-radius:3px;font-size:1rem;font-weight:700;text-decoration:none;transition:background .2s,transform .2s;border:2px solid var(--white);}
+.btn-submit-lg:hover{background:var(--orange);color:var(--white);border-color:var(--orange);transform:translateY(-2px);}
+
+/* FOOTER */
+footer{background:var(--mid-blue);padding:3rem 2rem 0;}
+.footer-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:2.5rem;padding-bottom:2.5rem;}
+.footer-col h4{font-size:.85rem;font-weight:700;color:var(--white);margin-bottom:1.2rem;padding-bottom:.5rem;border-bottom:2px solid rgba(255,255,255,0.1);text-transform:uppercase;letter-spacing:.5px;}
+.footer-contact-block{display:flex;gap:.8rem;align-items:flex-start;}
+.footer-avatar{width:52px;height:52px;border-radius:50%;flex-shrink:0;background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:1.4rem;}
+.fc-name{color:var(--white);font-weight:700;font-size:.88rem;margin-bottom:.3rem;}
+.fc-info a{color:rgba(255,255,255,0.65);font-size:.8rem;text-decoration:none;display:block;margin-bottom:.2rem;}
+.fc-info a:hover{color:var(--orange);}
+.footer-links{list-style:none;}
+.footer-links li{padding:.32rem 0;border-bottom:1px solid rgba(255,255,255,0.06);}
+.footer-links a{color:rgba(255,255,255,0.65);text-decoration:none;font-size:.82rem;transition:color .2s,padding-left .2s;display:flex;align-items:center;gap:.4rem;}
+.footer-links a:hover{color:var(--orange);padding-left:.4rem;}
+.footer-links a .nb{display:inline-block;background:#e00;color:#fff;font-size:.58rem;font-weight:800;padding:.1rem .3rem;border-radius:2px;animation:blink 1s infinite;}
+.footer-downloads{list-style:none;}
+.footer-downloads li{padding:.32rem 0;border-bottom:1px solid rgba(255,255,255,0.06);}
+.footer-downloads a{color:rgba(255,255,255,0.65);text-decoration:none;font-size:.82rem;transition:color .2s;}
+.footer-downloads a::before{content:'↓ ';color:var(--sky-blue);}
+.footer-downloads a:hover{color:var(--orange);}
+.news-item{padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:.8rem;color:rgba(255,255,255,0.65);line-height:1.5;}
+.news-item::before{content:'● ';color:var(--orange);font-size:.55rem;vertical-align:middle;}
+.footer-bottom{max-width:1200px;margin:0 auto;padding:1rem 0;border-top:1px solid rgba(255,255,255,0.08);text-align:center;}
+.footer-copyright{font-size:.78rem;color:rgba(255,255,255,0.35);}
+.footer-copyright a{color:var(--sky-blue);text-decoration:none;}
+
+/* BACK TO TOP */
+#btt{position:fixed;bottom:2rem;right:2rem;z-index:999;width:40px;height:40px;border-radius:4px;background:var(--orange);color:var(--white);display:none;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer;text-decoration:none;box-shadow:0 4px 15px rgba(0,0,0,0.2);transition:background .2s,transform .2s;font-weight:700;}
+#btt.show{display:flex;}
+#btt:hover{background:var(--dark-blue);transform:translateY(-3px);}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@keyframes moveCircle{0%{left:-20px;}100%{left:100%;}}
+
+/* RESPONSIVE */
+@media(max-width:1024px){.footer-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:768px){
+  .topics-grid,.guidelines-grid{grid-template-columns:1fr;}
+  .nav-menu{display:none;flex-direction:column;position:absolute;top:70px;left:0;right:0;background:var(--white);box-shadow:0 8px 20px rgba(0,0,0,0.1);height:auto;padding:1rem 0;z-index:999;}
+  .nav-menu.open{display:flex;}
+  .nav-item{height:auto;flex-direction:column;align-items:flex-start;}
+  .nav-item>a{padding:.7rem 1.5rem;height:auto;border-bottom:1px solid var(--border);width:100%;}
+  .dropdown{position:static;box-shadow:none;border-top:none;border-left:3px solid var(--orange);margin-left:1.5rem;}
+  .hamburger{display:flex;}
+  .nav-inner{position:relative;}
+  .footer-grid{grid-template-columns:1fr;}
+  .guideline-icon-box{width:80px;min-width:80px;font-size:1.8rem;}
+}
+@media(max-width:500px){section{padding:2.5rem 0;}}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-item">🕐 Conference: 10–12 November 2027, Béni Mellal, Morocco</div>
+  <div class="topbar-item">📞 Contact: acmcst@usms.ma</div>
+</div>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <img src="logo-acmcst.png" alt="ACMCST" onerror="this.style.display='none'">
+    </a>
+    <ul class="nav-menu" id="navMenu">
+      <li class="nav-item"><a href="index.html">HOME</a></li>
+      <li class="nav-item active">
+        <a href="cfp.html">CALL FOR PAPERS <span class="ch">▾</span></a>
+        <div class="dropdown">
+          <a href="cfp.html">Conference Topics</a>
+          <a href="cfp.html#special">Special Session</a>
+        </div>
+      </li>
+      <li class="nav-item"><a href="speakers.html">KEYNOTE SPEAKERS</a></li>
+      <li class="nav-item"><a href="dates.html">IMPORTANT DATES</a></li>
+      <li class="nav-item">
+        <a href="committees.html">COMMITTEES <span class="ch">▾</span></a>
+        <div class="dropdown">
+          <a href="committees.html#organizing">Organizing Committee</a>
+          <a href="committees.html#technical">Technical Committee</a>
+          <a href="committees.html#scientific">Scientific Committee</a>
+        </div>
+      </li>
+      <li class="nav-item"><a href="venue.html">ACCESS MAP</a></li>
+      <li class="nav-item"><a href="submission.html">SUBMISSION</a></li>
+      <li class="nav-item"><a href="registration.html">REGISTRATION</a></li>
+            <li class="nav-item"><a href="previous-edition.html">PREVIOUS EDITION</a></li>
+
+    </ul>
+    <div class="hamburger" onclick="document.getElementById('navMenu').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <h1>Call for Papers</h1>
+  <p>ACMCST 2027 — International Conference | Béni Mellal, Morocco</p>
+  <div class="breadcrumb">
+    <a href="index.html">Home</a>
+    <span>›</span>
+    <span>Call for Papers</span>
+  </div>
+</div>
+
+<!-- INTRO -->
+<div class="intro-section">
+  <div class="container">
+    <div class="intro-text reveal">
+      <p>The <span class="hl">ACMCST 2027</span> invites researchers, academics, engineers, and industry professionals to submit original and unpublished contributions in the fields of advanced communications, modern circuits, and systems technologies. Papers should present significant, novel, and technically sound research.</p>
+      <p>All accepted papers will be published in <span class="hl">Springer Lecture Notes in Networks and Systems</span> and indexed in <span class="hl">SCOPUS, INSPEC, WTI Frankfurt eG, zbMATH, and SCImago</span>.</p>
+    </div>
+    <!-- 3 IMAGES -->
+    <div style="display:flex;justify-content:center;align-items:center;gap:2rem;margin-top:1rem;flex-wrap:wrap;">
+      <img src="proceeding2027.jpg" alt="Proceeding 2027" style="height:120px;width:auto;object-fit:contain;box-shadow:0 4px 15px rgba(0,0,0,0.15);border-radius:4px;">
+      <img src="scopus.png" alt="Scopus" style="height:100px;width:auto;object-fit:contain;filter:grayscale(20%);transition:filter .2s;" onmouseover="this.style.filter='grayscale(0%)'" onmouseout="this.style.filter='grayscale(20%)'">
+    </div>
+  </div>
+</div>
+
+<!-- DIVIDER ANIMÉ -->
+<div style="background:var(--dark-blue);height:3px;width:100%;position:relative;overflow:hidden;">
+  <div style="position:absolute;top:50%;transform:translateY(-50%);width:20px;height:20px;background:white;border-radius:50%;box-shadow:0 0 10px 5px rgba(255,255,255,0.6),0 0 20px 10px rgba(255,255,255,0.3);animation:moveCircle 10s linear infinite;"></div>
+</div>
+
+<!-- TOPICS -->
+<section id="topics">
+  <div class="container">
+    <div class="sec-header reveal">
+      <div class="sec-tag">Conference Topics</div>
+      <h2 class="sec-title">Topics of Interest</h2>
+      <div class="sec-line"></div>
+    </div>
+    <div class="topics-grid">
+      <div class="topic-card reveal">
+        <div class="topic-card-header">
+          <div class="topic-icon"><img src="icon1.png" alt="Track A" onerror="this.outerHTML='<div class=tif>🧠</div>'"></div>
+          <div>
+            <div class="track-label">Track A</div>
+            <h3>Intelligent Systems and Advanced Technologies</h3>
+          </div>
+        </div>
+        <div class="topic-body">
+          <ul class="topic-list">
+            <li>Connected Systems</li>
+            <li>Industrial IoT</li>
+            <li>Control of Connected Vehicle Systems</li>
+            <li>Robotics and Autonomous Systems</li>
+            <li>Smart Homes, Smart Cities</li>
+            <li>IA for Embedded Systems</li>
+            <li>Smart IoT, Embedded Systems & Industry 4.0</li>
+            <li>Machine Learning for IoT</li>
+            <li>Connected Car, Automotive</li>
+            <li>Smart Systems</li>
+            <li>Technologies in Intelligent Systems</li>
+          </ul>
+        </div>
+      </div>
+      <div class="topic-card reveal">
+        <div class="topic-card-header">
+          <div class="topic-icon"><img src="icon2.png" alt="Track B" onerror="this.outerHTML='<div class=tif>⚡</div>'"></div>
+          <div>
+            <div class="track-label">Track B</div>
+            <h3>Power & Energy</h3>
+          </div>
+        </div>
+        <div class="topic-body">
+          <ul class="topic-list">
+            <li>Power Electronics, Systems and Applications</li>
+            <li>Smart Grids & Microgrids</li>
+            <li>Command and Control Systems for Renewable Energy</li>
+            <li>Electric power generation, transmission & distribution</li>
+            <li>Energy conversion systems</li>
+            <li>Energy storage components & systems</li>
+            <li>Energy harvesting</li>
+            <li>Power semiconductor devices</li>
+            <li>Energy efficiency</li>
+          </ul>
+        </div>
+      </div>
+      <div class="topic-card reveal">
+        <div class="topic-card-header">
+          <div class="topic-icon"><img src="icon3.png" alt="Track C" onerror="this.outerHTML='<div class=tif>📡</div>'"></div>
+          <div>
+            <div class="track-label">Track C</div>
+            <h3>Information and Communication Technologies</h3>
+          </div>
+        </div>
+        <div class="topic-body">
+          <ul class="topic-list">
+            <li>RFID technology and applications</li>
+            <li>Satellite and Space Communications</li>
+            <li>Network and Security</li>
+            <li>Telecommunication Systems</li>
+            <li>Mobile and Ubiquitous Computing</li>
+            <li>Wireless Communications and Networking</li>
+            <li>Antenna Systems and Architectures</li>
+            <li>Telecommunications Applied to Transportation</li>
+            <li>Access Systems and Networks</li>
+            <li>Hybrid information technology</li>
+            <li>Electromagnetic computation methods</li>
+          </ul>
+        </div>
+      </div>
+      <div class="topic-card reveal">
+        <div class="topic-card-header">
+          <div class="topic-icon"><img src="icon4.png" alt="Track D" onerror="this.outerHTML='<div class=tif>🔌</div>'"></div>
+          <div>
+            <div class="track-label">Track D</div>
+            <h3>Electronics Circuits and Systems</h3>
+          </div>
+        </div>
+        <div class="topic-body">
+          <ul class="topic-list">
+            <li>Microsystems and Embedded Systems</li>
+            <li>Sensors and Sensing Systems</li>
+            <li>Low-Power and Low-Voltage Design</li>
+            <li>EDA, Test and Reliability</li>
+            <li>Signal Processing, Image and Video</li>
+            <li>Linear and Non-Linear Circuits and Systems</li>
+            <li>Neural Networks, Machine and Deep Learning</li>
+            <li>VLSI Systems and Applications</li>
+            <li>Digital Circuits and Systems</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SUBMISSION GUIDELINES -->
+<section id="guidelines">
+  <div class="container">
+    <div class="sec-header reveal">
+      <div class="sec-tag">Instructions</div>
+      <h2 class="sec-title">Submission Guidelines</h2>
+      <div class="sec-line"></div>
+    </div>
+    <div class="guidelines-grid">
+      <div class="guideline-card reveal">
+<div class="guideline-icon-box"><img src="cfp-icon1.png" style="width:90px;height:90px;object-fit:contain;filter:brightness(0) invert(1);"></div>        <div class="guideline-content">
+          <h4>Paper Format</h4>
+          <ul>
+            <li>Papers must be written in English</li>
+            <li>Use Springer LNNS template (Word or LaTeX)</li>
+            <li>Length: 10–15 pages including references</li>
+            <li>All papers must be original and unpublished</li>
+            <li>Double-blind review process</li>
+          </ul>
+        </div>
+      </div>
+      <div class="guideline-card reveal">
+<div class="guideline-icon-box"><img src="cfp-icon2.png" style="width:90px;height:90px;object-fit:contain;filter:brightness(0) invert(1);"></div>        <div class="guideline-content">
+          <h4>Submission Process</h4>
+          <ul>
+            <li>Submit via the online submission system</li>
+            <li>PDF format required for submission</li>
+            <li>All papers will be peer-reviewed</li>
+            <li>At least one author must register</li>
+            <li>Accepted papers must be presented at the conference</li>
+          </ul>
+        </div>
+      </div>
+      <div class="guideline-card reveal">
+<div class="guideline-icon-box"><img src="cfp-icon3.png" style="width:90px;height:90px;object-fit:contain;filter:brightness(0) invert(1);"></div>        <div class="guideline-content">
+          <h4>Publication</h4>
+          <ul>
+            <li>Published by Springer LNNS</li>
+            <li>Indexed in SCOPUS & INSPEC</li>
+            <li>Also indexed in WTI Frankfurt eG</li>
+            <li>zbMATH and SCImago indexed</li>
+            <li>DOI assigned to each paper</li>
+          </ul>
+        </div>
+      </div>
+      <div class="guideline-card reveal">
+<div class="guideline-icon-box"><img src="cfp-icon4.png" style="width:90px;height:90px;object-fit:contain;filter:brightness(0) invert(1);"></div>        <div class="guideline-content">
+          <h4>Templates</h4>
+          <ul>
+          <li><a href="Microsoft+Word+Proceedings+Templates.zip" style="color:var(--sky-blue);">Springer Template (Word)</a></li>
+          <li><a href="LaTeX2e+Proceedings+Templates.zip" style="color:var(--sky-blue);">Springer Template (LaTeX)</a></li>
+          <li><a href="CFP.pdf" style="color:var(--sky-blue);">CFP Flyer (PDF)</a></li>
+          <li><a href="Springer_ProceedingsPaper_656847_LTP_ST_SN_Saih.docx" style="color:var(--sky-blue);">Copyright Form</a></li>
+
+
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- SPECIAL SESSION -->
+<section id="special" style="background:var(--white);">
+  <div class="container">
+    <div class="sec-header reveal">
+      <div class="sec-tag">Special Session</div>
+      <h2 class="sec-title">Special Session: Embedded Systems & Applications</h2>
+      <div class="sec-line"></div>
+    </div>
+
+    <div class="reveal" style="max-width:900px;margin:0 auto;">
+      <p style="font-size:.95rem;color:#4a5a6a;line-height:1.9;margin-bottom:1.5rem;text-align:justify;">
+        This special session focuses on the latest advances in embedded systems design and their applications across various domains including automotive, industrial, medical, aerospace, and consumer electronics. It brings together researchers and industry experts to discuss innovative solutions for embedded systems.
+      </p>
+
+      <div style="background:var(--light);border-radius:10px;padding:2rem;border-left:4px solid var(--sky-blue);">
+        <h3 style="font-family:'Merriweather',serif;font-size:1rem;font-weight:900;color:var(--dark-blue);margin-bottom:1.2rem;">Topics include:</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem 2rem;">
+          <div style="font-size:.85rem;color:#4a5a6a;padding:.3rem 0 .3rem 1.2rem;position:relative;border-bottom:1px solid rgba(0,0,0,0.06);">
+            <span style="position:absolute;left:0;color:var(--orange);font-weight:900;">›</span>Real-time embedded systems (RTOS)
+          </div>
+          <div style="font-size:.85rem;color:#4a5a6a;padding:.3rem 0 .3rem 1.2rem;position:relative;border-bottom:1px solid rgba(0,0,0,0.06);">
+            <span style="position:absolute;left:0;color:var(--orange);font-weight:900;">›</span>Hardware/Software co-design
+          </div>
+          <div style="font-size:.85rem;color:#4a5a6a;padding:.3rem 0 .3rem 1.2rem;position:relative;border-bottom:1px solid rgba(0,0,0,0.06);">
+            <span style="position:absolute;left:0;color:var(--orange);font-weight:900;">›</span>FPGA and SoC design
+          </div>
+          <div style="font-size:.85rem;color:#4a5a6a;padding:.3rem 0 .3rem 1.2rem;position:relative;border-bottom:1px solid rgba(0,0,0,0.06);">
+            <span style="position:absolute;left:0;color:var(--orange);font-weight:900;">›</span>Low-power embedded systems
+          </div>
+          <div style="font-size:.85rem;color:#4a5a6a;padding:.3rem 0 .3rem 1.2rem;position:relative;border-bottom:1px solid rgba(0,0,0,0.06);">
+            <span style="position:absolute;left:0;color:var(--orange);font-weight:900;">›</span>Embedded AI and Machine Learning
+          </div>
+          <div style="font-size:.85rem;color:#4a5a6a;padding:.3rem 0 .3rem 1.2rem;position:relative;border-bottom:1px solid rgba(0,0,0,0.06);">
+            <span style="position:absolute;left:0;color:var(--orange);font-weight:900;">›</span>Embedded systems for IoT
+          </div>
+          <div style="font-size:.85rem;color:#4a5a6a;padding:.3rem 0 .3rem 1.2rem;position:relative;border-bottom:1px solid rgba(0,0,0,0.06);">
+            <span style="position:absolute;left:0;color:var(--orange);font-weight:900;">›</span>Embedded systems for automotive
+          </div>
+          <div style="font-size:.85rem;color:#4a5a6a;padding:.3rem 0 .3rem 1.2rem;position:relative;border-bottom:1px solid rgba(0,0,0,0.06);">
+            <span style="position:absolute;left:0;color:var(--orange);font-weight:900;">›</span>Embedded systems for medical devices
+          </div>
+          <div style="font-size:.85rem;color:#4a5a6a;padding:.3rem 0 .3rem 1.2rem;position:relative;border-bottom:1px solid rgba(0,0,0,0.06);">
+            <span style="position:absolute;left:0;color:var(--orange);font-weight:900;">›</span>Embedded systems for aerospace
+          </div>
+          <div style="font-size:.85rem;color:#4a5a6a;padding:.3rem 0 .3rem 1.2rem;position:relative;border-bottom:1px solid rgba(0,0,0,0.06);">
+            <span style="position:absolute;left:0;color:var(--orange);font-weight:900;">›</span>Cyber-physical systems
+          </div>
+          <div style="font-size:.85rem;color:#4a5a6a;padding:.3rem 0 .3rem 1.2rem;position:relative;border-bottom:1px solid rgba(0,0,0,0.06);">
+            <span style="position:absolute;left:0;color:var(--orange);font-weight:900;">›</span>Embedded security and safety
+          </div>
+          <div style="font-size:.85rem;color:#4a5a6a;padding:.3rem 0 .3rem 1.2rem;position:relative;border-bottom:1px solid rgba(0,0,0,0.06);">
+            <span style="position:absolute;left:0;color:var(--orange);font-weight:900;">›</span>Edge computing
+          </div>
+        </div>
+      </div>
+
+      
+    </div>
+  </div>
+</section>
+<!-- SUBMIT CTA -->
+<div class="submit-section">
+  <h3>Ready to Submit Your Paper?</h3>
+  <p>Join researchers and professionals from around the world at ACMCST 2027</p>
+  <a href="submission.html" class="btn-submit-lg">Submit Your Paper →</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <h4>Contact Us</h4>
+      <div class="footer-contact-block">
+        <div class="footer-avatar">👤</div>
+        <div class="fc-info">
+          <div class="fc-name">Dr. SAIH Mohamed</div>
+          <a href="mailto:acmcst@usms.ma">acmcst@usms.ma</a>
+          <a href="http://www.acmcst.com">www.acmcst.com</a>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <ul class="footer-links">
+        <li><a href="cfp.html">Call for Papers</a></li>
+        <li><a href="speakers.html">Keynote Speakers</a></li>
+        <li><a href="submission.html">Submission</a></li>
+        <li><a href="registration.html">Registration</a></li>
+        <li><a href="venue.html">Access Map</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Downloads</h4>
+      <ul class="footer-downloads">
+        <li><a href="program.pdf">Conference Program</a></li>
+        <li><a href="CFP.pdf">CFP Flyer (PDF)</a></li>
+        <li><a href="Microsoft+Word+Proceedings+Templates.zip">Springer Template (Word)</a></li>
+        <li><a href="LaTeX2e+Proceedings+Templates.zip">Springer Template (LaTeX)</a></li>
+                <li class="js-toggle-copyright" style="display:none;"><a href="copyright.docx">Copyright Transfer Form</a></li>
+
+      </ul>
+    </div>
+    <div>
+      <h4>Recent News</h4>
+      <div class="news-item">ACMCST 2027 will take place on November 10–12, 2027, in Béni Mellal, Morocco.</div>
+      <div class="news-item">Paper submission is now open. Deadline: July 31, 2027.</div>
+      <div class="news-item">ACMCST'25 proceedings are now available on SpringerLink.</div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copyright">
+      © 2027 <a href="http://www.acmcst.com">ACMCST</a>. All rights reserved. <a href="http://www.acmcst.com">www.acmcst.com</a>
+    </div>
+  </div>
+</footer>
+
+<a href="#" id="btt" title="Back to top">↑</a>
+
+<script>
+window.addEventListener('scroll',()=>{document.getElementById('btt').classList.toggle('show',window.scrollY>400);});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="site-toggles.js?v=2"></script>
+</body>
+</html>

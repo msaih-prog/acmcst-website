@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACMCST 2027 — Payments</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --dark-blue:#0d2137;--mid-blue:#1a4a7a;--sky-blue:#2e9fd4;--orange:#e07b20;
+    --bg:#0a0f1a;--white:#ffffff;--text:#ffffff;--muted:#8a9ab0;
+    --success:#1a7a4a;--danger:#c0392b;--border:#1e3a5a;--card-bg:#0d2137;--input-bg:#0f1e30;--pending:#f59e0b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Source Sans 3',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+  #login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0a0f1a 0%,#0d2137 100%);}
+  .login-box{background:#0d2137;border-radius:16px;padding:2.5rem 2rem;width:100%;max-width:380px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5);border:1px solid var(--border);}
+  .login-box .logo-title{font-family:'Merriweather',serif;font-size:1.4rem;color:var(--white);margin-bottom:0.3rem;}
+  .login-box .logo-sub{font-size:0.85rem;color:var(--muted);margin-bottom:2rem;}
+  .lock-icon{width:60px;height:60px;background:var(--sky-blue);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;}
+  .lock-icon svg{width:28px;height:28px;fill:var(--white);}
+  .login-box input[type="email"],.login-box input[type="password"]{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:8px;font-size:1rem;font-family:inherit;margin-bottom:1rem;outline:none;text-align:center;background:var(--input-bg);color:var(--white);}
+  .login-box input[type="password"]{letter-spacing:4px;}
+  .login-box input[type="email"]:focus,.login-box input[type="password"]:focus{border-color:var(--sky-blue);}
+  .login-btn{width:100%;padding:12px;background:var(--sky-blue);color:var(--white);border:none;border-radius:8px;font-size:1rem;font-family:inherit;font-weight:600;cursor:pointer;}
+  .login-btn:hover{background:var(--mid-blue);}
+  .login-btn:disabled{opacity:0.6;cursor:not-allowed;}
+  .login-error{color:#ff6b6b;font-size:0.85rem;margin-top:0.75rem;display:none;}
+  #main-app{display:none;}
+  .topbar{background:#060c14;color:var(--white);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--border);flex-wrap:wrap;gap:10px;}
+  .topbar-title{font-family:'Merriweather',serif;font-size:1rem;}
+  .topbar-title span{color:var(--sky-blue);}
+  .topbar-right{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+  .admin-link{background:var(--mid-blue);color:var(--white);padding:6px 14px;border-radius:6px;font-size:0.85rem;text-decoration:none;font-weight:600;}
+  .logout-btn{background:transparent;border:1px solid var(--border);color:var(--white);padding:6px 14px;border-radius:6px;font-size:0.85rem;cursor:pointer;font-family:inherit;}
+  .logout-btn:hover{background:var(--border);}
+  .container{max-width:1300px;margin:0 auto;padding:2rem 1rem;}
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1.5rem;}
+  .stat-card{border-radius:10px;padding:1.2rem;text-align:center;border:1px solid var(--border);}
+  .stat-card.total{background:#0d2137;}
+  .stat-card.oral{background:#0a4a2a;}
+  .stat-card.poster{background:#123a5c;}
+  .stat-card.pending{background:#7c4a00;}
+  .stat-card .num{font-size:1.8rem;font-weight:700;color:var(--white);}
+  .stat-card .lbl{font-size:0.78rem;color:rgba(255,255,255,0.6);margin-top:2px;}
+
+  .bulk-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1.5rem;justify-content:flex-end;}
+  .btn{padding:10px 18px;border:none;border-radius:8px;font-size:0.86rem;font-family:inherit;font-weight:600;cursor:pointer;}
+  .btn-danger{background:#c0392b;color:var(--white);}
+  .btn-danger:hover{background:#992d22;}
+  .btn-sky{background:var(--sky-blue);color:var(--white);}
+  .btn-sky:hover{background:var(--mid-blue);}
+  .btn-orange{background:var(--orange);color:var(--white);}
+  .btn-orange:hover{background:#c96d18;}
+  .btn:disabled{opacity:0.5;cursor:not-allowed;}
+
+  .section-card{background:var(--card-bg);border-radius:12px;border:1px solid var(--border);padding:1.5rem;margin-bottom:1.5rem;}
+  .section-title{font-size:1rem;font-weight:700;color:var(--white);margin-bottom:1.2rem;padding-bottom:10px;border-bottom:2px solid var(--sky-blue);}
+
+  .pending-list{display:flex;flex-direction:column;gap:10px;}
+  .pending-item{background:#7c4a0022;border:1px solid rgba(245,158,11,0.4);border-radius:8px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+  .pending-info{font-size:0.85rem;color:var(--text);}
+  .pending-info b{color:var(--pending);}
+  .pending-meta{font-size:0.76rem;color:var(--muted);margin-top:3px;}
+  .remind-btn{background:rgba(245,158,11,0.2);color:var(--pending);border:1px solid rgba(245,158,11,0.5);padding:8px 16px;border-radius:6px;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:inherit;}
+  .remind-btn:hover{background:rgba(245,158,11,0.35);}
+  .remind-btn:disabled{opacity:0.5;cursor:not-allowed;}
+  .remind-count{font-size:0.72rem;font-weight:700;color:var(--pending);white-space:nowrap;}
+  .empty-state{text-align:center;padding:2rem;color:var(--muted);font-size:0.9rem;}
+
+  .controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:1.2rem;}
+  .search-input{flex:1;min-width:200px;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:0.92rem;font-family:inherit;outline:none;background:var(--input-bg);color:var(--white);}
+  .search-input::placeholder{color:var(--muted);}
+  .search-input:focus{border-color:var(--sky-blue);}
+  .filter-btns{display:flex;gap:6px;flex-wrap:wrap;}
+  .filter-btn{padding:8px 14px;border-radius:20px;border:1.5px solid var(--border);background:transparent;font-size:0.8rem;font-family:inherit;cursor:pointer;color:var(--muted);font-weight:600;}
+  .filter-btn:hover{border-color:var(--sky-blue);color:var(--sky-blue);}
+  .filter-btn.active{background:var(--sky-blue);color:var(--white);border-color:var(--sky-blue);}
+
+  .table-wrap{overflow-x:auto;}
+  table.reg-table{width:100%;border-collapse:collapse;font-size:0.82rem;}
+  table.reg-table th{background:#060c14;color:var(--sky-blue);padding:10px 12px;text-align:left;white-space:nowrap;border-bottom:2px solid var(--border);position:sticky;top:0;}
+  table.reg-table td{padding:9px 12px;border-bottom:1px solid var(--border);white-space:nowrap;color:var(--text);}
+  table.reg-table tr:hover td{background:rgba(46,159,212,0.05);}
+  .badge{font-size:0.72rem;padding:4px 10px;border-radius:20px;font-weight:700;border:1px solid;white-space:nowrap;}
+  .badge-oral{background:rgba(46,204,113,0.1);color:#2ecc71;border-color:rgba(46,204,113,0.3);}
+  .badge-poster{background:rgba(46,159,212,0.1);color:#2e9fd4;border-color:rgba(46,159,212,0.3);}
+  .badge-moroccan{background:rgba(224,123,32,0.1);color:#f0a050;border-color:rgba(224,123,32,0.3);}
+  .badge-international{background:rgba(155,89,182,0.1);color:#9b59b6;border-color:rgba(155,89,182,0.3);}
+  .dl-btn{background:var(--mid-blue);color:var(--white);border:none;padding:5px 10px;border-radius:5px;font-size:0.72rem;font-family:inherit;cursor:pointer;font-weight:600;margin:1px;}
+  .dl-btn:hover{background:var(--sky-blue);}
+  .dl-btn:disabled{opacity:0.35;cursor:not-allowed;}
+  .verify-toggle{border:none;padding:6px 12px;border-radius:20px;font-size:0.76rem;font-weight:700;cursor:pointer;font-family:inherit;}
+  .verify-toggle.unverified{background:rgba(231,76,60,0.15);color:#e74c3c;}
+  .verify-toggle.verified{background:rgba(46,204,113,0.15);color:#2ecc71;}
+  .verify-toggle:disabled{opacity:0.5;cursor:not-allowed;}
+
+  #toast{position:fixed;bottom:2rem;right:2rem;padding:12px 20px;border-radius:8px;font-size:0.9rem;font-weight:600;color:var(--white);z-index:9999;transform:translateY(100px);opacity:0;transition:all 0.3s;max-width:320px;}
+  #toast.show{transform:translateY(0);opacity:1;}
+  #toast.success{background:#1a7a4a;}
+  #toast.error{background:#c0392b;}
+  #toast.info{background:var(--sky-blue);}
+  @media(max-width:640px){
+    .stats-grid{grid-template-columns:repeat(2,1fr);}
+    .topbar{padding:1rem;}
+    .container{padding:1rem;}
+  }
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-box">
+    <div class="lock-icon"><svg viewBox="0 0 24 24"><path d="M12 1C9.24 1 7 3.24 7 6v2H5c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2h-2V6c0-2.76-2.24-5-5-5zm0 2c1.66 0 3 1.34 3 3v2H9V6c0-1.66 1.34-3 3-3zm0 9c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"/></svg></div>
+    <div class="logo-title">ACMCST <span style="color:var(--orange)">2027</span></div>
+    <div class="logo-sub">Payments Management — Restricted Access</div>
+    <input type="email" id="email-input" placeholder="Email" onkeydown="if(event.key==='Enter')document.getElementById('pwd-input').focus()"/>
+    <input type="password" id="pwd-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkLogin()"/>
+    <button class="login-btn" id="login-btn" onclick="checkLogin()">Access</button>
+    <div class="login-error" id="login-error">Incorrect email or password</div>
+  </div>
+</div>
+
+<div id="main-app">
+  <div class="topbar">
+    <div class="topbar-title">ACMCST <span>2027</span> — Payments Management</div>
+    <div class="topbar-right">
+      <a href="assignments.html" class="admin-link">📋 Assignments</a>
+      <a href="review.html" class="admin-link" style="background:#1a7a4a;">📄 Reviewing Papers</a>
+      <a href="reviewers.html" class="admin-link">👥 Reviewers</a>
+      <a href="Attestations.html" class="admin-link">🏅 Attestations</a>
+      <a href="payments.html" class="admin-link" style="background:var(--orange);">💰 Payments</a>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <div class="stats-grid">
+      <div class="stat-card total"><div class="num" id="stat-total">0</div><div class="lbl">💰 Total Submissions</div></div>
+      <div class="stat-card oral"><div class="num" id="stat-oral">0</div><div class="lbl">✅ Oral Received</div></div>
+      <div class="stat-card poster"><div class="num" id="stat-poster">0</div><div class="lbl">📋 Poster Received</div></div>
+      <div class="stat-card pending"><div class="num" id="stat-pending">0</div><div class="lbl">⏳ Pending</div></div>
+    </div>
+
+    <div class="bulk-row">
+      <button class="btn btn-danger" id="delete-all-btn" onclick="deleteAllRegistrations()" style="margin-right:auto;">🗑️ Tout supprimer</button>
+      <button class="btn btn-sky" id="zip-copyright-btn" onclick="downloadAllZip('Copyright_Form', 'copyright_form_path')">📥 Télécharger tous les Copyright Forms</button>
+      <button class="btn btn-sky" id="zip-source-btn" onclick="downloadAllZip('Source_Files', 'source_files_path')">📥 Télécharger tous les Source Files</button>
+      <button class="btn btn-sky" id="zip-cr-btn" onclick="downloadAllZip('Camera_Ready', 'camera_ready_path')">📥 Télécharger tous les Camera-Ready Papers</button>
+      <button class="btn btn-orange" onclick="exportExcel()">📊 Exporter Excel</button>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title">⚠️ Papiers en attente de soumission</div>
+      <div class="pending-list" id="pending-list">
+        <div class="empty-state">Loading…</div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title">✅ Soumissions reçues</div>
+      <div class="controls">
+        <input type="text" class="search-input" id="search-input" placeholder="Search by name or Paper ID..." oninput="renderTable()"/>
+        <div class="filter-btns">
+          <button class="filter-btn active" onclick="setFilter('All', event)">All</button>
+          <button class="filter-btn" onclick="setFilter('Oral', event)">Oral</button>
+          <button class="filter-btn" onclick="setFilter('Poster', event)">Poster</button>
+          <button class="filter-btn" onclick="setFilter('Moroccan', event)">Marocain</button>
+          <button class="filter-btn" onclick="setFilter('International', event)">International</button>
+          <button class="filter-btn" onclick="setFilter('Verified', event)">Vérifié</button>
+          <button class="filter-btn" onclick="setFilter('Unverified', event)">Non vérifié</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="reg-table">
+          <thead>
+            <tr>
+              <th>Nom</th><th>Prénom</th><th>Paper ID</th><th>Titre</th><th>Type</th><th>Catégorie</th>
+              <th>Date soumission</th><th>Fichiers</th><th>Paiement</th>
+            </tr>
+          </thead>
+          <tbody id="reg-tbody">
+            <tr><td colspan="9" class="empty-state">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script>
+let acceptedPapers = [];
+let registrations = [];
+let currentFilter = 'All';
+
+function escapeHtml(str) {
+  return String(str ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+async function checkLogin() {
+  const email = document.getElementById('email-input').value.trim();
+  const pwd = document.getElementById('pwd-input').value;
+  const btn = document.getElementById('login-btn');
+  btn.disabled = true; btn.textContent = 'Signing in...';
+  const { error } = await sb.auth.signInWithPassword({ email, password: pwd });
+  btn.disabled = false; btn.textContent = 'Access';
+  if (error) {
+    document.getElementById('login-error').textContent = error.message;
+    document.getElementById('login-error').style.display = 'block';
+    return;
+  }
+  document.getElementById('login-error').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('main-app').style.display = 'block';
+  loadDashboard();
+}
+
+async function logout() {
+  await sb.auth.signOut();
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('main-app').style.display = 'none';
+}
+
+(async function initSession() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('main-app').style.display = 'block';
+    loadDashboard();
+  }
+})();
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'show ' + type;
+  setTimeout(() => { t.className = ''; }, 3500);
+}
+
+async function loadDashboard() {
+  try {
+    const { data, error } = await sb.functions.invoke('payments-admin', { body: { action: 'dashboard' } });
+    if (error) throw error;
+    if (!data.succes) throw new Error(data.message);
+    acceptedPapers = data.acceptedPapers;
+    registrations = data.registrations;
+    renderStats();
+    renderPending();
+    renderTable();
+  } catch (e) {
+    showToast('Load error: ' + e.message, 'error');
+  }
+}
+
+function renderStats() {
+  const oral = registrations.filter(r => r.type_presentation === 'Oral').length;
+  const poster = registrations.filter(r => r.type_presentation === 'Poster').length;
+  const submittedIds = new Set(registrations.map(r => r.paper_id));
+  const pending = acceptedPapers.filter(p => !submittedIds.has(p.paper_id)).length;
+  document.getElementById('stat-total').textContent = registrations.length;
+  document.getElementById('stat-oral').textContent = oral;
+  document.getElementById('stat-poster').textContent = poster;
+  document.getElementById('stat-pending').textContent = pending;
+}
+
+function renderPending() {
+  const submittedIds = new Set(registrations.map(r => r.paper_id));
+  const pending = acceptedPapers.filter(p => !submittedIds.has(p.paper_id));
+  const list = document.getElementById('pending-list');
+  if (pending.length === 0) {
+    list.innerHTML = '<div class="empty-state">Aucun papier en attente 🎉</div>';
+    return;
+  }
+  list.innerHTML = pending.map(p => `
+    <div class="pending-item">
+      <div>
+        <div class="pending-info"><b>${escapeHtml(p.nom_auteur || '')} ${escapeHtml(p.prenom_auteur || '')}</b> — Paper ID ${escapeHtml(p.paper_id)}</div>
+        <div class="pending-meta">${escapeHtml(p.titre)} · ${p.decision === 'Accepted' ? 'Oral' : 'Poster'} · Décision envoyée le ${p.date_envoi_decision ? new Date(p.date_envoi_decision).toLocaleDateString() : '—'}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="remind-count" id="remind-count-${p.id}">${p.camera_ready_reminders_sent > 0 ? `🔔 Relancé ${p.camera_ready_reminders_sent}×` : ''}</span>
+        <button class="remind-btn" onclick="remind('${p.id}', this)">📧 Relancer</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function setFilter(f, evt) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  evt.target.classList.add('active');
+  renderTable();
+}
+
+function matchesFilter(r) {
+  if (currentFilter === 'All') return true;
+  if (currentFilter === 'Oral') return r.type_presentation === 'Oral';
+  if (currentFilter === 'Poster') return r.type_presentation === 'Poster';
+  if (currentFilter === 'Moroccan') return r.country_group === 'Moroccan';
+  if (currentFilter === 'International') return r.country_group === 'International';
+  if (currentFilter === 'Verified') return !!r.payment_verified;
+  if (currentFilter === 'Unverified') return !r.payment_verified;
+  return true;
+}
+
+function renderTable() {
+  const search = document.getElementById('search-input').value.toLowerCase();
+  const tbody = document.getElementById('reg-tbody');
+  const filtered = registrations.filter(r =>
+    matchesFilter(r) && (
+      (r.first_name || '').toLowerCase().includes(search) ||
+      (r.last_name || '').toLowerCase().includes(search) ||
+      (r.paper_id || '').toLowerCase().includes(search)
+    )
+  );
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="9" class="empty-state">No submissions found</td></tr>';
+    return;
+  }
+  tbody.innerHTML = filtered.map(r => {
+    const isOral = r.type_presentation === 'Oral';
+    const typeBadge = isOral ? '<span class="badge badge-oral">Oral</span>' : '<span class="badge badge-poster">Poster</span>';
+    const originBadge = r.country_group === 'Moroccan'
+      ? '<span class="badge badge-moroccan">Moroccan</span>'
+      : '<span class="badge badge-international">International</span>';
+    const files = [
+      r.payment_proof_path ? `<button class="dl-btn" onclick="downloadFile('${r.payment_proof_path}')">Payment Proof</button>` : '',
+      isOral && r.copyright_form_path ? `<button class="dl-btn" onclick="downloadFile('${r.copyright_form_path}')">Copyright</button>` : '',
+      isOral && r.source_files_path ? `<button class="dl-btn" onclick="downloadFile('${r.source_files_path}')">Source</button>` : '',
+      isOral && r.camera_ready_path ? `<button class="dl-btn" onclick="downloadFile('${r.camera_ready_path}')">Camera-Ready</button>` : '',
+    ].filter(Boolean).join(' ');
+    return `
+    <tr>
+      <td>${escapeHtml(r.last_name)}</td>
+      <td>${escapeHtml(r.first_name)}</td>
+      <td>${escapeHtml(r.paper_id)}</td>
+      <td style="white-space:normal;max-width:260px;">${escapeHtml(r.titre || '')}</td>
+      <td>${typeBadge} ${originBadge}</td>
+      <td>${escapeHtml(r.category)}</td>
+      <td>${r.created_at ? new Date(r.created_at).toLocaleDateString() : ''}</td>
+      <td>${files}</td>
+      <td><button class="verify-toggle ${r.payment_verified ? 'verified' : 'unverified'}" onclick="toggleVerified('${r.id}', ${!r.payment_verified}, this)">${r.payment_verified ? '🟢 Vérifié' : '🔴 Non vérifié'}</button></td>
+    </tr>`;
+  }).join('');
+}
+
+async function downloadFile(path) {
+  try {
+    const { data, error } = await sb.functions.invoke('payments-admin', { body: { action: 'signed_url', path } });
+    if (error) throw error;
+    if (!data.succes) throw new Error(data.message);
+    window.open(data.url, '_blank');
+  } catch (e) {
+    showToast('Download error: ' + e.message, 'error');
+  }
+}
+
+async function toggleVerified(registrationId, verified, btn) {
+  btn.disabled = true;
+  try {
+    const { data, error } = await sb.functions.invoke('payments-admin', { body: { action: 'verify_payment', registrationId, verified } });
+    if (error) throw error;
+    if (!data.succes) throw new Error(data.message);
+    const r = registrations.find(x => x.id === registrationId);
+    if (r) r.payment_verified = verified;
+    renderTable();
+    showToast(verified ? 'Paiement marqué vérifié' : 'Paiement marqué non vérifié', 'success');
+  } catch (e) {
+    showToast('Error: ' + e.message, 'error');
+    btn.disabled = false;
+  }
+}
+
+async function remind(paperId, btn) {
+  btn.disabled = true; btn.textContent = 'Envoi...';
+  try {
+    const { data, error } = await sb.functions.invoke('payments-admin', { body: { action: 'remind', paperId } });
+    if (error) throw error;
+    if (!data.succes) throw new Error(data.message);
+    showToast(data.message, 'success');
+    btn.textContent = '✅ Envoyé';
+    if (typeof data.remindersSent === 'number') {
+      const countEl = document.getElementById('remind-count-' + paperId);
+      if (countEl) countEl.textContent = `🔔 Relancé ${data.remindersSent}×`;
+      const p = acceptedPapers.find(x => x.id === paperId);
+      if (p) p.camera_ready_reminders_sent = data.remindersSent;
+    }
+    setTimeout(() => { btn.disabled = false; btn.textContent = '📧 Relancer'; }, 2000);
+  } catch (e) {
+    showToast('Error: ' + e.message, 'error');
+    btn.disabled = false; btn.textContent = '📧 Relancer';
+  }
+}
+
+// Suppression totale (registrations + fichiers Storage) pour ACMCST uniquement,
+// dans le projet Supabase séparé. Irréversible : pas de restauration possible
+// pour ces données (contrairement au backup papers/assignments d'assignments.html) —
+// on télécharge donc un export JSON des registrations juste avant, par sécurité.
+async function deleteAllRegistrations() {
+  const first = confirm(
+    '⚠️ ATTENTION : ceci va supprimer DÉFINITIVEMENT TOUTES les soumissions camera-ready ACMCST ' +
+    '(table registrations) ET tous les fichiers déjà uploadés (Oral + Poster) dans le projet Supabase séparé. ' +
+    'Cette action est IRRÉVERSIBLE. Continuer ?'
+  );
+  if (!first) return;
+
+  const btn = document.getElementById('delete-all-btn');
+  btn.disabled = true; const originalText = btn.textContent;
+
+  try {
+    btn.textContent = 'Sauvegarde JSON...';
+    await loadDashboard();
+    const backup = JSON.stringify(registrations, null, 2);
+    const blob = new Blob([backup], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `acmcst_registrations_backup_${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+
+    const second = confirm(
+      `✅ Sauvegarde JSON téléchargée (${registrations.length} inscription(s)). ` +
+      'Confirmer la suppression définitive de toutes les registrations ACMCST et de tous les fichiers Storage associés ?'
+    );
+    if (!second) { btn.disabled = false; btn.textContent = originalText; return; }
+
+    btn.textContent = 'Suppression...';
+    const { data, error } = await sb.functions.invoke('payments-admin', { body: { action: 'delete_all' } });
+    if (error) throw error;
+    if (!data.succes) throw new Error(data.message);
+    showToast(data.message, 'success');
+    setTimeout(() => location.reload(), 1200);
+  } catch (e) {
+    showToast('Error: ' + e.message, 'error');
+    btn.disabled = false; btn.textContent = originalText;
+  }
+}
+
+async function downloadAllZip(category, pathField) {
+  const items = registrations.filter(r => r.type_presentation === 'Oral' && r[pathField]);
+  if (items.length === 0) { showToast('Aucun fichier à télécharger pour cette catégorie.', 'info'); return; }
+  const btnId = category === 'Copyright_Form' ? 'zip-copyright-btn' : category === 'Source_Files' ? 'zip-source-btn' : 'zip-cr-btn';
+  const btn = document.getElementById(btnId);
+  btn.disabled = true; const originalText = btn.textContent; btn.textContent = `Préparation (0/${items.length})...`;
+  try {
+    const zip = new JSZip();
+    let done = 0;
+    for (const r of items) {
+      const { data, error } = await sb.functions.invoke('payments-admin', { body: { action: 'signed_url', path: r[pathField] } });
+      if (error || !data.succes) { done++; continue; }
+      const resp = await fetch(data.url);
+      const blob = await resp.blob();
+      const ext = r[pathField].split('.').pop();
+      zip.file(`${r.last_name}_${r.first_name}_${r.paper_id}.${ext}`, blob);
+      done++;
+      btn.textContent = `Préparation (${done}/${items.length})...`;
+    }
+    const content = await zip.generateAsync({ type: 'blob' });
+    const url = URL.createObjectURL(content);
+    const a = document.createElement('a');
+    a.href = url; a.download = `ACMCST_${category}.zip`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } catch (e) {
+    showToast('Zip error: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false; btn.textContent = originalText;
+  }
+}
+
+function exportExcel() {
+  const rows = registrations.map(r => [
+    r.last_name, r.first_name, r.paper_id, r.type_presentation, r.category, r.country_group,
+    r.created_at ? new Date(r.created_at).toLocaleDateString() : '', r.payment_verified ? 'Vérifié' : 'Non vérifié',
+  ]);
+  const ws = XLSX.utils.aoa_to_sheet([
+    ['Nom', 'Prénom', 'Paper ID', 'Type', 'Catégorie', 'Pays', 'Date soumission', 'Statut paiement'],
+    ...rows,
+  ]);
+  ws['!cols'] = [{ wch: 18 }, { wch: 18 }, { wch: 12 }, { wch: 10 }, { wch: 28 }, { wch: 14 }, { wch: 16 }, { wch: 14 }];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Registrations');
+  XLSX.writeFile(wb, 'ACMCST_camera_ready_registrations.xlsx');
+}
+</script>
+</body>
+</html>
